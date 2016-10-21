@@ -1,2 +1,5 @@
 # herbps10.github.io
-herbsusmann.com
+
+```
+$ bundle exec jekyll serve
+```
