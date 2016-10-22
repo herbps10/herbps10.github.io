@@ -20,6 +20,12 @@
   small {
     font-size: 75%;
     font-weight: 400;
-    opacity: .5;
+    color: $blue;
+  }
+}
+
+.masthead {
+  .links {
+    float: right;
   }
 }

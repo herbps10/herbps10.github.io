@@ -5,11 +5,21 @@
 
   <body>
 
+    <div id='graph-container'></div>
+
     <div class="container content">
+
       <header class="masthead">
+        <div class='links'>
+          <a href='mailto:herbps10@gmail.com' target='_blank' class='fa fa-envelope'></a>
+          <a href='http://github.com/herbps10' target='_blank' class='fa fa-github'></a>
+          <a href='http://twitter.com/herbps10' target='_blank' class='fa fa-twitter'></a>
+          <a href='http://linkedin.com/in/herbsusmann' target='_blank' class='fa fa-linkedin'></a>
+        </div>
+
         <h3 class="masthead-title">
           <a href="{{ site.baseurl }}/" title="Home">{{ site.title }}</a>
-          <small>{{ site.tagline }}</small>
+          <small><a href='/about'>(About)</a></small>
         </h3>
       </header>
 
@@ -23,6 +33,9 @@
         </small>
       </footer>
     </div>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="/public/graph.js"></script>
 
     {% if site.analytics_id %}
      <script>
