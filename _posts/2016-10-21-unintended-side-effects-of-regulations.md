@@ -3,7 +3,7 @@ layout: post
 title: Tobacco Industry Concessions that Weren't Concessions
 ---
 
-![The Cigarette Century by Allan M. Brandt](public/images/cigarette_century.jpg){:class="pull-right"}
+![The Cigarette Century by Allan M. Brandt](/public/images/cigarette_century.jpg){:class="pull-right"}
 
 Last year I read [_The Cigarette Century_](http://www.cigarettecentury.com/) by Allan M. Brandt, a history of the tobacco industry and a finalist for a Pulitzer Prize. One of the points that has stuck with me is how regulations that were intended to curtail the tobacco industry ended up benefiting them. 
 
