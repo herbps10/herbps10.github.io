@@ -1,0 +1,22 @@
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  z-index: 2;
+}
+
+.link {
+  stroke: #ccc;
+  z-index: 1;
+}
+
+#graph-container {
+  position: relative;
+  z-index: -1;
+}
+
+svg {
+  position: absolute;
+  top: -230px;
+  left: -300px;
+  z-index: 1;
+}
