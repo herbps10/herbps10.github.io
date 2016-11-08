@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Tobacco Industry Concessions that Weren't Concessions
+description: Regulations had positive side effects for the tobacco industry
 ---
 
 ![The Cigarette Century by Allan M. Brandt](/public/images/cigarette_century.jpg){:class="pull-right"}

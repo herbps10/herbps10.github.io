@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Raytracing in Bash
+description: A minimal raytracer written entirely in bash
 ---
 
 Last semester I took an introductory course in raytracing.
