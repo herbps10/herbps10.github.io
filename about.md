@@ -1,6 +1,7 @@
 ---
 layout: page
 title: About
+description: Herb Susmann is a software developer in the Boston area
 ---
 
 ![Herb Susmann](/public/images/me.png){:class="pull-right"}
