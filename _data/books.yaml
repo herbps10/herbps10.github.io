@@ -1,0 +1,106 @@
+---
+- title: Confessions of an Economic Hit Man
+  author: John Perkins
+  isbn: 9781576755129
+  link: https://en.wikipedia.org/wiki/Confessions_of_an_Economic_Hit_Man
+  image: http://books.google.com/books/content?id=nJFFrLX-924C&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'Seveneves: A Novel'
+  author: Neal Stephenson
+  isbn: 9780062190413
+  link: http://www.nealstephenson.com/seveneves.html
+  image: http://books.google.com/books/content?id=0VWdBAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: National Security and Double Government
+  author: Michael J. Glennon
+  isbn: 0190206446
+  link: https://en.wikipedia.org/wiki/National_Security_and_Double_Government
+  image: http://books.google.com/books/content?id=BvlzBAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'The Cigarette Century: The Rise, Fall, and Deadly Persistence of the Product
+    That Defined America'
+  author: Allan Brandt
+  isbn: 0465070485
+  link: http://www.cigarettecentury.com/
+  image: http://books.google.com/books/content?id=pgUXBQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: Metaphors We Live By
+  author: George Lakoff
+  isbn: 0226468011
+  image: http://books.google.com/books/content?id=m8Sp5m9vZcwC&printsec=frontcover&img=1&zoom=1&source=gbs_api
+- title: Oryx and Crake
+  author: Margaret Atwood
+  isbn: 1400078989
+  link: https://en.wikipedia.org/wiki/Oryx_and_Crake
+  image: http://books.google.com/books/content?id=Wl_lvpiO11kC&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'The Lonely American: Drifting Apart in the Twenty-first Century'
+  author: Jacqueline Olds
+  isbn: 0807000345
+  link: http://www.thelonelyamerican.com/
+  image: http://books.google.com/books/content?id=PxyQkYI3vJ0C&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: Illness as Metaphor and AIDS and Its Metaphors
+  author: Susan Sontag
+  isbn: 9780312420130
+  link: https://en.wikipedia.org/wiki/AIDS_and_Its_Metaphors
+  image: http://books.google.com/books/content?id=ZZ806Vanu3IC&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'And No Birds Sing: Rhetorical Analyses of Rachel Carson''s Silent Spring'
+  author: Craig Waddell
+  isbn: 0809322196
+  link: https://books.google.com/books?id=UWTCtG3jRc0C
+  image: http://books.google.com/books/content?id=UWTCtG3jRc0C&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: Between the World and Me
+  author: Ta-Nehisi Coates
+  isbn: 0812993543
+  link: https://en.wikipedia.org/wiki/Between_the_World_and_Me
+  image: http://books.google.com/books/content?id=p5LyrQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
+- title: Invisible Man
+  author: Ralph Ellison
+  isbn: 9784871876353
+  link: https://en.wikipedia.org/wiki/Invisible_Man
+  image: http://books.google.com/books/content?id=hQk0jgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
+- title: 'Trust Me, I''m Lying: Confessions of a Media Manipulator'
+  author: Ryan Holiday
+  isbn: 1591846285
+  link: https://en.wikipedia.org/wiki/Trust_Me,_I'm_Lying
+  image: http://books.google.com/books/content?id=cXyokgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
+- title: Watchmen
+  author: Alan Moore
+  isbn: 9781401245252
+  link: https://en.wikipedia.org/wiki/Watchmen
+  image: http://books.google.com/books/content?id=ixfQngEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
+- title: 'The Red Queen: Sex and the Evolution of Human Nature'
+  author: Matt Ridley
+  isbn: 0060556579
+  link: http://www.mattridley.co.uk/books/the-red-queen-sex-and-the-evolution-of-human-nature/
+  image: http://books.google.com/books/content?id=7AypMwk_TD0C&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'Titan: The Life of John D. Rockefeller, Sr.'
+  author: Ron Chernow
+  isbn: 1400077303
+  link: https://www.amazon.com/Titan-Life-John-Rockefeller-Sr/dp/1400077303
+  image: http://books.google.com/books/content?id=fn9X6JonsgwC&printsec=frontcover&img=1&zoom=1&source=gbs_api
+- title: 'Arc of Justice: A Saga of Race, Civil Rights, and Murder in the Jazz Age'
+  author: Kevin Boyle
+  link: https://www.amazon.com/gp/product/0805079335/ref=oh_aui_detailpage_o03_s00?ie=UTF8&psc=1
+  isbn: 9781429900164
+  image: http://books.google.com/books/content?id=vNHigIfcwaMC&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'White Flight: Atlanta and the Making of Modern Conservatism'
+  author: Kevin M. Kruse
+  isbn: 9780691092607
+  link: https://www.amazon.com/gp/product/0691133867/ref=oh_aui_detailpage_o04_s00?ie=UTF8&psc=1
+  image: http://books.google.com/books/content?id=c5763Zgu4_oC&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'The Entrepreneurial State: Debunking Public vs. Private Sector Myths'
+  author: Mariana Mazzucato
+  isbn: 0857282522
+  link: http://marianamazzucato.com/the-entrepreneurial-state/
+  image: http://books.google.com/books/content?id=QKd5cDPY_i4C&printsec=frontcover&img=1&zoom=1&source=gbs_api
+- title: 'Capital Moves: RCA''s Seventy-Year Quest for Cheap Labor'
+  author: Jefferson Cowie
+  isbn: 9781565846593
+  link: http://www.cornellpress.cornell.edu/book/?GCOI=80140100563690
+  image: http://books.google.com/books/content?id=OgxNK7o1FpkC&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'Cutting Into the Meatpacking Line: Workers and Change in the Rural Midwest'
+  author: Deborah Fink
+  isbn: 0807846953
+  link: http://www.uncpress.unc.edu/browse/book_detail?title_id=205
+  image: http://books.google.com/books/content?id=xdghw0cKYEgC&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
+- title: 'A. Philip Randolph: A Biographical Portrait'
+  author: Jervis Anderson
+  isbn: 9780520055056
+  link: https://www.amazon.com/gp/product/0520055055/ref=oh_aui_detailpage_o08_s00?ie=UTF8&psc=1
+  image: http://books.google.com/books/content?id=NhxXYZ03cSgC&printsec=frontcover&img=1&zoom=1&edge=none&source=gbs_api
