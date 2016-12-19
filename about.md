@@ -9,3 +9,10 @@ description: Herb Susmann is a software developer in the Boston area
 I grew up near Ithaca, New York, where I was home-schooled for elementary school, an experience that shaped my belief in the value of self-directed, intrinsically motivated learning. I went to college at [SUNY Geneseo](http://geneseo.edu){:target="blank"} where I received a degree in Mathematics in 2014. I am currently working as a software developer at [Silent Spring Institute](http://silentspring.org){:target="blank"} in the greater Boston area. 
 
 The animation on the background of this site shows the generation of a graph by the [Barabási–Albert model](https://en.wikipedia.org/wiki/Barab%C3%A1si%E2%80%93Albert_model) and represents my interest in the computer modelling of biological and sociological processes.
+
+### Publications
+
+Bilgic, Yusuf K., and Herbert Susmann. "rlme: An R Package for Rank-Based Estimation and Prediction in Random Effects Nested Models." _The R Journal_ (2013): 71.
+
+Boronow KE, Susmann HP, Gajos KZ, Rudel RA, Arnold KC, Brown P, Morello-Frosch R, Havas L, Brody JG. DERBI: A Digital Method to Help Researchers Offer “Right-to-
+Know” Personal Exposure Results. _Environmental Health Perspectives_. In press; doi:10.1289/EHP702.
