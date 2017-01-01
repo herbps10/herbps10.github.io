@@ -32,3 +32,5 @@ github:
 gems:
   - jekyll-paginate
   - jekyll-gist
+
+analytics_id:        UA-8572766-7
