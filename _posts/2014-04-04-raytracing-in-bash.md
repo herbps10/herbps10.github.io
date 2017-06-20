@@ -14,7 +14,7 @@ Once I figured out the assignment in OCaml, I decided to give it a shot entirely
 
 It prints out the raytraced image directly to the console using special unicode characters and coloring through escape codes. Here’s what the result looks like:
 
-![Bash ray tracer output](public/images/bash-ray-tracer.png)
+![Bash ray tracer output](/public/images/bash-ray-tracer.png)
 
 Not exactly pretty, but it works! (if only there was a way to change the line spacing in gnome-terminal).
 
