@@ -10,6 +10,6 @@ This [Kaplan-Meier survival plot](https://en.wikipedia.org/wiki/Kaplan%E2%80%93M
 
 <img src='/public/images/jeopardy-survival-plot.png' width='95%' alt='Kaplain-Meier survival plot of Jeopardy! winning streaks' />
 
-The point on the extreme right is due, of course, to Ken Jennings and his 74 game winning streak.
+The data includes seasons 1-33 (aired 1984-2016), and does not include any championship or tournament games. The point on the extreme right is due, of course, to Ken Jennings and his 74 game winning streak.
 
 Here's the [R code](https://gist.github.com/herbps10/c3282c5b869d7a33d601079e66eba490) for the figure.
