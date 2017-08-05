@@ -14,5 +14,4 @@ The animation on the background of this site shows the generation of a graph by 
 
 Bilgic, Yusuf K., and Herbert Susmann. "rlme: An R Package for Rank-Based Estimation and Prediction in Random Effects Nested Models." _The R Journal_ (2013): 71.
 
-Boronow KE, Susmann HP, Gajos KZ, Rudel RA, Arnold KC, Brown P, Morello-Frosch R, Havas L, Brody JG. DERBI: A Digital Method to Help Researchers Offer “Right-to-
-Know” Personal Exposure Results. _Environmental Health Perspectives_. In press; doi:10.1289/EHP702.
+Boronow, K.E., H.P. Susmann, K.Z. Gajos, R.A. Rudel, K.C. Arnold, P. Brown, R. Morello-Frosch, L. Havas, J.G. Brody. 2017. DERBI: A Digital Method to Help Researchers Offer “Right-to-Know” Personal Exposure Results. _Environmental Health Perspectives_, 125(2):A27-A33. doi:10.1289/EHP702
