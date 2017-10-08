@@ -22,4 +22,4 @@ Bilgic, Yusuf K., and Herbert Susmann. 2013. rlme: An R Package for Rank-Based E
 
 ### Other
 
-[Lifted by privilege, he’s not above the less fortunate)(https://www.bostonglobe.com/opinion/letters/2016/02/23/lifted-privilege-not-above-less-fortunate/1tcJWPGWanRoEiGQmuLZZN/story.html). 2016. Letter to the Editor, Boston Globe.
+[Lifted by privilege, he’s not above the less fortunate](https://www.bostonglobe.com/opinion/letters/2016/02/23/lifted-privilege-not-above-less-fortunate/1tcJWPGWanRoEiGQmuLZZN/story.html). 2016. Letter to the Editor, Boston Globe.
