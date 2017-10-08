@@ -60,7 +60,7 @@ To address this, I added two new features to bring in information about the cont
 - _rank_ - categorical variable indicating the contestant's current rank (first place, tied for first, second place, etc.)
 - _distance from lead_ - the difference in points between the contestant and the leader. If the contestant is in the lead, it is a negative number indicating how far they are ahead.
 
-I built two new sets of models using these features. I also added a very simple model for comparison: predict the winner of the game to be whoever is in the lead ("current leader" in the legend.) This model doesn't output probabilities, so it will show up on the ROC curves as a single point. Here's how they compare to the original model:
+I built two new sets of models using these features. I also added a very simple model for comparison: predict the winner of the game to be whoever is in the lead. This model doesn't output probabilities, so it will show up on the ROC curves as a single point (I call this model "current leader" in the legend.) Here's how they compare to the original model:
 
 <img src='/public/images/rocs1.png' class='large' />
 
