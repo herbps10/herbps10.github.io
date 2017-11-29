@@ -138,5 +138,5 @@ ggplot(sowpods_probs, aes(x = length, y = prob)) +
 
 ![Bananagram word probabilities](/public/images/bananagrams.png)
 
-Drawing 3 letters has the highest probability of forming a word, at $53.7%$. This validates my strategy of dumping early in the game to get new tiles when I get stuck, because the new letters often help me get out of the rut.
+Drawing 3 letters has the highest probability of forming a word, at $53.7\%$. This validates my strategy of dumping early in the game to get new tiles when I get stuck, because the new letters often help me get out of the rut.
 

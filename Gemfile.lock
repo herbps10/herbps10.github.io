@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     addressable (2.4.0)
     colorator (1.1.0)
@@ -7,6 +7,10 @@ GEM
       multipart-post (>= 1.2, < 3)
     ffi (1.9.14)
     forwardable-extended (2.6.0)
+    googlebooks (0.0.9)
+      httparty
+    httparty (0.14.0)
+      multi_xml (>= 0.5.2)
     jekyll (3.3.0)
       addressable (~> 2.4)
       colorator (~> 1.0)
@@ -33,6 +37,7 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
     mercenary (0.3.6)
+    multi_xml (0.6.0)
     multipart-post (2.0.0)
     octokit (4.3.0)
       sawyer (~> 0.7.0, >= 0.5.3)
@@ -52,13 +57,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  googlebooks
   jekyll (= 3.3.0)
   jekyll-feed (~> 0.6)
   jekyll-gist
   jekyll-paginate
-
-RUBY VERSION
-   ruby 2.3.0p0
 
 BUNDLED WITH
    1.13.5
