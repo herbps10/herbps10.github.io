@@ -31,11 +31,11 @@ _J. G. Brody_, **H. Susmann**, K. Boronow, J. Ohayon. DERBI: A digital framework
 
 _L. A. Schaider_, S. Balan, A. Blum, **H. Susmann**, D. Andrews, M. Stryar, R. A. Rudel, R. Dodson, G. Peaslee. Fluorinated compounds are common in U.S. fast food packaging and potentially contribute to population-wide PFAS exposure. International Society of Exposure Scientists (ISES) Annual Meeting. Oct 15-19, 2017. Durham, North Carolina.
 
-_J. G. Brody and **H. Susmann**_. Reporting Data to Participants in Biomonitoring and Household Exposure Studies: Its Use in the PROTECT Study (Puerto Rico Test Site to Explore Contamination Effects.) NIEHS Superfund Research Program Annual Meeting. Nov 18-20, 2015. San Juan, Puerto Rico.
+_J. G. Brody & **H. Susmann**_. Reporting Data to Participants in Biomonitoring and Household Exposure Studies: Its Use in the PROTECT Study (Puerto Rico Test Site to Explore Contamination Effects.) NIEHS Superfund Research Program Annual Meeting. Nov 18-20, 2015. San Juan, Puerto Rico.
 
 J. G. Brody, _**H. Susmann**_, R. A. Rudel, K. C. Arnold, S. Ryan, K. Z. Gajos. DERBI, a New Digital Reporting Tool, Helps Study Participants and Researchers See Insights about Personal Exposure. International Society of Exposure Scientists (ISES) Annual Meeting. Oct 18-22, 2015. Henderson, Nevada.
 
-_**H. Susmann**_, Y. K. Bilgic. Computational Techniques for the Statistical Analysis of Big Data in R: A Case Study of the rlme Package. UP-Stat. Apr 10-11, 2014. Geneseo, New York. Awarded Best Student Presentation.
+_**H. Susmann**_ & Y. K. Bilgic. Computational Techniques for the Statistical Analysis of Big Data in R: A Case Study of the rlme Package. UP-Stat. Apr 10-11, 2014. Geneseo, New York. Awarded Best Student Presentation.
 
 _C. DeAngelis, E. Twohy, **H. Susmann**_. Difference Equation Approximations of Agent Based Models for Solving Optimization Problems. Undergraduate Capstone Conference. Aug 12-16, 2013. Columbus, Ohio. 
 
