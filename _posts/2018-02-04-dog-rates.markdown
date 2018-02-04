@@ -1,0 +1,45 @@
+---
+layout: post
+title: ""
+description: "Analyzing tweets from @dog_rates"
+---
+
+From Twitter:
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">The most common rating for dogs from <a href="https://twitter.com/dog_rates?ref_src=twsrc%5Etfw">@dog_rates</a> is 13/10. A few are 15/10 but all dogs deserve that rating in my opinion. Pictured with Ellie (12/10) from <a href="https://twitter.com/KatieNicoleF?ref_src=twsrc%5Etfw">@KatieNicoleF</a>. <a href="https://t.co/B46rRDSCRY">pic.twitter.com/B46rRDSCRY</a></p>&mdash; Herb Susmann (@herbps10) <a href="https://twitter.com/herbps10/status/959923100468105219?ref_src=twsrc%5Etfw">February 3, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+Here's the R code I used to generate the histogram:
+
+{% highlight R %}
+
+library(rtweet)
+library(tidyverse)
+library(stringr)
+library(cowplot)
+library(grid)
+library(jpeg)
+
+g <- rasterGrob(readJPEG("ellie.jpg"), interpolate = TRUE)
+
+tmls <- get_timelines("dog_rates", n = 3200)
+
+ratings <- tmls %>%
+  filter(str_detect(text, "t.co")) %>%
+  filter(!str_detect(text, "^RT")) %>%
+  filter(!str_detect(text, "Here's a little more info on Dew")) %>%
+  mutate(rating = map(text, str_extract_all, "1[0-5]/10"),
+         rating = map(rating, `[[`, 1)) %>%
+  unnest(rating) %>%
+  count(rating)
+
+ggplot(ratings, aes(x = rating, y = n)) +
+  annotation_custom(g) +
+  geom_col(fill = "white", alpha = 0.8) +
+  labs(caption = "Data: @dog_rates, photo: @KatieNicoleF",
+       title = "577 WeRateDogs™ Ratings")
+
+
+{% endhighlight %}
+
+The R code is also available [as a gist](https://gist.github.com/herbps10/0d3396b27d4de5a843694737efc98e8a).
