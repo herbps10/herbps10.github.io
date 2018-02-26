@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""
+title: "More animals from Twitter"
 description: "Analyzing tweets from @dog_rates"
 date: 2018-02-25 12:00:00
 ---
