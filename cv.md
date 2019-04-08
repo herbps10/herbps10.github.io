@@ -7,11 +7,19 @@ title: Curriculum Vitae
 
 ### EDUCATION
 
-B.A. Mathematics, State University of New York at Geneseo. 2014. Computer Science minor. 3.76/4.0 GPA. 
+B.A. Mathematics, State University of New York at Geneseo. 2014. Computer Science minor.
+
+### RESEARCH EXPERIENCE
+
+Graduate Research Assistant, [Alkema Lab](https://people.umass.edu/lalkema/). University of Massachusetts at Amherst. 2018-Present.
+
+Student Researcher, Modeling and Simulation in Systems Biology Research Experience for Undergraduates. Virginia Bioinformatics Institute, Virginia Tech University. Blacksburg, Virginia. 2013.
+
+Student Researcher, SUNY Geneseo Distributed Systems Laboratory. Geneseo, New York. 2010–2014.
 
 ### PROFESSIONAL EXPERIENCE
 
-Data Scientist/Software Developer, Silent Spring Institute. Newton, Massachusetts. 2014–Present.
+Data Scientist/Software Developer, [Silent Spring Institute](https://silentspring.org). Newton, Massachusetts. 2014–2018.
 
 ### PUBLICATIONS
 
@@ -19,9 +27,6 @@ Data Scientist/Software Developer, Silent Spring Institute. Newton, Massachusett
 Boronow, K.E., **H. P. Susmann**, K. Z. Gajos, R. A. Rudel, K. C. Arnold, P. Brown, R. Morello-Frosch, L. Havas, J. G. Brody. 2017. DERBI: A Digital Method to Help Researchers Offer “Right-to-Know” Personal Exposure Results. <i>Environmental Health Perspectives</i>, 125(2):A27-A33. doi:10.1289/EHP702
 
 Bilgic, Y. K., & **Susmann, H.** 2013. rlme: an R package for rank-based estimation and prediction in random effects nested models. <i>The R Journal</i>, 5(2), 71-79.
-
-#### Manuscripts Under Preparation
-**Susmann, H.**, L. A. Schaider, K. M. Rodgers, R. A. Rudel. Contribution of treated food packaging to population PFAS exposures.
 
 ### CONFERENCE PARTICIPATION
 Presenter names are underlined.
@@ -49,12 +54,6 @@ _**H. Susmann**_. Difference Equation Approximations of Agent Based Models for S
 #### Workshops
 _**H. Susmann**_, K. Boronow, J. G. Brody. Sense-Making Under Uncertainty: Using Expert Systems to Help Users Navigate Uncertain Implications of Chemical Exposure Data. Designing for Uncertainty in HCI: When does Uncertainty Help? Association for Computing Machinery (ACM) Special Interest Group on Computer-Human Interaction (SIGCHI). May 6-11, 2017. Denver, Colorado.
 
-### RESEARCH EXPERIENCE
-
-Student Researcher, Modeling and Simulation in Systems Biology Research Experience for Undergraduates. Virginia Bioinformatics Institute, Virginia Tech University. Blacksburg, Virginia. 2013.
-
-Student Researcher, SUNY Geneseo Distributed Systems Laboratory. Geneseo, New York. 2010–2014.
-
 ### HONORS AND AWARDS
 
 Travel Scholarship, $750, to the Engaging Diverse Partners: Strategies to Address Environmental Public Health workshop. 2017, Durham, North Carolina.
@@ -77,13 +76,13 @@ Topic Modeling in R. Presentation. Boston Data-Con. Cambridge, Massachusetts. 20
 
 ### VOLUNTEER EXPERIENCE
 
-Assistant English as a Second Language Instructor, WATCH CDC. Waltham, Massachusetts. 2016–Present.
+English as a Second Language Instructor, [WATCH CDC](http://watchcdc.org/). Waltham, Massachusetts. 2016–2018.
+
+### Languages
+English (native), Spanish (B2).
 
 ### RESEARCH RELATED WEBSITES
 
 Personal website: [http://herbsusmann.com](http://herbsusmann.com)
 
 Silent Spring Institute Developer Blog: [https://silentspring.org/devblog](https://silentspring.org/devblog)
-
-
-
