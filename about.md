@@ -18,4 +18,4 @@ The animation on the background of this site shows the generation of a graph by 
 
 [Lifted by privilege, he’s not above the less fortunate](https://www.bostonglobe.com/opinion/letters/2016/02/23/lifted-privilege-not-above-less-fortunate/1tcJWPGWanRoEiGQmuLZZN/story.html). 2016. Letter to the Editor, Boston Globe.
 
-See my [C.V.](/cv.html) for listing of my research activities.
+See my [C.V.](/cv.html) for a listing of my research activities.
