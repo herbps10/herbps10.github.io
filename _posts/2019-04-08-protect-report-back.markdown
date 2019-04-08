@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Reporting research results to participants on smartphones
+title: Smartphone interface for reporting research results to study participants
 description: We developed a novel interface for reporting results to participants of exposure studies.
 ---
 
