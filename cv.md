@@ -11,7 +11,7 @@ B.A. Mathematics, State University of New York at Geneseo. 2014. Computer Scienc
 
 ### RESEARCH EXPERIENCE
 
-Graduate Research Assistant, [Alkema Lab](https://people.umass.edu/lalkema/). University of Massachusetts at Amherst. 2018-Present.
+Graduate Research Assistant, [Alkema Lab](https://people.umass.edu/lalkema/). University of Massachusetts at Amherst. Amherst, Massachusetts. 2018-Present.
 
 Student Researcher, Modeling and Simulation in Systems Biology Research Experience for Undergraduates. Virginia Bioinformatics Institute, Virginia Tech University. Blacksburg, Virginia. 2013.
 
