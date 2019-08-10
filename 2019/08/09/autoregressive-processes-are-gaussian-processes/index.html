@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Herb Susmann">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Autoregressive (AR) processes are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a Gaussian process. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/2019/08/09/autoregressive-processes-are-gaussian-processes/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.dd629241ea9333c62c071f4a25f829ff.css">
+
+  
+    
+    
+    
+    
+      
+    
+    
+    
+    <link rel="stylesheet" href="/css/academic.e8c8eb76d03fd9d9bc5ae079f0c36c5c.css">
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/2019/08/09/autoregressive-processes-are-gaussian-processes/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@herbps10">
+  <meta property="twitter:creator" content="@herbps10">
+  
+  <meta property="og:site_name" content="Herb Susmann">
+  <meta property="og:url" content="/2019/08/09/autoregressive-processes-are-gaussian-processes/">
+  <meta property="og:title" content="Autoregressive Processes are Gaussian Processes | Herb Susmann">
+  <meta property="og:description" content="Autoregressive (AR) processes are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a Gaussian process. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2019-08-09T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2019-08-09T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Autoregressive Processes are Gaussian Processes | Herb Susmann</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Herb Susmann</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/project/"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/publication/"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Autoregressive Processes are Gaussian Processes</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2019-08-09 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2019-08-09 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Aug 9, 2019</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    8 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/2019/08/09/autoregressive-processes-are-gaussian-processes/&amp;text=Autoregressive%20Processes%20are%20Gaussian%20Processes" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/2019/08/09/autoregressive-processes-are-gaussian-processes/&amp;t=Autoregressive%20Processes%20are%20Gaussian%20Processes" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Autoregressive%20Processes%20are%20Gaussian%20Processes&amp;body=/2019/08/09/autoregressive-processes-are-gaussian-processes/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/2019/08/09/autoregressive-processes-are-gaussian-processes/&amp;title=Autoregressive%20Processes%20are%20Gaussian%20Processes" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Autoregressive%20Processes%20are%20Gaussian%20Processes%20/2019/08/09/autoregressive-processes-are-gaussian-processes/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/2019/08/09/autoregressive-processes-are-gaussian-processes/&amp;title=Autoregressive%20Processes%20are%20Gaussian%20Processes" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<p><a href="https://en.wikipedia.org/wiki/Autoregressive_model">Autoregressive (AR) processes</a> are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a <a href="https://en.wikipedia.org/wiki/Gaussian_process">Gaussian process</a>. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.</p>
+<div id="ar-processes" class="section level2">
+<h2>AR processes</h2>
+<p>Let <span class="math inline">\(\mathbf{Y} = \left\{ Y_1, Y_2, \dots, Y_n \right\}\)</span> be a set of random variables indexed by time. An aurogressive model assumes that <span class="math inline">\(\mathbf{Y}\)</span> is correlated over time. An AR model is typically described by defining <span class="math inline">\(Y_t\)</span> in terms of <span class="math inline">\(Y_{t-1}\)</span>:</p>
+<p><span class="math display">\[
+Y_{t} = \rho Y_{t-1} + \epsilon_{t}
+\]</span>
+where <span class="math inline">\(\epsilon_{t}\sim N\left(0,\sigma_{\epsilon}^{2}\right)\)</span> and <span class="math inline">\(\rho \in \mathbb{R}\)</span> is a parameter that controls the degree to which <span class="math inline">\(Y_t\)</span> is correlated with <span class="math inline">\(Y_{t-1}\)</span>. This model is called an AR process of order 1 because <span class="math inline">\(Y_t\)</span> only depends on <span class="math inline">\(Y_{t-1}\)</span>.</p>
+<p>We can also rearrange terms to emphasize that this representation defines the conditional distribution of <span class="math inline">\(Y_{t}\)</span> given <span class="math inline">\(Y_{t-1}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{t} \vert Y_{t-1} \sim&amp; N(\rho Y_{t-1}, \sigma_\epsilon^2) \\
+Y_1 \sim&amp; N(0, \frac{\sigma_\epsilon^2}{1-\rho^2})
+\end{aligned}
+\]</span></p>
+<p>Where the variance of <span class="math inline">\(Y_1\)</span> comes from the unconditional variance, which is derived below. The stationarity condition of an AR process is that each <span class="math inline">\(Y_t\)</span> has the same distribution; that is, <span class="math inline">\(\mu = \mathrm{E}(Y_i) = \mathrm{E}Y_j\)</span> and <span class="math inline">\(\sigma^2 = \mathrm{Var}(Y_i) = \mathrm{Var}(Y_j)\)</span> for all <span class="math inline">\(i, j\)</span>.</p>
+<p>Now we can derive the unconditional mean and variance of <span class="math inline">\(Y_t\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{E}\left(Y_{t}\right) &amp;= \mathrm{E}\left(\rho Y_{t - 1} + \epsilon_{t} \right)\\
+                     &amp;= \rho \mathrm{E}\left( Y_{t - 1 } \right)\\
+                 \mu &amp;= \rho\mu\ \text{(apply stationarity condition)} \\
+                 \mu &amp;= 0 \\
+\mathrm{Var}\left(Y_{t}\right) &amp;= \mathrm{Var}\left(\rho Y_{t-1} + \epsilon_{t}\right)\\
+                                   &amp;= \rho^{2}\mathrm{Var}(Y_{t-1}) + \mathrm{Var}\left(\epsilon_{t}\right)\\
+                                   &amp;= \rho^{2}\mathrm{Var}(Y_{t-1}) + \sigma_{\epsilon}^{2}\\
+                        \sigma^{2} &amp;= \rho^{2}\sigma^{2} + \sigma_{\epsilon}^{2}\ \text{(apply stationarity condition)}\\
+ \sigma^{2}\left(1-\rho^{2}\right) &amp;= \sigma_{\epsilon}^{2}\\
+                        \sigma^{2} &amp;= \frac{\sigma_{\epsilon}^{2}}{1 - \rho^{2}}
+\end{aligned}
+\]</span></p>
+<p>The plot below shows several examples of draws from an AR(1) process with differing values of <span class="math inline">\(\rho\)</span> and <span class="math inline">\(\sigma^2_\epsilon = 1\)</span>:
+<img src="/post/2019-08-06-ar-process_files/figure-html/ar_1_conditional_representation-1.png" width="672" /></p>
+</div>
+<div id="gaussian-processes" class="section level2">
+<h2>Gaussian processes</h2>
+<p>Gaussian processes model a set of variables as being multivariate normally distributed with mean <span class="math inline">\(\boldsymbol{\mu}\)</span> and variance/covariance matrix <span class="math inline">\(\boldsymbol{\Sigma}\)</span>:</p>
+<p><span class="math display">\[
+\mathbf{Y} \sim MVN(\boldsymbol{\mu}, \boldsymbol{\Sigma})
+\]</span></p>
+<p>Usually the mean vector is set to <span class="math inline">\(\boldsymbol{0}\)</span>, which means the Gaussian process is fully defined by its choice of variance/covariance matrix <span class="math inline">\(\boldsymbol{\Sigma}\)</span>. The variance/covariance matrix is defined by a kernel function which defines the covariance between any two variables:</p>
+<p><span class="math display">\[
+\Sigma_{i,j} = K(i, j)
+\]</span></p>
+</div>
+<div id="an-ar1-process-is-a-gaussian-process" class="section level2">
+<h2>An AR(1) process is a Gaussian process</h2>
+<p>We want to show that an AR process can be represented as a Gaussian process. To do this, we need to show that <span class="math inline">\(\mathbf{Y}\)</span> is jointly normally distributed with some mean vector and variance/covariance matrix.</p>
+<p>We already know that <span class="math inline">\(\mathrm{E}(Y_t)=0\)</span>, so the mean vector of its joint distribution will be <span class="math inline">\(\mathbf{0}\)</span>.</p>
+<p>To find the variance/covariance matrix, we need to derive the covariance between <span class="math inline">\(Y_{t_1}\)</span> and <span class="math inline">\(Y_{t_2}\)</span>. First, let’s consider the simpler case of the covariance between <span class="math inline">\(Y_t\)</span> and <span class="math inline">\(Y_{t+1}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \mathrm{cov}(Y_{t}, Y_{t+1}) &amp;= \mathrm{E} \left[ \left( Y_t - \mathrm{E}[Y_t] \right) \left( Y_{t+1} - \mathrm{E}[Y_{t+1}] \right) \right] \text{ (definition of covariance) } \\
+                   &amp;= \mathrm{E} \left[ Y_t Y_{t+1} \right] \text{ (because } \mathrm{E}[Y_t] = \mathrm{E}[Y_{t+1}] = 0 \text{)} \\
+                   &amp;= \mathrm{E} \left[ Y_t \left( \rho Y_{t} + \epsilon_{t+1} \right) \right] \\
+                   &amp;= \mathrm{E} \left[ \rho Y_t^2 + Y_t \epsilon_{t+1} \right] \\
+                   &amp;= \rho \mathrm{E}\left[ Y_t^2 \right] \\
+                   &amp;= \rho (\mathrm{Var}(Y_t) + \mathrm{E}[Y_t]^2) \\
+                   &amp;= \rho \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\end{aligned}
+\]</span></p>
+<p>for <span class="math inline">\(Y\)</span>s separated by more than one time point, iterating the above result yields the expression</p>
+<p><span class="math display">\[
+\begin{aligned}
+  \mathrm{cov}(Y_{t_1}, Y_{t_2}) = \rho^{\vert t_1 - t_2 \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\end{aligned}
+\]</span></p>
+<p>Now we can fully define the joint distribution of <span class="math inline">\(\mathbf{Y}\)</span>:</p>
+<p><span class="math display">\[
+\mathbf{Y} \sim MVN(\mathbf{0}, \boldsymbol{\Sigma})
+\]</span></p>
+<p>where <span class="math inline">\(\Sigma_{i,j} = \rho^{\vert i - j \vert} \frac{\sigma_\epsilon^2}{1-\rho^2}\)</span>. This is a Gaussian process!</p>
+<p><img src="/post/2019-08-06-ar-process_files/figure-html/ar_process_gaussian_representation-1.png" width="672" /></p>
+</div>
+<div id="combining-kernel-functions" class="section level2">
+<h2>Combining kernel functions</h2>
+<p>The nice thing about Gaussian processes is that we can combine multiple kernel functions to model processes with dependence from different sources. Two ways kernels can be combined are by multiplication and addition. Multiplying two kernels is like an “AND” operation: the correlation between points will be high if the correlation from both kernels is high. Adding two kernels together is like an “OR” operation: correlation is high if either kernel indicates high covariance.</p>
+<p>As an example, let’s build a Gaussian process that combines an AR process (for temporal correlation) and a spatial process (for spatial correlation) by combining two kernel functions. First, we need to define an outcome variable <span class="math inline">\(Y\)</span> that varies in time and space: let <span class="math inline">\(Y_{c,t}\)</span> be a random variable indexed by spatial site <span class="math inline">\(c\)</span> at timepoint <span class="math inline">\(t\)</span>. We take the AR covariance as the first kernel function, to model temporal correlation:</p>
+<p><span class="math display">\[
+K_1(i, j) = \rho^{\vert t_i - t_j \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\]</span></p>
+<p>and a squared-exponential kernel function to model spatial dependence:</p>
+<p><span class="math display">\[
+K_2(i, j) = \alpha^2 \exp\left( -\frac{d(i, j)}{2\lambda^2} \right)
+\]</span></p>
+<p>where <span class="math inline">\(d(i, j)\)</span> is the spatial distance between sites <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, <span class="math inline">\(\lambda\)</span> is a length-scale parameter, and <span class="math inline">\(\alpha^2\)</span> is a parameter controlling the magnitude of the covariance.</p>
+<p>Combine the two kernel functions so that two data points are correlated if they are close together in time and space:</p>
+<p><span class="math display">\[
+\begin{aligned}
+K(i, j) &amp;= K_1(i, j) \times K_2(i, j) \\
+        &amp;= \rho^{\vert t_i - t_j \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2} \alpha^2 \exp\left( -\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]</span></p>
+<p>Note the parameters <span class="math inline">\(\sigma^2_\epsilon\)</span> and <span class="math inline">\(\alpha^2\)</span>, which are multipled together, would be unidentifiable in parameter estimation and should be replaced by a single parameter that controls the magnitude of the covariance.</p>
+<p>To illustrate this Gaussian process model, I started by generating a set of sites with random locations:</p>
+<p><img src="/post/2019-08-06-ar-process_files/figure-html/spatial_locations-1.png" width="672" /></p>
+<p>then I drew from the Gaussian process using the parameters temporal parameters <span class="math inline">\(\rho=0.9\)</span>, <span class="math inline">\(\sigma_\epsilon^2=1\)</span> and spatial parameters <span class="math inline">\(\alpha = 1\)</span> and <span class="math inline">\(\lambda=2\)</span>.</p>
+<p>The plot below shows the time trend in the first six sites:</p>
+<p><img src="/post/2019-08-06-ar-process_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>And the spatial distribution over time of <span class="math inline">\(Y_{c,t}\)</span> is shown below:
+<img src="/post/2019-08-06-ar-process_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Visually we can see that the Gaussian process generates data that is correlated in both time and space.</p>
+</div>
+<div id="modeling-using-the-mean-and-the-covariance" class="section level2">
+<h2>Modeling using the mean and the covariance</h2>
+<p>The spatio-temporal Gaussian process we defined in the previous section does its modeling through the variance/covariance matrix, with its mean function set to zero. An alternative way to think about a spatio-temporal process is akin to the first AR representation we looked at, and define <span class="math inline">\(\mathbf{Y}_t\)</span> (the set of all <span class="math inline">\(Y_{c,t}\)</span> at time <span class="math inline">\(t\)</span>) relative to <span class="math inline">\(\mathbf{Y}_{t-1}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+  \mathbf{Y}_{t} = \rho \mathbf{Y}_{t-1} + \boldsymbol{\epsilon}_t
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{\epsilon_t} \sim MVN(\mathbf{0}, \boldsymbol{\Sigma}_\epsilon)\)</span>.</p>
+<p>If we set <span class="math inline">\(\boldsymbol{\Sigma_\epsilon}\)</span> to be the diagonal matrix <span class="math inline">\(\boldsymbol{\Sigma}_\epsilon = \sigma^2_\epsilon \mathbf{I}_n\)</span> then we will have an independent AR(1) independent process for each spatial site. It gets more interesting if we define <span class="math inline">\(\boldsymbol{\Sigma}_\epsilon\)</span> by a covariance function so we can include dependence between sites, for example dependence based on the distance between the sites. For now, let’s use the squared exponential kernel and define <span class="math inline">\(\Sigma_{i,j} = \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)\)</span>.</p>
+<p>Is this process also equivalent to a mean zero Gaussian process with some covariance kernel? We’ll answer this question by deriving the covariance between any two points.</p>
+<p>The mean of <span class="math inline">\(\mathbf{Y_t}\)</span> can be shown to be zero in the same way we showed a univariate AR process has mean 0. We also need to know the overall variance/covariance matrix of <span class="math inline">\(\mathbf{Y}_t\)</span>, which we’ll call <span class="math inline">\(\boldsymbol{\Phi}\)</span>; the logic is imilar to the univariate case, and I’ll show it here for completeness:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \mathrm{Var}\left(\boldsymbol{Y}_{t}\right) &amp; =\mathrm{Var}\left(\rho^{2}\mathbf{Y}_{t-1} + \boldsymbol{\epsilon}_{t}\right) \\
+     &amp;= \rho^{2}\mathrm{Var}\left(\boldsymbol{Y}_{t-1}\right)+\mathrm{Var}\left(\boldsymbol{\epsilon}_{t}\right) \\
+    \boldsymbol{\Phi} &amp; =\rho^{2}\boldsymbol{\Phi}+\boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi}-\rho^{2}\boldsymbol{\Sigma} &amp;= \boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi}\left(\mathbf{I}-\rho^{2}\mathbf{I}\right) &amp; =\boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi} &amp;=\boldsymbol{\Sigma}_{\epsilon}\left(\mathbf{I}-\rho^{2}\mathbf{I}\right)^{-1}
+\end{aligned}
+\]</span></p>
+<p>If we pull out two sites at the same time point, their covariance is <span class="math inline">\(\mathrm{cov}(Y_{t,c_1}, Y_{t,c_2}) = \frac{\Sigma_{\epsilon, c_1, c_2}}{1-\rho^2}\)</span>, which looks very similar to the unidimensional AR(1) process variance.</p>
+<p>Now we derive the covariance between any two sites that are one time point apart:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t},y_{c_2,t+1}\right) &amp; =\mathrm{E}\left[\left(y_{c_1,t}-\mathrm{E}\left[y_{c_1,t}\right]\right)\left(y_{c_2,t}-\mathrm{E}\left[y_{c_2,t}\right]\right)\right]\\
+ &amp; =\mathrm{E}\left[y_{c_1,t}y_{c_2,t}\right]\\
+ &amp; =\mathrm{E}\left[y_{c_1,t}\left[\rho y_{c_2,t}+\epsilon_{c_2,t+1}\right]\right]\\
+ &amp; =\rho\mathrm{E}\left[y_{c_1,t}y_{c_2,t}\right]\\
+ &amp; =\rho\mathrm{cov}\left(y_{c_1,t}y_{c_2,t}\right)\\
+ &amp; =\rho\frac{\Sigma_{i,j}}{1-\rho^2} \\
+ &amp;= \rho \frac{1}{1-\rho^2} \Sigma_{i,j} \\
+ &amp;= \rho \frac{1}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]</span></p>
+<p>for sites more than one time point away from each other, we can iterate the above result to get a general expression of the covariance between any two points:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t_1},y_{c_2,t_2}\right) &amp;= \rho^{\vert t_1 - t_2 \vert}\frac{1}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]</span></p>
+<p>if we reparameterize <span class="math inline">\(\alpha\)</span> to be the product of two parameters <span class="math inline">\(\alpha = \sigma^2_\epsilon \alpha\)</span>, we get</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t_1},y_{c_2,t_2}\right) &amp;= \rho^{\vert t_1 - t_2 \vert}\frac{\sigma^2_\epsilon}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right) \\
+&amp;= K_1(i, j) \times K_2(i,j)
+\end{aligned}
+\]</span></p>
+<p>which is the product of an AR(1) and squared exponential kernel function as defined in the previous section. In practice we wouldn’t want to separate these parameters because both of them will not be identifiable given observed data, but I separated them here to show how the covariance structure is the product of two kernel functions.</p>
+<p>Therefore, we can write this process in the form of a Gaussian process with mean zero and covariance kernel given by the product of a temporal and spatial kernel:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbf{Y} \sim&amp; MVN(\mathbf{0}, \boldsymbol{\Sigma}) \\
+\Sigma_{i,j} =&amp; K_1(i, j) \times K_2(i, j) 
+\end{aligned}
+\]</span></p>
+<p>The spatio-temporal processes defined as a set of conditional distributions and as a Gaussian process are equivalent.</p>
+<hr />
+<p>To summarize, AR processes can be written as a Gaussian process model, which is useful because a temporal process can then be easily combined with other sources of dependence. In general, we can build our models by defining conditional distributions with a given mean and covariance, or a joint distribution with mean zero where the model is fully defined by a variance/covariance kernel function. In a future post I will look at Bayesian parameter estimation in these models using Stan.</p>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hue57d0e8436ae96137a60d1345f821d2b_24465_250x250_fill_lanczos_center_2.png" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Herb Susmann</a></h5>
+      <h6 class="card-subtitle">Graduate Student</h6>
+      <p class="card-text" itemprop="description">Gradate student in Biostatistics at UMass Amherst matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+          <li>
+            <a itemprop="sameAs" href="mailto:hsusmann@umass.edu" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    <script src="/js/academic.min.bec90056665421447c830e8aa2f42710.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" integrity="sha256-gfQwA6PlkZsLqWu4bU4hXPrbTqzixm0B5MdvBLI+Oas=" crossorigin="anonymous"></script>
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

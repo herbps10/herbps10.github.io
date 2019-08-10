@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Herb Susmann</title>
+    <link>/</link>
+      <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <description>Herb Susmann</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Herb Susmann</title>
+      <link>/</link>
+    </image>
+    
+    <item>
+      <title>Example Talk</title>
+      <link>/talk/example/</link>
+      <pubDate>Sat, 01 Jun 2030 13:00:00 +0000</pubDate>
+      <guid>/talk/example/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    Click on the &lt;strong&gt;Slides&lt;/strong&gt; button above to view the built-in slides feature.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Slides can be added in a few ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt; slides using Academic&amp;rsquo;s &lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content/#create-slides&#34; target=&#34;_blank&#34;&gt;&lt;em&gt;Slides&lt;/em&gt;&lt;/a&gt; feature and link using &lt;code&gt;slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Upload&lt;/strong&gt; an existing slide deck to &lt;code&gt;static/&lt;/code&gt; and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Embed&lt;/strong&gt; your slides (e.g. Google Slides) or presentation video on this page using &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Further talk details can easily be added to this page using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Presidential Primary Polling Analysis in Stan</title>
+      <link>/2019/08/10/presidential-primary-polling-analysis-in-stan/</link>
+      <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>/2019/08/10/presidential-primary-polling-analysis-in-stan/</guid>
+      <description>
+
+
+&lt;p&gt;I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. &lt;a href=&#34;https://fivethirtyeight.com&#34;&gt;FiveThirtyEight&lt;/a&gt; publishes several &lt;a href=&#34;https://projects.fivethirtyeight.com/polls&#34;&gt;polling datasets&lt;/a&gt;, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a &lt;a href=&#34;https://gist.github.com/herbps10/d274d3d9c579e4e9eb5c16a16949c315&#34;&gt;Github gist&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; be the true proportion of voters in favor of candidate &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;. Our modeling assumption is that the logit-transform of &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; follows a random walk; that is:
+&lt;span class=&#34;math display&#34;&gt;\[
+\mathrm{logit}(\delta_{c,t}) \sim \mathrm{N}\left(\mathrm{logit}(\delta_{c,t-1}), \tau^2\right)
+\]&lt;/span&gt;
+We can’t observe &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; directly; we have to infer it through the noisy observations we have from polls.&lt;/p&gt;
+&lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(s_{i}\)&lt;/span&gt; be the sample size of poll &lt;span class=&#34;math inline&#34;&gt;\(c[i]\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(y_{i}\)&lt;/span&gt; the number of poll respondents in favor of candidate &lt;span class=&#34;math inline&#34;&gt;\(c[i]\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t[i]\)&lt;/span&gt;. Let &lt;span class=&#34;math inline&#34;&gt;\(\phi_i\)&lt;/span&gt; be the proportion of poll respondents in favor of candidate &lt;span class=&#34;math inline&#34;&gt;\(c[i]\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t[i]\)&lt;/span&gt;. To incorporate sampling error, we model &lt;span class=&#34;math inline&#34;&gt;\(y_i\)&lt;/span&gt; as binomial:
+&lt;span class=&#34;math display&#34;&gt;\[
+y_i \sim \mathrm{Binomial}(s_i, \phi_i)
+\]&lt;/span&gt;
+We also allow for added variance in our observations by relating &lt;span class=&#34;math inline&#34;&gt;\(\phi_i\)&lt;/span&gt; to the true logit proportion &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c[i], t[i]}\)&lt;/span&gt; with a normal distribution:
+&lt;span class=&#34;math display&#34;&gt;\[
+\mathrm{logit}(\phi_i) \sim \mathrm{N}(\mathrm{logit}(\delta_{c[i], t[i]}), \sigma^2)
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;To finish defining the model half-normal priors on the hyperparameters. The prior for &lt;span class=&#34;math inline&#34;&gt;\(\tau^2\)&lt;/span&gt; has a small variance to improve identification of the model (a vaguer prior can cause the MCMC chains to not mix well.)
+&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  \tau^2 &amp;amp;\sim \mathrm{N}(0, 0.02)[0, \infty] \\
+  \sigma^2 &amp;amp;\sim \mathrm{N}(0, 1)[0, \infty] 
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Here is the Stan representation of the statistical model:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;S4 class stanmodel &amp;#39;random_walk&amp;#39; coded as follows:
+data {
+  int&amp;lt;lower=0&amp;gt; T; // Number of timepoints
+  int&amp;lt;lower=0&amp;gt; C; // Number of candidates
+  int&amp;lt;lower=0&amp;gt; N; // Number of poll observations
+  
+  int sample_size[N]; // Sample size of each poll
+  int y[N]; // Number of respondents in poll for candidate (approximate)
+  int&amp;lt;lower=1, upper=T&amp;gt; get_t_i[N]; // timepoint for ith observation
+  int&amp;lt;lower=1, upper=C&amp;gt; get_c_i[N]; // candidate for ith observation
+}
+parameters {
+  matrix[C, T] delta_logit; // Percent for candidate c at time t
+  real&amp;lt;lower=0, upper=1&amp;gt; phi[N]; // Percent of participants in poll for candidate
+  real&amp;lt;lower=0&amp;gt; tau; // Random walk variance
+  real&amp;lt;lower=0,upper=0.5&amp;gt; sigma; // Overdispersion of observations
+}
+model {
+  // Priors
+  tau ~ normal(0, 0.2);
+  sigma ~ normal(0, 1);
+  
+  // Random walk
+  for(c in 1:C) {
+    delta_logit[c, 2:T] ~ normal(delta_logit[c, 1:(T - 1)], tau);
+  }
+  
+  // Observed data
+  y ~ binomial(sample_size, phi);
+  for(i in 1:N) {
+    // Overdispersion
+    delta_logit[get_c_i[i], get_t_i[i]] ~ normal(logit(phi[i]), sigma);
+  }
+}
+generated quantities {
+  matrix[C, T] delta = inv_logit(delta_logit);
+} &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The raw dataset that we are going to fit:
+&lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/raw_data-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I fitted the Stan model to the data using the standard HMC-NUTS algorithm and 1000 MCMC iterations. The plot below shows the posterior median with 75% and 95% credible intervals.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;One issue with this model is that it oversmooths large bumps in the polls. For example, Harris had a bump after the first debate, which the model smooths into an uptick leading into the debate that is not justified in the data. The model could be improved by allowing for these shocks, for example by restarting the random walk after key dates like the debates which we know are likely to cause discontinuities in the results.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reactor</title>
+      <link>/project/reactor/</link>
+      <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>/project/reactor/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Autoregressive Processes are Gaussian Processes</title>
+      <link>/2019/08/09/autoregressive-processes-are-gaussian-processes/</link>
+      <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>/2019/08/09/autoregressive-processes-are-gaussian-processes/</guid>
+      <description>
+
+
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Autoregressive_model&#34;&gt;Autoregressive (AR) processes&lt;/a&gt; are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a &lt;a href=&#34;https://en.wikipedia.org/wiki/Gaussian_process&#34;&gt;Gaussian process&lt;/a&gt;. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.&lt;/p&gt;
+&lt;div id=&#34;ar-processes&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;AR processes&lt;/h2&gt;
+&lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y} = \left\{ Y_1, Y_2, \dots, Y_n \right\}\)&lt;/span&gt; be a set of random variables indexed by time. An aurogressive model assumes that &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}\)&lt;/span&gt; is correlated over time. An AR model is typically described by defining &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; in terms of &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+Y_{t} = \rho Y_{t-1} + \epsilon_{t}
+\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_{t}\sim N\left(0,\sigma_{\epsilon}^{2}\right)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\rho \in \mathbb{R}\)&lt;/span&gt; is a parameter that controls the degree to which &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; is correlated with &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;. This model is called an AR process of order 1 because &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; only depends on &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;We can also rearrange terms to emphasize that this representation defines the conditional distribution of &lt;span class=&#34;math inline&#34;&gt;\(Y_{t}\)&lt;/span&gt; given &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+Y_{t} \vert Y_{t-1} \sim&amp;amp; N(\rho Y_{t-1}, \sigma_\epsilon^2) \\
+Y_1 \sim&amp;amp; N(0, \frac{\sigma_\epsilon^2}{1-\rho^2})
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Where the variance of &lt;span class=&#34;math inline&#34;&gt;\(Y_1\)&lt;/span&gt; comes from the unconditional variance, which is derived below. The stationarity condition of an AR process is that each &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; has the same distribution; that is, &lt;span class=&#34;math inline&#34;&gt;\(\mu = \mathrm{E}(Y_i) = \mathrm{E}Y_j\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\sigma^2 = \mathrm{Var}(Y_i) = \mathrm{Var}(Y_j)\)&lt;/span&gt; for all &lt;span class=&#34;math inline&#34;&gt;\(i, j\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Now we can derive the unconditional mean and variance of &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathrm{E}\left(Y_{t}\right) &amp;amp;= \mathrm{E}\left(\rho Y_{t - 1} + \epsilon_{t} \right)\\
+                     &amp;amp;= \rho \mathrm{E}\left( Y_{t - 1 } \right)\\
+                 \mu &amp;amp;= \rho\mu\ \text{(apply stationarity condition)} \\
+                 \mu &amp;amp;= 0 \\
+\mathrm{Var}\left(Y_{t}\right) &amp;amp;= \mathrm{Var}\left(\rho Y_{t-1} + \epsilon_{t}\right)\\
+                                   &amp;amp;= \rho^{2}\mathrm{Var}(Y_{t-1}) + \mathrm{Var}\left(\epsilon_{t}\right)\\
+                                   &amp;amp;= \rho^{2}\mathrm{Var}(Y_{t-1}) + \sigma_{\epsilon}^{2}\\
+                        \sigma^{2} &amp;amp;= \rho^{2}\sigma^{2} + \sigma_{\epsilon}^{2}\ \text{(apply stationarity condition)}\\
+ \sigma^{2}\left(1-\rho^{2}\right) &amp;amp;= \sigma_{\epsilon}^{2}\\
+                        \sigma^{2} &amp;amp;= \frac{\sigma_{\epsilon}^{2}}{1 - \rho^{2}}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The plot below shows several examples of draws from an AR(1) process with differing values of &lt;span class=&#34;math inline&#34;&gt;\(\rho\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\sigma^2_\epsilon = 1\)&lt;/span&gt;:
+&lt;img src=&#34;/post/2019-08-06-ar-process_files/figure-html/ar_1_conditional_representation-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;gaussian-processes&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Gaussian processes&lt;/h2&gt;
+&lt;p&gt;Gaussian processes model a set of variables as being multivariate normally distributed with mean &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\mu}\)&lt;/span&gt; and variance/covariance matrix &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\mathbf{Y} \sim MVN(\boldsymbol{\mu}, \boldsymbol{\Sigma})
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Usually the mean vector is set to &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{0}\)&lt;/span&gt;, which means the Gaussian process is fully defined by its choice of variance/covariance matrix &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}\)&lt;/span&gt;. The variance/covariance matrix is defined by a kernel function which defines the covariance between any two variables:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\Sigma_{i,j} = K(i, j)
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;an-ar1-process-is-a-gaussian-process&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;An AR(1) process is a Gaussian process&lt;/h2&gt;
+&lt;p&gt;We want to show that an AR process can be represented as a Gaussian process. To do this, we need to show that &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}\)&lt;/span&gt; is jointly normally distributed with some mean vector and variance/covariance matrix.&lt;/p&gt;
+&lt;p&gt;We already know that &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{E}(Y_t)=0\)&lt;/span&gt;, so the mean vector of its joint distribution will be &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{0}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;To find the variance/covariance matrix, we need to derive the covariance between &lt;span class=&#34;math inline&#34;&gt;\(Y_{t_1}\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Y_{t_2}\)&lt;/span&gt;. First, let’s consider the simpler case of the covariance between &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Y_{t+1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+    \mathrm{cov}(Y_{t}, Y_{t+1}) &amp;amp;= \mathrm{E} \left[ \left( Y_t - \mathrm{E}[Y_t] \right) \left( Y_{t+1} - \mathrm{E}[Y_{t+1}] \right) \right] \text{ (definition of covariance) } \\
+                   &amp;amp;= \mathrm{E} \left[ Y_t Y_{t+1} \right] \text{ (because } \mathrm{E}[Y_t] = \mathrm{E}[Y_{t+1}] = 0 \text{)} \\
+                   &amp;amp;= \mathrm{E} \left[ Y_t \left( \rho Y_{t} + \epsilon_{t+1} \right) \right] \\
+                   &amp;amp;= \mathrm{E} \left[ \rho Y_t^2 + Y_t \epsilon_{t+1} \right] \\
+                   &amp;amp;= \rho \mathrm{E}\left[ Y_t^2 \right] \\
+                   &amp;amp;= \rho (\mathrm{Var}(Y_t) + \mathrm{E}[Y_t]^2) \\
+                   &amp;amp;= \rho \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;for &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;s separated by more than one time point, iterating the above result yields the expression&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  \mathrm{cov}(Y_{t_1}, Y_{t_2}) = \rho^{\vert t_1 - t_2 \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Now we can fully define the joint distribution of &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\mathbf{Y} \sim MVN(\mathbf{0}, \boldsymbol{\Sigma})
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(\Sigma_{i,j} = \rho^{\vert i - j \vert} \frac{\sigma_\epsilon^2}{1-\rho^2}\)&lt;/span&gt;. This is a Gaussian process!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-08-06-ar-process_files/figure-html/ar_process_gaussian_representation-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;combining-kernel-functions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Combining kernel functions&lt;/h2&gt;
+&lt;p&gt;The nice thing about Gaussian processes is that we can combine multiple kernel functions to model processes with dependence from different sources. Two ways kernels can be combined are by multiplication and addition. Multiplying two kernels is like an “AND” operation: the correlation between points will be high if the correlation from both kernels is high. Adding two kernels together is like an “OR” operation: correlation is high if either kernel indicates high covariance.&lt;/p&gt;
+&lt;p&gt;As an example, let’s build a Gaussian process that combines an AR process (for temporal correlation) and a spatial process (for spatial correlation) by combining two kernel functions. First, we need to define an outcome variable &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; that varies in time and space: let &lt;span class=&#34;math inline&#34;&gt;\(Y_{c,t}\)&lt;/span&gt; be a random variable indexed by spatial site &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; at timepoint &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;. We take the AR covariance as the first kernel function, to model temporal correlation:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+K_1(i, j) = \rho^{\vert t_i - t_j \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;and a squared-exponential kernel function to model spatial dependence:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+K_2(i, j) = \alpha^2 \exp\left( -\frac{d(i, j)}{2\lambda^2} \right)
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(d(i, j)\)&lt;/span&gt; is the spatial distance between sites &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\lambda\)&lt;/span&gt; is a length-scale parameter, and &lt;span class=&#34;math inline&#34;&gt;\(\alpha^2\)&lt;/span&gt; is a parameter controlling the magnitude of the covariance.&lt;/p&gt;
+&lt;p&gt;Combine the two kernel functions so that two data points are correlated if they are close together in time and space:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+K(i, j) &amp;amp;= K_1(i, j) \times K_2(i, j) \\
+        &amp;amp;= \rho^{\vert t_i - t_j \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2} \alpha^2 \exp\left( -\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Note the parameters &lt;span class=&#34;math inline&#34;&gt;\(\sigma^2_\epsilon\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\alpha^2\)&lt;/span&gt;, which are multipled together, would be unidentifiable in parameter estimation and should be replaced by a single parameter that controls the magnitude of the covariance.&lt;/p&gt;
+&lt;p&gt;To illustrate this Gaussian process model, I started by generating a set of sites with random locations:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-08-06-ar-process_files/figure-html/spatial_locations-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;then I drew from the Gaussian process using the parameters temporal parameters &lt;span class=&#34;math inline&#34;&gt;\(\rho=0.9\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\sigma_\epsilon^2=1\)&lt;/span&gt; and spatial parameters &lt;span class=&#34;math inline&#34;&gt;\(\alpha = 1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\lambda=2\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The plot below shows the time trend in the first six sites:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-08-06-ar-process_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;And the spatial distribution over time of &lt;span class=&#34;math inline&#34;&gt;\(Y_{c,t}\)&lt;/span&gt; is shown below:
+&lt;img src=&#34;/post/2019-08-06-ar-process_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Visually we can see that the Gaussian process generates data that is correlated in both time and space.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modeling-using-the-mean-and-the-covariance&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Modeling using the mean and the covariance&lt;/h2&gt;
+&lt;p&gt;The spatio-temporal Gaussian process we defined in the previous section does its modeling through the variance/covariance matrix, with its mean function set to zero. An alternative way to think about a spatio-temporal process is akin to the first AR representation we looked at, and define &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}_t\)&lt;/span&gt; (the set of all &lt;span class=&#34;math inline&#34;&gt;\(Y_{c,t}\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;) relative to &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}_{t-1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  \mathbf{Y}_{t} = \rho \mathbf{Y}_{t-1} + \boldsymbol{\epsilon}_t
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\epsilon_t} \sim MVN(\mathbf{0}, \boldsymbol{\Sigma}_\epsilon)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;If we set &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma_\epsilon}\)&lt;/span&gt; to be the diagonal matrix &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}_\epsilon = \sigma^2_\epsilon \mathbf{I}_n\)&lt;/span&gt; then we will have an independent AR(1) independent process for each spatial site. It gets more interesting if we define &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}_\epsilon\)&lt;/span&gt; by a covariance function so we can include dependence between sites, for example dependence based on the distance between the sites. For now, let’s use the squared exponential kernel and define &lt;span class=&#34;math inline&#34;&gt;\(\Sigma_{i,j} = \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Is this process also equivalent to a mean zero Gaussian process with some covariance kernel? We’ll answer this question by deriving the covariance between any two points.&lt;/p&gt;
+&lt;p&gt;The mean of &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y_t}\)&lt;/span&gt; can be shown to be zero in the same way we showed a univariate AR process has mean 0. We also need to know the overall variance/covariance matrix of &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}_t\)&lt;/span&gt;, which we’ll call &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Phi}\)&lt;/span&gt;; the logic is imilar to the univariate case, and I’ll show it here for completeness:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+    \mathrm{Var}\left(\boldsymbol{Y}_{t}\right) &amp;amp; =\mathrm{Var}\left(\rho^{2}\mathbf{Y}_{t-1} + \boldsymbol{\epsilon}_{t}\right) \\
+     &amp;amp;= \rho^{2}\mathrm{Var}\left(\boldsymbol{Y}_{t-1}\right)+\mathrm{Var}\left(\boldsymbol{\epsilon}_{t}\right) \\
+    \boldsymbol{\Phi} &amp;amp; =\rho^{2}\boldsymbol{\Phi}+\boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi}-\rho^{2}\boldsymbol{\Sigma} &amp;amp;= \boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi}\left(\mathbf{I}-\rho^{2}\mathbf{I}\right) &amp;amp; =\boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi} &amp;amp;=\boldsymbol{\Sigma}_{\epsilon}\left(\mathbf{I}-\rho^{2}\mathbf{I}\right)^{-1}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;If we pull out two sites at the same time point, their covariance is &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{cov}(Y_{t,c_1}, Y_{t,c_2}) = \frac{\Sigma_{\epsilon, c_1, c_2}}{1-\rho^2}\)&lt;/span&gt;, which looks very similar to the unidimensional AR(1) process variance.&lt;/p&gt;
+&lt;p&gt;Now we derive the covariance between any two sites that are one time point apart:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t},y_{c_2,t+1}\right) &amp;amp; =\mathrm{E}\left[\left(y_{c_1,t}-\mathrm{E}\left[y_{c_1,t}\right]\right)\left(y_{c_2,t}-\mathrm{E}\left[y_{c_2,t}\right]\right)\right]\\
+ &amp;amp; =\mathrm{E}\left[y_{c_1,t}y_{c_2,t}\right]\\
+ &amp;amp; =\mathrm{E}\left[y_{c_1,t}\left[\rho y_{c_2,t}+\epsilon_{c_2,t+1}\right]\right]\\
+ &amp;amp; =\rho\mathrm{E}\left[y_{c_1,t}y_{c_2,t}\right]\\
+ &amp;amp; =\rho\mathrm{cov}\left(y_{c_1,t}y_{c_2,t}\right)\\
+ &amp;amp; =\rho\frac{\Sigma_{i,j}}{1-\rho^2} \\
+ &amp;amp;= \rho \frac{1}{1-\rho^2} \Sigma_{i,j} \\
+ &amp;amp;= \rho \frac{1}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;for sites more than one time point away from each other, we can iterate the above result to get a general expression of the covariance between any two points:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t_1},y_{c_2,t_2}\right) &amp;amp;= \rho^{\vert t_1 - t_2 \vert}\frac{1}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;if we reparameterize &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; to be the product of two parameters &lt;span class=&#34;math inline&#34;&gt;\(\alpha = \sigma^2_\epsilon \alpha\)&lt;/span&gt;, we get&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t_1},y_{c_2,t_2}\right) &amp;amp;= \rho^{\vert t_1 - t_2 \vert}\frac{\sigma^2_\epsilon}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right) \\
+&amp;amp;= K_1(i, j) \times K_2(i,j)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;which is the product of an AR(1) and squared exponential kernel function as defined in the previous section. In practice we wouldn’t want to separate these parameters because both of them will not be identifiable given observed data, but I separated them here to show how the covariance structure is the product of two kernel functions.&lt;/p&gt;
+&lt;p&gt;Therefore, we can write this process in the form of a Gaussian process with mean zero and covariance kernel given by the product of a temporal and spatial kernel:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathbf{Y} \sim&amp;amp; MVN(\mathbf{0}, \boldsymbol{\Sigma}) \\
+\Sigma_{i,j} =&amp;amp; K_1(i, j) \times K_2(i, j) 
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The spatio-temporal processes defined as a set of conditional distributions and as a Gaussian process are equivalent.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;To summarize, AR processes can be written as a Gaussian process model, which is useful because a temporal process can then be easily combined with other sources of dependence. In general, we can build our models by defining conditional distributions with a given mean and covariance, or a joint distribution with mean zero where the model is fully defined by a variance/covariance kernel function. In a future post I will look at Bayesian parameter estimation in these models using Stan.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Using R formulas to pass data to Stan</title>
+      <link>/2019/07/22/r-formulas-stan/</link>
+      <pubDate>Mon, 22 Jul 2019 18:00:00 +0000</pubDate>
+      <guid>/2019/07/22/r-formulas-stan/</guid>
+      <description>
+
+
+&lt;p&gt;Many statistical routines in R use &lt;a href=&#34;https://stat.ethz.ch/R-manual/R-devel/library/stats/html/formula.html&#34;&gt;R formulas&lt;/a&gt; as a flexible way to specify the terms of a model. With a little setup, we can use formulas to build inputs to &lt;a href=&#34;http://mc-stan.org&#34;&gt;Stan&lt;/a&gt; and avoid hard-coding any variables in the model.&lt;/p&gt;
+&lt;p&gt;For example, say you are writing a Stan model for linear regression. You would like to regress a response variable &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; on two predictors, &lt;span class=&#34;math inline&#34;&gt;\(x_1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(y_1\)&lt;/span&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// linear_regression.stan
+data {
+  int N; // Number of observations
+  vector[N] y;
+  vector[N] x1;
+  vector[N] x2;
+} 
+parameters {
+  real beta_0;
+  real beta_1;
+  real beta_2;
+  real&amp;lt;lower=0&amp;gt; sigma;
+} 
+model {
+  y ~ normal(beta_0 + beta_1 * x1 + beta_2 * x2, sigma);
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;But what if you later decide to add more predictors? We can make the above model more flexible by &lt;a href=&#34;https://mc-stan.org/docs/2_19/stan-users-guide/linear-regression.html#vectorization.section&#34;&gt;allowing a matrix of predictors&lt;/a&gt; &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; of arbitrary size:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// linear_regression.stan
+data {
+  int N; // Number of observations
+  int K; // Number of predictors
+  vector[N] y;
+  matrix[N, K] X;
+} 
+parameters {
+  vector[K] beta;
+  real&amp;lt;lower=0&amp;gt; sigma;
+} 
+model {
+  y ~ normal(beta * X, sigma);
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then we can use R formulas to build the predictor matrix &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; and pass it to Stan:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_linear_regression &amp;lt;- function(formula, data, ...) {
+  model &amp;lt;- stan_model(&amp;quot;./linear_regression.stan&amp;quot;)
+
+  X &amp;lt;- model.matrix(formula, data)
+  y &amp;lt;- model.extract(model.frame(formula, data), &amp;quot;response&amp;quot;)
+  
+  data &amp;lt;- list(
+    N = nrow(X),
+    K = ncol(X),
+    X = X,
+    y = y
+  )
+
+  sampling(model, data, ...)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now it’s easy to fit the model with different predictors:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;N &amp;lt;- 100
+simulated_data &amp;lt;- tibble::tibble(
+  x1 = rnorm(N, 0, 1),
+  x2 = rnorm(N, 0, 1),
+  y = x1 + 2*x2 + rnorm(N, 0, 0.1)
+)
+
+
+fit_linear_model(y ~ x1, simulated_data)
+fit_linear_model(y ~ x1 + x2, simulated_data)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Writing a separate function for preparing the data for Stan based on a formula makes the model more usable and flexible.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Smartphone interface for reporting research results to study participants</title>
+      <link>/2019/04/08/smartphone-interface-for-reporting-research-results-to-study-participants/</link>
+      <pubDate>Mon, 08 Apr 2019 18:00:00 +0000</pubDate>
+      <guid>/2019/04/08/smartphone-interface-for-reporting-research-results-to-study-participants/</guid>
+      <description>&lt;p&gt;One of the themes that I worked on at &lt;a href=&#34;https://silentspring.org&#34; target=&#34;_blank&#34;&gt;Silent Spring Institute&lt;/a&gt; was on how to report complex personal data to our study participants. In the &lt;a href=&#34;https://web.northeastern.edu/protect/&#34; target=&#34;_blank&#34;&gt;PROTECT&lt;/a&gt; study, mothers in Puerto Rico were tested for a host of environmental chemicals. Our job was to design a tool to report-back individual results to the participants.&lt;/p&gt;
+
+&lt;p&gt;While I was on the project, I designed and implemented a novel smartphone interface for communicating personal results to study participants. One aspect was designing a visualization that allowed participants to compare their results to other women in the study. Our approach uses a &lt;a href=&#34;https://www.biorxiv.org/content/10.1101/028191v1.article-info&#34; target=&#34;_blank&#34;&gt;SinaPlot&lt;/a&gt; where the participant&amp;rsquo;s personal results are represented by an avatar that they chose when they enter their report.&lt;/p&gt;
+
+&lt;p&gt;Last May I left Silent Spring Institute to pursue graduate school, and I was happy to see that the tool was launched in October! To learn more, check out &lt;a href=&#34;https://web.northeastern.edu/protect/protects-community-engagement-core-and-silent-spring-institute-inaugurate-a-mobile-application-to-provide-protect-participants-their-research-results/&#34; target=&#34;_blank&#34;&gt;the article&lt;/a&gt; the PROTECT team wrote about the launch of the reports.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/phthalates-screenshots.jpg&#34; alt=&#34;PROTECT Smartphone Interface&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Slides</title>
+      <link>/slides/example/</link>
+      <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
+      <guid>/slides/example/</guid>
+      <description>
+
+&lt;h1 id=&#34;welcome-to-slides&#34;&gt;Welcome to Slides&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/&#34; target=&#34;_blank&#34;&gt;Academic&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;features&#34;&gt;Features&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Efficiently write slides in Markdown&lt;/li&gt;
+&lt;li&gt;3-in-1: Create, Present, and Publish your slides&lt;/li&gt;
+&lt;li&gt;Supports speaker notes&lt;/li&gt;
+&lt;li&gt;Mobile friendly slides&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;controls&#34;&gt;Controls&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Next: &lt;code&gt;Right Arrow&lt;/code&gt; or &lt;code&gt;Space&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Previous: &lt;code&gt;Left Arrow&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Start: &lt;code&gt;Home&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Finish: &lt;code&gt;End&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Overview: &lt;code&gt;Esc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Speaker notes: &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Fullscreen: &lt;code&gt;F&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Zoom: &lt;code&gt;Alt + Click&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakimel/reveal.js#pdf-export&#34; target=&#34;_blank&#34;&gt;PDF Export&lt;/a&gt;: &lt;code&gt;E&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;code-highlighting&#34;&gt;Code Highlighting&lt;/h2&gt;
+
+&lt;p&gt;Inline code: &lt;code&gt;variable&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Code block:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;porridge = &amp;quot;blueberry&amp;quot;
+if porridge == &amp;quot;blueberry&amp;quot;:
+    print(&amp;quot;Eating...&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;math&#34;&gt;Math&lt;/h2&gt;
+
+&lt;p&gt;In-line math: $x + y = z$&lt;/p&gt;
+
+&lt;p&gt;Block math:&lt;/p&gt;
+
+&lt;p&gt;$$
+f\left( x \right) = \;\frac{{2\left( {x + 4} \right)\left( {x - 4} \right)}}{{\left( {x + 4} \right)\left( {x + 1} \right)}}
+$$&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;fragments&#34;&gt;Fragments&lt;/h2&gt;
+
+&lt;p&gt;Make content appear incrementally&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{% fragment %}} One {{% /fragment %}}
+{{% fragment %}} **Two** {{% /fragment %}}
+{{% fragment %}} Three {{% /fragment %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press &lt;code&gt;Space&lt;/code&gt; to play!&lt;/p&gt;
+
+&lt;p&gt;&lt;span class=&#34;fragment &#34; &gt;
+   One
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+   &lt;strong&gt;Two&lt;/strong&gt;
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+   Three
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;A fragment can accept two optional parameters:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;class&lt;/code&gt;: use a custom style (requires definition in custom CSS)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;weight&lt;/code&gt;: sets the order in which a fragment appears&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;speaker-notes&#34;&gt;Speaker Notes&lt;/h2&gt;
+
+&lt;p&gt;Add speaker notes to your presentation&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{% speaker_note %}}
+- Only the speaker can read these notes
+- Press `S` key to view
+{{% /speaker_note %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press the &lt;code&gt;S&lt;/code&gt; key to view the speaker notes!&lt;/p&gt;
+
+&lt;aside class=&#34;notes&#34;&gt;
+  &lt;ul&gt;
+&lt;li&gt;Only the speaker can read these notes&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;S&lt;/code&gt; key to view&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/aside&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;themes&#34;&gt;Themes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black: Black background, white text, blue links (default)&lt;/li&gt;
+&lt;li&gt;white: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;league: Gray background, white text, blue links&lt;/li&gt;
+&lt;li&gt;beige: Beige background, dark text, brown links&lt;/li&gt;
+&lt;li&gt;sky: Blue background, thin dark text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;night: Black background, thick white text, orange links&lt;/li&gt;
+&lt;li&gt;serif: Cappuccino background, gray text, brown links&lt;/li&gt;
+&lt;li&gt;simple: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;solarized: Cream-colored background, dark green text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+
+&lt;section data-noprocess data-shortcode-slide
+  
+      
+      data-background-image=&#34;/img/boards.jpg&#34;
+  &gt;
+
+
+&lt;h2 id=&#34;custom-slide&#34;&gt;Custom Slide&lt;/h2&gt;
+
+&lt;p&gt;Customize the slide style and background&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{&amp;lt; slide background-image=&amp;quot;/img/boards.jpg&amp;quot; &amp;gt;}}
+{{&amp;lt; slide background-color=&amp;quot;#0000FF&amp;quot; &amp;gt;}}
+{{&amp;lt; slide class=&amp;quot;my-style&amp;quot; &amp;gt;}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;custom-css-example&#34;&gt;Custom CSS Example&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s make headers navy colored.&lt;/p&gt;
+
+&lt;p&gt;Create &lt;code&gt;assets/css/reveal_custom.css&lt;/code&gt; with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.reveal section h1,
+.reveal section h2,
+.reveal section h3 {
+  color: navy;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;questions&#34;&gt;Questions?&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://discourse.gohugo.io&#34; target=&#34;_blank&#34;&gt;Ask&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34; target=&#34;_blank&#34;&gt;Documentation&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>What Poisons Are in Your Body? - Nick Kristof</title>
+      <link>/2018/02/25/what-poisons-are-in-your-body-nick-kristof/</link>
+      <pubDate>Sun, 25 Feb 2018 18:00:00 +0000</pubDate>
+      <guid>/2018/02/25/what-poisons-are-in-your-body-nick-kristof/</guid>
+      <description>&lt;p&gt;Nick Kristof, columnist for the New York Times, recently &lt;a href=&#34;https://www.nytimes.com/interactive/2018/02/23/opinion/columnists/poisons-in-our-bodies.html&#34; target=&#34;_blank&#34;&gt;wrote about Detox Me Action Kit&lt;/a&gt;, a study I manage and helped launch at Silent Spring Institute.&lt;/p&gt;
+
+&lt;p&gt;The column includes a nice graphic summarizing his results:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;https://www.nytimes.com/interactive/2018/02/23/opinion/columnists/poisons-in-our-bodies.html&#39;&gt;&lt;img src=&#39;/img/kristof-results.png&#39; style=&#39;border: 2px solid #ccc&#39;&gt;&lt;/a&gt;
+&lt;p style=&#39;text-align: right&#39;&gt;Source: &lt;a href=&#39;https://www.nytimes.com/interactive/2018/02/23/opinion/columnists/poisons-in-our-bodies.html&#39;&gt;The New York Times&lt;/a&gt;&lt;/p&gt;&lt;/p&gt;
+
+&lt;p&gt;You can check out the study on the Silent Spring Institute website: &lt;a href=&#34;http://silentspring.org/detoxmeactionkit&#34; target=&#34;_blank&#34;&gt;Detox Me Action Kit&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>More animals from Twitter</title>
+      <link>/2018/02/25/more-animals-from-twitter/</link>
+      <pubDate>Sun, 25 Feb 2018 12:00:00 +0000</pubDate>
+      <guid>/2018/02/25/more-animals-from-twitter/</guid>
+      <description>&lt;p&gt;More from Twitter, to complete a very silly triptych:&lt;/p&gt;
+
+&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;en&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;.&lt;a href=&#34;https://twitter.com/common_squirrel?ref_src=twsrc%5Etfw&#34;&gt;@common_squirrel&lt;/a&gt; spends most of its time running and blinking. One time, it hoped. &lt;a href=&#34;https://t.co/gO6y3bmSp3&#34;&gt;pic.twitter.com/gO6y3bmSp3&lt;/a&gt;&lt;/p&gt;&amp;mdash; Herb Susmann (@herbps10) &lt;a href=&#34;https://twitter.com/herbps10/status/962143396667232256?ref_src=twsrc%5Etfw&#34;&gt;February 10, 2018&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+
+&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;en&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;The answer to &lt;a href=&#34;https://twitter.com/isacatinthesink?ref_src=twsrc%5Etfw&#34;&gt;@isacatinthesink&lt;/a&gt; is more often &amp;quot;no&amp;quot; than &amp;quot;yes&amp;quot;. I&amp;#39;m surprised. Cats love sinks. &lt;a href=&#34;https://t.co/si1q7VoW1N&#34;&gt;pic.twitter.com/si1q7VoW1N&lt;/a&gt;&lt;/p&gt;&amp;mdash; Herb Susmann (@herbps10) &lt;a href=&#34;https://twitter.com/herbps10/status/961773203759747072?ref_src=twsrc%5Etfw&#34;&gt;February 9, 2018&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Code for the &lt;a href=&#34;https://gist.github.com/herbps10/1908ebecba9ccec4a5e90d0c8970ec8d&#34; target=&#34;_blank&#34;&gt;@common_squirrel plot&lt;/a&gt; and the &lt;a href=&#34;https://gist.github.com/herbps10/10789f17eeccdd221ecea61cc343041c&#34; target=&#34;_blank&#34;&gt;@isacatinthesink plot&lt;/a&gt; are available as Github Gists.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>They&#39;re all good dogs</title>
+      <link>/2018/02/04/theyre-all-good-dogs/</link>
+      <pubDate>Sun, 04 Feb 2018 12:00:00 +0000</pubDate>
+      <guid>/2018/02/04/theyre-all-good-dogs/</guid>
+      <description>
+
+
+&lt;p&gt;From Twitter:&lt;/p&gt;
+&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;en&#34;&gt;
+&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;
+The most common rating for dogs from &lt;a href=&#34;https://twitter.com/dog_rates?ref_src=twsrc%5Etfw&#34;&gt;&lt;span class=&#34;citation&#34;&gt;@dog_rates&lt;/span&gt;&lt;/a&gt; is 13/10. A few are 15/10 but all dogs deserve that rating in my opinion. Pictured with Ellie (12/10) from &lt;a href=&#34;https://twitter.com/KatieNicoleF?ref_src=twsrc%5Etfw&#34;&gt;&lt;span class=&#34;citation&#34;&gt;@KatieNicoleF&lt;/span&gt;&lt;/a&gt;. &lt;a href=&#34;https://t.co/B46rRDSCRY&#34;&gt;pic.twitter.com/B46rRDSCRY&lt;/a&gt;
+&lt;/p&gt;
+— Herb Susmann (&lt;span class=&#34;citation&#34;&gt;@herbps10&lt;/span&gt;) &lt;a href=&#34;https://twitter.com/herbps10/status/959923100468105219?ref_src=twsrc%5Etfw&#34;&gt;February 3, 2018&lt;/a&gt;
+&lt;/blockquote&gt;
+&lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+&lt;p&gt;Here’s the R code I used to generate the histogram:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(rtweet)
+library(tidyverse)
+library(stringr)
+library(cowplot)
+library(grid)
+library(jpeg)
+
+g &amp;lt;- rasterGrob(readJPEG(&amp;quot;ellie.jpg&amp;quot;), interpolate = TRUE)
+
+tmls &amp;lt;- get_timelines(&amp;quot;dog_rates&amp;quot;, n = 3200)
+
+ratings &amp;lt;- tmls %&amp;gt;%
+  filter(str_detect(text, &amp;quot;t.co&amp;quot;)) %&amp;gt;%
+  filter(!str_detect(text, &amp;quot;^RT&amp;quot;)) %&amp;gt;%
+  filter(!str_detect(text, &amp;quot;Here&amp;#39;s a little more info on Dew&amp;quot;)) %&amp;gt;%
+  mutate(rating = map(text, str_extract_all, &amp;quot;1[0-5]/10&amp;quot;),
+         rating = map(rating, `[[`, 1)) %&amp;gt;%
+  unnest(rating) %&amp;gt;%
+  count(rating)
+
+ggplot(ratings, aes(x = rating, y = n)) +
+  annotation_custom(g) +
+  geom_col(fill = &amp;quot;white&amp;quot;, alpha = 0.8) +
+  labs(caption = &amp;quot;Data: @dog_rates, photo: @KatieNicoleF&amp;quot;,
+       title = &amp;quot;577 WeRateDogs™ Ratings&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The R code is also available &lt;a href=&#34;https://gist.github.com/herbps10/0d3396b27d4de5a843694737efc98e8a&#34;&gt;as a gist&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Fastest way to see 17 Boston breweries (and one cider house)</title>
+      <link>/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/</link>
+      <pubDate>Mon, 09 Oct 2017 12:00:00 +0000</pubDate>
+      <guid>/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/</guid>
+      <description>&lt;p&gt;There have been a few articles in the last couple years that have used traveling salesman problem solvers to find the fastest way to see &lt;a href=&#34;http://www.randalolson.com/2016/07/30/the-optimal-u-s-national-parks-centennial-road-trip/&#34; target=&#34;_blank&#34;&gt;all the national parks&lt;/a&gt; or &lt;a href=&#34;https://flowingdata.com/2015/10/26/top-brewery-road-trip-routed-algorithmically/&#34; target=&#34;_blank&#34;&gt;72 breweries in the US&lt;/a&gt;. I&amp;rsquo;m going to join the trend on a smaller geographic scale by plotting the fastest way to see 18 breweries (including one cider house) in the Boston area.&lt;/p&gt;
+
+&lt;p&gt;The fastest route takes about 2.5 hours of driving (by your designated driver or using a ride service, of course) from start to finish:&lt;/p&gt;
+
+&lt;div style=&#39;margin: 15px 0px&#39;&gt;
+  &lt;iframe src=&#39;/maps/brewery.html&#39; width=&#39;700&#39; height=&#39;600&#39; style=&#39;border: none; position: relative; left: -25px&#39;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you take 15 minutes at each brewery to have a beer, and it takes 2.5 hours to drive to each one, you could do it all in only 7 hours. Not bad, that&amp;rsquo;s less than a full day at work!&lt;/p&gt;
+
+&lt;p&gt;You won&amp;rsquo;t be able to drive this yourself if you have a beer at every stop, so you&amp;rsquo;ll either need to find a friend to drive you around for seven hours, or take something like a Lyft. I used the Lyft API to estimate how much it would cost, and it comes in at about $176. If you can split this with three friends, and you pay, say, &lt;span&gt;$&lt;/span&gt;8 per drink, your total cost would be &lt;span&gt;$&lt;/span&gt;188.&lt;/p&gt;
+
+&lt;p&gt;Am I going to do this? Probably not. I really don&amp;rsquo;t think I could stomach 17 beers and a cider in one day. And think of all the fun I could have programming in R for seven hours, instead. Yeah. Easy choice.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a list of all the breweries, in order. You could start your tour anywhere, but if I were doing this I&amp;rsquo;d start at Aeronaut, my favorite brewery around here. You&amp;rsquo;d also get to end at Bantam Cider Company to cap off very long night out on a different note.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Aeuronaut Brewery&lt;/li&gt;
+&lt;li&gt;Winter Hill Brewing Company&lt;/li&gt;
+&lt;li&gt;Idle Hands Craft Ales&lt;/li&gt;
+&lt;li&gt;Night Shift Brewing&lt;/li&gt;
+&lt;li&gt;Bone Up Brewing Company&lt;/li&gt;
+&lt;li&gt;Mystic Brewery&lt;/li&gt;
+&lt;li&gt;Downeast Cider House&lt;/li&gt;
+&lt;li&gt;Boston Beer Works&lt;/li&gt;
+&lt;li&gt;Trillium Brewing Company&lt;/li&gt;
+&lt;li&gt;Harpoon Brewery&lt;/li&gt;
+&lt;li&gt;Dorchester Brewing Company&lt;/li&gt;
+&lt;li&gt;Sam Adams Brewery&lt;/li&gt;
+&lt;li&gt;Turtle Swamp Brewing&lt;/li&gt;
+&lt;li&gt;John Harvards Brewery&lt;/li&gt;
+&lt;li&gt;Lamplighter Brewing Company&lt;/li&gt;
+&lt;li&gt;Cambridge Brewing Company&lt;/li&gt;
+&lt;li&gt;Somerville Brewing Company&lt;/li&gt;
+&lt;li&gt;Bantam Cider Company&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If you want to want do this, here&amp;rsquo;s a &lt;a href=&#34;https://www.google.com/maps/dir/Aeronaut+Brewing+Company,+14+Tyler+St,+Somerville,+MA+02143/Winter+Hill+Brewing+Company,+328+Broadway,+Somerville,+MA+02145/Idle+Hands+Craft+Ales,+89+Commercial+St,+Malden,+MA+02148/Night+Shift+Brewing,+87+Santilli+Hwy,+Everett,+MA+02149/Bone+Up+Brewing+Co.,+38+Norman+St,+Everett,+MA+02149/Mystic+Brewery,+174+Williams+St,+Chelsea,+MA+02150/Downeast+Cider+House,+256+Marginal+St+%2332,+East+Boston,+MA+02128/BEERWORKS+Brewing+No.+3+Canal,+112+Canal+St,+Boston,+MA+02114/Trillium+Brewing+Company,+369+Congress+Street,+FL+1A,+Boston,+MA+02210/Harpoon+Brewery+And+Beer+Hall,+306+Northern+Ave,+Boston,+MA+02210/Dorchester+Brewing+Company,+1250+Massachusetts+Ave,+Dorchester,+MA+02125/Samuel+Adams,+30+Germania+St,+Boston,+MA+02130/Turtle+Swamp+Brewing,+3377+Washington+St,+Boston,+MA+02130/John+Harvard&#39;s+Brewery+%26+Ale+House,+33+Dunster+St,+Cambridge,+MA+02138/Lamplighter+Brewing+Co.,+284+Broadway,+Cambridge,+MA+02139/Cambridge+Brewing+Company,+1,+1+Kendall+Square,+Cambridge,+MA+02139/Somerville+Brewing+Company+-+Slumbrew,+15+Ward+St,+Somerville,+MA+02143/Bantam+Cider+Company,+40+Merriam+St,+Somerville,+MA+02143/@42.357596,-71.062877,12z/data=!4m109!4m108!1m5!1m1!1s0x89e37736621ba0e3:0xcd08ad34fe7dca73!2m2!1d-71.1062431!2d42.3819603!1m5!1m1!1s0x89e370d461337b9d:0x732c6faaf36fa55!2m2!1d-71.093984!2d42.392658!1m5!1m1!1s0x89e3711a973d8981:0x602f1fd391d76ed7!2m2!1d-71.0747463!2d42.4243919!1m5!1m1!1s0x89e3711a8dbb40d3:0xc68b7f0434ddb595!2m2!1d-71.067886!2d42.4059707!1m5!1m1!1s0x89e371116054c6df:0x30dd9e16e3a944cd!2m2!1d-71.0659377!2d42.4057422!1m5!1m1!1s0x89e371ab8c837f8f:0xc644198c4204f828!2m2!1d-71.044508!2d42.391628!1m5!1m1!1s0x89e370f8a1a1ba83:0x616aeee762a3390d!2m2!1d-71.0324945!2d42.3642794!1m5!1m1!1s0x89e3708e355828b1:0xb7e761efd7866524!2m2!1d-71.060386!2d42.364458!1m5!1m1!1s0x89e37a803cc64d71:0x84333022c52876d!2m2!1d-71.047858!2d42.3498299!1m5!1m1!1s0x89e37a9da5a2cfcb:0xc0be8b883c30f87e!2m2!1d-71.034439!2d42.346892!1m5!1m1!1s0x89e37a4fd2b56dcf:0x4556895a1d1fb907!2m2!1d-71.062317!2d42.322152!1m5!1m1!1s0x89e3797b7da31c79:0x608b218b28d63376!2m2!1d-71.1032285!2d42.3145455!1m5!1m1!1s0x89e379643bcaf91f:0x470aa6cde54a2b0d!2m2!1d-71.1052909!2d42.3088836!1m5!1m1!1s0x89e37742ceb8a909:0x7666471e31ddf163!2m2!1d-71.1192843!2d42.3726027!1m5!1m1!1s0x89e37752b0e81867:0x26811979965d9ac4!2m2!1d-71.0978948!2d42.36795!1m5!1m1!1s0x89e370ade1cbb413:0x3e315a440afb04f9!2m2!1d-71.0912995!2d42.3664092!1m5!1m1!1s0x89e370b65aae14c7:0xdc997b87e8c938a0!2m2!1d-71.0892538!2d42.3748138!1m5!1m1!1s0x89e370b5ff812441:0x94fbd00ab0ecf947!2m2!1d-71.0919018!2d42.3777733&#34; target=&#34;_blank&#34;&gt;Google Map with all the breweries entered in order&lt;/a&gt;. Good luck. Please drink responsibly.&lt;/p&gt;
+
+&lt;p&gt;P.S. Let me know if I missed any breweries in the area!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Do it yourself:&lt;/strong&gt; All the code for this project is &lt;a href=&#34;https://github.com/herbps10/brewery-tsp&#34; target=&#34;_blank&#34;&gt;on Github&lt;/a&gt;. I used the Google Maps API for calculating a distance matrix between all the breweries and to get detailed directions between each point on the final tour. The optimal tour was calculated using the &lt;a href=&#34;https://en.wikipedia.org/wiki/Travelling_salesman_problem#Asymmetric_TSP&#34; target=&#34;_blank&#34;&gt;asymmetric traveling salesman problem&lt;/a&gt; solver from the &lt;a href=&#34;https://cran.r-project.org/web/packages/TSP/index.html&#34; target=&#34;_blank&#34;&gt;TSP R package&lt;/a&gt;. The Lyft price estimate came from it&amp;rsquo;s &lt;a href=&#34;https://www.lyft.com/developers&#34; target=&#34;_blank&#34;&gt;public API&lt;/a&gt;. If you want to run the code yourself, you&amp;rsquo;ll need to get a Google Maps API key and a Lyft API key.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Predicting Jeopardy! Winners</title>
+      <link>/2017/10/07/predicting-jeopardy-winners/</link>
+      <pubDate>Sat, 07 Oct 2017 12:00:00 +0000</pubDate>
+      <guid>/2017/10/07/predicting-jeopardy-winners/</guid>
+      <description>
+
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt; Predict the winner of Jeopardy. As the game progresses, update the predictions to take into account the current score profile.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Background&lt;/strong&gt;: A quick search revealed work by &lt;a href=&#34;https://thejeopardyfan.com/2016/04/making-jeopardy-predictions-a-methodology.html&#34;&gt;The Jeopardy Fan&lt;/a&gt; on building a model to predict the Tournament of Champions contestants. He used player’s &lt;a href=&#34;http://j-archive.com/help.php#coryatscore&#34;&gt;Coryat scores&lt;/a&gt; to predict the length of their winning streak, and whether they would qualify for the tournament. I’m going for something slightly different than him by focusing on predicting the winner of a single game. I’m also going to use the real game score, instead of Coryat scores.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Data:&lt;/strong&gt; The &lt;a href=&#34;http://j-archive.com&#34;&gt;J-Archive&lt;/a&gt; is an incredible resource for Jeopardy! data, thanks to the work of their archivists. They have every game ever played, every question asked, along with which contestants answered and whether they were correct or not. I downloaded data from seasons 22-33 for fitting and testing the models.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Intuition:&lt;/strong&gt; Let’s explore the dataset a little bit to get a sense of how we might build a classification model to predict winners. You can easily make plots that show how a contestant’s score changes over the course of a game, like this one that shows Roger Craig setting a one-day earnings record:
+&lt;img src=&#39;/img/game5977.png&#39; alt=&#39;Jeopardy! Game 5977 score trajectory&#39; class=&#39;large&#39;/&gt;&lt;/p&gt;
+&lt;p&gt;Expanding this type of plot beyond a single game, here is a plot showing all of the games from season 27, with each trajectory colored by whether the contestant won the game:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/season27-trajectories.png&#39; alt=&#39;Jeopardy! season 27 score trajectories&#39; class=&#39;large&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;The winners tend to have higher scores throughout the game, but you can still see a few people who had high scores and still lost. If we show more seasons at once we can see more of the overall trend, but we lose the ability to see individual trajectories clearly:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/season22-33-trajectories.png&#39; alt=&#39;Jeopardy! season 22-33 score trajectories&#39; class=&#39;large&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;Another way to look at this is by plotting the median scores, with a ribbon showing the 5% and 95% quantiles:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/season22-33-trajectories-ribbon.png&#39; class=&#39;large&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;It looks like there is some separation between the winners and losers just in terms of their score, and the separation becomes more pronounced as the game progresses, which a model should be able to pick up on and use for prediction.&lt;/p&gt;
+&lt;p&gt;We should temper our expectations, though. Especially in the first graph, you can see how much of a randomizer the Final Jeopardy round is. Here’s a table showing how the contestant’s rank going in to Final Jeopardy corresponds to winning or losing (data from seasons 22-33):&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;Rank&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Won&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Lost&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Third&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;171 (6%)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2554 (94%)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Tied for second&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8 (12%)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;60 (88%)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Second&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;591 (22%)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2116 (75%)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Tied for first&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;17 (47%)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;19 (53%)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;First&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1991 (73%)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;&lt;strong&gt;750 (27%)&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;27% of contestants in first place going in to Final Jeopardy still lose. It’s going to be very difficult to accurately predict when an upset will happen, so this gives us a sense of the limits of any prediction model.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Modeling and Results&lt;/strong&gt;: One of the goals is to predict the winner as the game progresses. In each game of Jeopardy! there are up to 61 questions: 30 in Single Jeopardy, 30 in Double Jeopardy, and 1 in Final Jeopardy. I decided to fit a logistic regression model after every question, so we can see how the classification accuracy improves as the game gets closer to the end.&lt;/p&gt;
+&lt;p&gt;I used data from seasons 22-32 for training, and held out season 33 for testing.&lt;/p&gt;
+&lt;p&gt;There are 61 questions in each game; call them &lt;span class=&#34;math inline&#34;&gt;\(q_{1},q_{2},...,q_{i},...,q_{61}\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(q_{1}\)&lt;/span&gt; is the first question asked in the game, &lt;span class=&#34;math inline&#34;&gt;\(q_{2}\)&lt;/span&gt; is the second, and so on. The actual point value of each question might be different, depending on the order they are chosen in the game (for example, &lt;span class=&#34;math inline&#34;&gt;\(q_{1}\)&lt;/span&gt; might be a $200 question in one game, and a $1,000 question in another.) I fitted 61 logistic regression models &lt;span class=&#34;math inline&#34;&gt;\({M_{1}, M_{2}, ...,M_{n}}\)&lt;/span&gt; that predict whether the player won the game based on their score at the end of question &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt;. We would expect model &lt;span class=&#34;math inline&#34;&gt;\(M_{1}\)&lt;/span&gt; to do poorly, because the first question isn’t very informative of who is going to end up winning; and the accuracy to improve as the game progresses.&lt;/p&gt;
+&lt;p&gt;For example, here is the fitted logistic model for question 30:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/logistic-regression-curve-question-30.png&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;We can visualize the accuracy of the all models at once by plotting their &lt;a href=&#34;https://en.wikipedia.org/wiki/Receiver_operating_characteristic&#34;&gt;ROC curves&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/roc1.png&#39; class=&#39;large&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;As we would expect, the model has lousy accuracy at the beginning of the game, but improves steadily as the game progresses. However, it is not perfect even after the game is over. This is because the score itself doesn’t determine the winner; what matters is who has the highest score.&lt;/p&gt;
+&lt;p&gt;To address this, I added two new features to bring in information about the contestants compare to each other within the game:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;rank&lt;/em&gt; - categorical variable indicating the contestant’s current rank (first place, tied for first, second place, etc.)&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;distance from lead&lt;/em&gt; - the difference in points between the contestant and the leader. If the contestant is in the lead, it is a negative number indicating how far they are ahead.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I built two new sets of models using these features. I also added a very simple model for comparison: predict the winner of the game to be whoever is in the lead. This model doesn’t output probabilities, so it will show up on the ROC curves as a single point (I call this model “current leader” in the legend.) Here’s how they compare to the original model:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/rocs1.png&#39; class=&#39;large&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;The new models aren’t that much better than the original model. The biggest difference I see is that they have perfect accuracy at the end of the game, as you would expect since they have access to the final ranking of the contestants.&lt;/p&gt;
+&lt;p&gt;The “current leader” reference model falls right on the curves, indicating the logistic models don’t do better than it. They may be more useful, though, since they output probabilities rather than a dichotomous prediction.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Visualizing predictions&lt;/strong&gt;: Now that we have these models, let’s see a contestant’s probability of winning (conditioned on the model) evolves over the course of a game. I’m going to take the set of models that use the &lt;em&gt;distance from lead&lt;/em&gt; predictor and apply them to a game from season 33.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/game7573.png&#39; class=&#39;large&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;Gavin takes the lead in the prediction model at the same time he takes the lead, in the middle of Double Jeopardy.&lt;/p&gt;
+&lt;p&gt;Here’s another one from season 33 where the prediction flips towards the end of the game:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#39;/img/game7544.png&#39; class=&#39;large&#39; /&gt;&lt;/p&gt;
+&lt;p&gt;The highest probability of winning is assigned to whoever is in the lead, which reflects the logic of the simple reference model.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Next steps:&lt;/strong&gt;
+I think a significant shortcoming of the approach I took here is that I fit completely separate models for each question; they aren’t connected in any way, and so they don’t have any “memory” of how each contestant has performed previously in the game (except via their current score), or in prior games. Perhaps there’s a way to incorporate some ideas from partial pooling models to share strength between questions. Or maybe a model could be built that estimates a latent “ability” score for each participant, conditioned on their previous performance. A bonus of this would be that the winners ability score could be fed in to their next game, as a form of prior information about how well the contestant will do. Doing this in a Bayesian framework seems like a good choice.&lt;/p&gt;
+&lt;p&gt;I think there are also a few things that could be done to improve performance in the endgame. Right now the models don’t take into account how much money is still available. Incorporating this should help, especially in the end game when there isn’t very much money still on the board. It could also be used to find runaway scores, where one contestant has more money than is possible for a competitor to gain. We could also build a model for predicting the Final Jeopardy bets, so the end game model could have a better understanding of how likely an upset will be.&lt;/p&gt;
+&lt;p&gt;Finally, I’d also be interested in changing the goal slightly to predict winners in terms of Coryat score, which I’m sure would perform better since the uncertainty of daily doubles and the Final Jeopardy wager would be removed.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Source code:&lt;/strong&gt;
+The source code for this analysis is on Github: &lt;a href=&#34;https://github.com/herbps10/jeopardy&#34;&gt;https://github.com/herbps10/jeopardy&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bananagrams Probabilities</title>
+      <link>/2017/07/30/bananagrams-probabilities/</link>
+      <pubDate>Sun, 30 Jul 2017 21:13:14 -0500</pubDate>
+      <guid>/2017/07/30/bananagrams-probabilities/</guid>
+      <description>
+
+
+&lt;style type=&#39;text/css&#39;&gt;
+.banana {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.banana span {
+  display: inline-block;
+  background: #e3dbcf;
+  color: black;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: inset 10px 5px 5px 0px rgba(255, 255, 255, 0.1),
+              inset -3px -3px 7px 0px rgba(0, 0, 0, 0.2),
+              inset 0px 0px 5px 7px rgba(255, 255, 255, 0.2),
+              0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+
+}
+
+div.banana span {
+  width: 50px;
+  height: 50px;
+    font-size: 18pt;
+  line-height: 50px;
+  font-weight: bold;
+}
+
+span.banana span {
+    width: 30px;
+    height: 30px;
+}
+&lt;/style&gt;
+&lt;p&gt;There was a fabled game of Bananagrams in which my Dad drew his initial 11 tiles, and immediately spelled:&lt;/p&gt;
+&lt;div class=&#34;banana&#34;&gt;
+&lt;span&gt;R&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;S&lt;/span&gt;&lt;span&gt;T&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;F&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;R&lt;/span&gt;&lt;span&gt;I&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;N&lt;/span&gt;
+&lt;/div&gt;
+&lt;p&gt;If you haven’t played the game, it’s like a free-form version of Scrabble. You start by drawing a number of tiles (typically 11 or 21), and try to form a word or words out of them.&lt;/p&gt;
+&lt;p&gt;The story made me wonder how likely it is to spell an 11 letter word on the first draw.&lt;/p&gt;
+&lt;p&gt;The first step is to calculate the probability of drawing a particular word. Consider a bananagrams bag filled with only two letters, S for success and F for failure. Start pulling out tiles from the bag at random, without replacing each tile back in the bag after drawing it, and count how many S tiles you get. The &lt;a href=&#34;https://en.wikipedia.org/wiki/Hypergeometric_distribution&#34;&gt;hypergeometric distribution&lt;/a&gt; models the probability that you will get a certain number of S tiles for a given number of draws. The &lt;a href=&#34;https://en.wikipedia.org/wiki/Hypergeometric_distribution#Multivariate_hypergeometric_distribution&#34;&gt;multivariate hypergeometric distribution&lt;/a&gt; extends this to the multivariate case; that is, it models the probability you’ll draw a certain number of As, Bs, Cs, etc. after drawing a number of tiles from the bag.&lt;/p&gt;
+&lt;p&gt;Fortunately, the R package &lt;code&gt;extraDistr&lt;/code&gt; provides an R version of the multivariate hypergeometric probability mass function. Here’s a function that, given a word of length &lt;span class=&#34;math inline&#34;&gt;\(N\)&lt;/span&gt; and the number of each letter tile in a bag, gives the probability of drawing that word in &lt;span class=&#34;math inline&#34;&gt;\(N\)&lt;/span&gt; draws:&lt;/p&gt;
+&lt;p&gt;Using this function, we can find the probability of drawing&lt;br/&gt;&lt;span class=&#34;banana&#34;&gt;&lt;span&gt;R&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;S&lt;/span&gt;&lt;span&gt;T&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;F&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;R&lt;/span&gt;&lt;span&gt;I&lt;/span&gt;&lt;span&gt;A&lt;/span&gt;&lt;span&gt;N&lt;/span&gt;&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;And the result is &lt;span class=&#34;math inline&#34;&gt;\(4.28\times10^{-6}\%\)&lt;/span&gt;. Pretty lucky!&lt;/p&gt;
+&lt;p&gt;Now, what is the probability of drawing any valid 11 letter word to start the game? Note that in most cases, spelling a word using all your 11 tiles excludes the possibility of spelling another word. This suggests the the probability of spelling word &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; OR word &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt; is given by &lt;span class=&#34;math inline&#34;&gt;\(P(A \cap B)=P(A) + P(B)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;However, there is a special case: what if word &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; and word &lt;span class=&#34;math inline&#34;&gt;\(B\)&lt;/span&gt; are spelled with the same letters? In order to avoid double counting, we need to only want to include words with the same letters once.&lt;/p&gt;
+&lt;p&gt;I downloaded a list of words in the &lt;a href=&#34;https://en.wikipedia.org/wiki/Collins_Scrabble_Words&#34;&gt;SOWPODS&lt;/a&gt; scrabble dictionary from a &lt;a href=&#34;https://github.com/jmlewis/valett/blob/master/scrabble/sowpods.txt&#34;&gt;GitHub repository&lt;/a&gt; and loaded them into R. To deduplicate words with the same letters, I sorted the letters in each word and removed duplicates:&lt;/p&gt;
+&lt;p&gt;I then used the &lt;code&gt;word_probability&lt;/code&gt; function to calculate the probability of drawing each 11 letter word, and then summed them all up:&lt;/p&gt;
+&lt;p&gt;Which computes the probability of drawing a valid 11 letter word in the opening tiles to be &lt;span class=&#34;math inline&#34;&gt;\(~0.28\%\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Now, suppose you start the game by drawing a different number of tiles. We can compute the probability of starting with a valid word for a range of starting tile numbers:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-07-30-bananagrams_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Drawing 3 letters has the highest probability of forming a word, at &lt;span class=&#34;math inline&#34;&gt;\(53.7\%\)&lt;/span&gt;. This validates my strategy of dumping early in the game to get new tiles when I get stuck, because the new letters often help me get out of the rut.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>DERBI: A Digital Method to Help Researchers Offer “Right-to-Know” Personal Exposure Results</title>
+      <link>/publication/derbi/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/publication/derbi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Who was in each episode of Star Trek?</title>
+      <link>/2016/12/29/who-was-in-each-episode-of-star-trek/</link>
+      <pubDate>Thu, 29 Dec 2016 12:00:00 +0000</pubDate>
+      <guid>/2016/12/29/who-was-in-each-episode-of-star-trek/</guid>
+      <description>&lt;p&gt;There is a &lt;a href=&#34;http://www.chakoteya.net/&#34; target=&#34;_blank&#34;&gt;website&lt;/a&gt; with scripts for every episode of Star Trek, so for fun I downloaded them and generated a visualization of which characters were in each episode of Star Trek.&lt;/p&gt;
+
+&lt;p&gt;Enjoy!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/startrek-characters.png&#34; alt=&#34;Star Trek Characters&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Build a Crystal Radio</title>
+      <link>/2016/11/28/build-a-crystal-radio/</link>
+      <pubDate>Mon, 28 Nov 2016 12:00:00 +0000</pubDate>
+      <guid>/2016/11/28/build-a-crystal-radio/</guid>
+      <description>&lt;p&gt;I had fun leading a workshop a few weeks ago on building a crystal radio. We used a simple design that incorporates a loop antenna (doubling as an inductor), a variable capacitor, a germanium diode, and an earpiece.&lt;/p&gt;
+
+&lt;p&gt;Two pieces of wood make a frame for the antenna. We nailed in picture hanger hooks to the ends to wind wire around to form an antenna. Then we used a few nails to hold the variable capacitor in place, and soldered all the components together.&lt;/p&gt;
+
+&lt;p&gt;The walls of the library we were working in dampened outside radio waves a lot, but once we stepped outside we could all hear some nice strong AM stations.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/crystalradioworkshop.png&#34; alt=&#34;Crystal Radio Workshop&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Tobacco Industry Concessions that Weren&#39;t Concessions</title>
+      <link>/2016/10/21/tobacco-industry-concessions-that-werent-concessions/</link>
+      <pubDate>Fri, 21 Oct 2016 12:00:00 +0000</pubDate>
+      <guid>/2016/10/21/tobacco-industry-concessions-that-werent-concessions/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;/img/cigarette_century.jpg&#34; alt=&#34;The Cigarette Century by Allan M. Brandt&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Last year I read &lt;a href=&#34;http://www.cigarettecentury.com/&#34; target=&#34;_blank&#34;&gt;&lt;em&gt;The Cigarette Century&lt;/em&gt;&lt;/a&gt; by Allan M. Brandt, a history of the tobacco industry and a finalist for a Pulitzer Prize. One of the points that has stuck with me is how regulations that were intended to curtail the tobacco industry ended up benefiting them.&lt;/p&gt;
+
+&lt;p&gt;In what appeard to be a blow to the tobacco industry, the advertising of tobacco products on the radio and television was banned by the FCC in 1969. In 1967, a lawyer named &lt;a href=&#34;https://en.wikipedia.org/wiki/John_F._Banzhaf_III&#34; target=&#34;_blank&#34;&gt;John F. Banzhaf III&lt;/a&gt; successfully petitioned the FCC under the fairness doctrine to force radio and television to play anti-tobacco public service announcements if they played tobacco company ads. When the tobacco ads went off the air, so did the public service announcements. This was to the benefit of the tobacco industry who desperately wanted to suppress anti-tobacco information. Furthermore, the ban on advertising saved money being spent on expensive ad campaigns (the industry spent $230 million on television advertising in 1970 alone.)&lt;/p&gt;
+
+&lt;p&gt;In 1972, the FTC was finally able to require warning labels on tobacco products. Again, this perceived concession to the tobacco industry provided them with alternative benefits. Now the tobacco companies could argue that smokers were clearly warned of the health risks of smoking, and that they made an informed decision to start smoking despite the risks. Because these risks were accepted, the companies argued, they should not be liable for resulting health issues.&lt;/p&gt;
+
+&lt;p&gt;The tobacco companies negotiated regulations that, while appearing to be concessions, offered them benefits. That they were successful shows their savviness and the difficulty regulators have in reigning in companies that are determined to preserve their business model, and the profits that go along with it.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Jeopardy! Survival Analysis</title>
+      <link>/2016/06/19/jeopardy-survival-analysis/</link>
+      <pubDate>Sun, 19 Jun 2016 12:00:00 +0000</pubDate>
+      <guid>/2016/06/19/jeopardy-survival-analysis/</guid>
+      <description>&lt;p&gt;Long streaks are rare in Jeopardy. Most winners only win one game, and slightly less than 40% win two games in a row. In fact, only 6 contestants have won more than ten games in a row.&lt;/p&gt;
+
+&lt;p&gt;This &lt;a href=&#34;https://en.wikipedia.org/wiki/Kaplan%E2%80%93Meier_estimator&#34; target=&#34;_blank&#34;&gt;Kaplan-Meier survival plot&lt;/a&gt; visualizes the survival function of Jeopardy winners:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#39;/img/jeopardy-survival-plot.png&#39; width=&#39;95%&#39; alt=&#39;Kaplain-Meier survival plot of Jeopardy! winning streaks&#39; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The data includes seasons 1-33 (aired 1984-2016), and does not include any championship or tournament games. The point on the extreme right is due, of course, to Ken Jennings and his 74 game winning streak.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the &lt;a href=&#34;https://gist.github.com/herbps10/c3282c5b869d7a33d601079e66eba490&#34; target=&#34;_blank&#34;&gt;R code&lt;/a&gt; for the figure.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>RNHANES</title>
+      <link>/project/rnhanes/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      <guid>/project/rnhanes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Performant R</title>
+      <link>/2014/04/21/performant-r/</link>
+      <pubDate>Mon, 21 Apr 2014 21:13:14 -0500</pubDate>
+      <guid>/2014/04/21/performant-r/</guid>
+      <description>&lt;p&gt;I was fortunate enough to be able to present at UP-Stat 2014 on some of the things I&amp;rsquo;ve learned about writing performant R code while I was working on speeding up an R package for fitting mixed effects nested models. The talk seemed to be a big hit - I was awarded &amp;ldquo;Best Student Presentation&amp;rdquo;!&lt;/p&gt;
+
+&lt;iframe src=&#34;http://www.slideshare.net/slideshow/embed_code/33775697&#34; width=&#34;550&#34; height=&#34;462&#34; frameborder=&#34;0&#34; marginwidth=&#34;0&#34; marginheight=&#34;0&#34; scrolling=&#34;no&#34;&gt;&lt;/iframe&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Raytracing in Bash</title>
+      <link>/2014/04/04/raytracing-in-bash/</link>
+      <pubDate>Fri, 04 Apr 2014 21:13:14 -0500</pubDate>
+      <guid>/2014/04/04/raytracing-in-bash/</guid>
+      <description>&lt;p&gt;Last semester I took an introductory course in raytracing.&lt;/p&gt;
+
+&lt;p&gt;We practiced an iterative development cycle in which we built up more and more complex ray tracers over the course of the semester. The very first ray tracer was pretty simple: it had to be able to intersect rays with simple geometric objects and display the results, but there didn’t have to be any lighting calculations or anything yet.&lt;/p&gt;
+
+&lt;p&gt;Once I figured out the assignment in OCaml, I decided to give it a shot entirely in Bash!&lt;/p&gt;
+
+&lt;p&gt;(Well, not ENTIRELY in Bash. I will admit I shelled out to bc for floating point operations. A friend pointed out you could do floating point in Bash by having seperate variables for the integer and decimal components, but that’ll have to wait for version two)&lt;/p&gt;
+
+&lt;p&gt;It prints out the raytraced image directly to the console using special unicode characters and coloring through escape codes. Here’s what the result looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/bash-ray-tracer.png&#34; alt=&#34;Bash ray tracer output&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Not exactly pretty, but it works! (if only there was a way to change the line spacing in gnome-terminal).&lt;/p&gt;
+
+&lt;p&gt;The script is available as a gist: &lt;a href=&#34;https://gist.github.com/herbps10/5d606d52e6d18b8c0f34825f22f9c713/&#34; target=&#34;_blank&#34;&gt;raytracer.sh&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/1/01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/1/01/01/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Autoregressive_model&#34;&gt;Autoregressive (AR) processes&lt;/a&gt; are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a &lt;a href=&#34;https://en.wikipedia.org/wiki/Gaussian_process&#34;&gt;Gaussian process&lt;/a&gt;. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.&lt;/p&gt;
+&lt;div id=&#34;ar-processes&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;AR processes&lt;/h2&gt;
+&lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y} = \left\\{ Y_1, Y_2, \dots, Y_n \right\\}\)&lt;/span&gt; be a set of random variables indexed by time. An aurogressive model assumes that &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}\)&lt;/span&gt; is correlated over time. An AR model is typically described by defining &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; in terms of &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+Y_{t} = \rho Y_{t-1} + \epsilon_{t}
+\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(\epsilon_{t}\sim N\left(0,\sigma_{\epsilon}^{2}\right)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\rho \in \mathbb{R}\)&lt;/span&gt; is a parameter that controls the degree to which &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; is correlated with &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;. This model is called an AR process of order 1 because &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; only depends on &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;We can also rearrange terms to emphasize that this representation defines the conditional distribution of &lt;span class=&#34;math inline&#34;&gt;\(Y_{t}\)&lt;/span&gt; given &lt;span class=&#34;math inline&#34;&gt;\(Y_{t-1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+Y_{t} \vert Y_{t-1} \sim&amp;amp; N(\rho Y_{t-1}, \sigma_\epsilon^2) \\
+Y_1 \sim&amp;amp; N(0, \frac{\sigma_\epsilon^2}{1-\rho^2})
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Where the variance of &lt;span class=&#34;math inline&#34;&gt;\(Y_1\)&lt;/span&gt; comes from the unconditional variance, which is derived below. The stationarity condition of an AR process is that each &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; has the same distribution; that is, &lt;span class=&#34;math inline&#34;&gt;\(\mu = \mathrm{E}(Y_i) = \mathrm{E}Y_j\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\sigma^2 = \mathrm{Var}(Y_i) = \mathrm{Var}(Y_j)\)&lt;/span&gt; for all &lt;span class=&#34;math inline&#34;&gt;\(i, j\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Now we can derive the unconditional mean and variance of &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{aligned}
+(Y_{t}) &amp;amp; = (Y_{t - 1} + &lt;em&gt;{t} )\
+&amp;amp; = ( Y&lt;/em&gt;{t - 1 } )\
+&amp;amp; =   \
+&amp;amp; = 0 \&lt;/p&gt;
+&lt;p&gt;(Y_{t}) &amp;amp; = (Y_{t-1} + &lt;em&gt;{t})\
+&amp;amp; = ^{2}(Y&lt;/em&gt;{t-1}) + (&lt;em&gt;{t})\
+&amp;amp; = ^{2}(Y&lt;/em&gt;{t-1}) + &lt;em&gt;{}&lt;sup&gt;{2}\
+&lt;/sup&gt;{2} &amp;amp; = &lt;sup&gt;{2}&lt;/sup&gt;{2} + &lt;/em&gt;{}&lt;sup&gt;{2} \
+&lt;/sup&gt;{2}(1-^{2}) &amp;amp; = _{}&lt;sup&gt;{2}\
+&lt;/sup&gt;{2} &amp;amp; = 
+\end{aligned}
+$$&lt;/p&gt;
+&lt;p&gt;The plot below shows several examples of draws from an AR(1) process with differing values of &lt;span class=&#34;math inline&#34;&gt;\(\rho\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\sigma^2_\epsilon = 1\)&lt;/span&gt;:
+&lt;img src=&#34;2019-08-_files/figure-html/ar_1_conditional_representation-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;gaussian-processes&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Gaussian processes&lt;/h2&gt;
+&lt;p&gt;Gaussian processes model a set of variables as being multivariate normally distributed with mean &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\mu}\)&lt;/span&gt; and variance/covariance matrix &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\mathbf{Y} \sim MVN(\boldsymbol{\mu}, \boldsymbol{\Sigma})
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Usually the mean vector is set to &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{0}\)&lt;/span&gt;, which means the Gaussian process is fully defined by its choice of variance/covariance matrix &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}\)&lt;/span&gt;. The variance/covariance matrix is defined by a kernel function which defines the covariance between any two variables:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\Sigma_{i,j} = K(i, j)
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;an-ar1-process-is-a-gaussian-process&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;An AR(1) process is a Gaussian process&lt;/h2&gt;
+&lt;p&gt;We want to show that an AR process can be represented as a Gaussian process. To do this, we need to show that &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}\)&lt;/span&gt; is jointly normally distributed with some mean vector and variance/covariance matrix.&lt;/p&gt;
+&lt;p&gt;We already know that &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{E}(Y_t)=0\)&lt;/span&gt;, so the mean vector of its joint distribution will be &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{0}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;To find the variance/covariance matrix, we need to derive the covariance between &lt;span class=&#34;math inline&#34;&gt;\(Y_{t_1}\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Y_{t_2}\)&lt;/span&gt;. First, let’s consider the simpler case of the covariance between &lt;span class=&#34;math inline&#34;&gt;\(Y_t\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Y_{t+1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+    \operatorname{cov}(Y_{t}, Y_{t+1}) &amp;amp;= \operatorname{E} \left[ \left( Y_t - \operatorname{E}[Y_t] \right) \left( Y_{t+1} - \operatorname{E}[Y_{t+1}] \right) \right] \text{ (definition of covariance) } \\
+                   &amp;amp;= \operatorname{E} \left[ Y_t Y_{t+1} \right] \text{ (because } \operatorname{E}[Y_t] = \operatorname{E}[Y_{t+1}] = 0 \text{)} \\
+                   &amp;amp;= \operatorname{E} \left[ Y_t \left( \rho Y_{t} + \epsilon_{t+1} \right) \right] \\
+                   &amp;amp;= \operatorname{E} \left[ \rho Y_t^2 + Y_t \epsilon_{t+1} \right] \\
+                   &amp;amp;= \rho \operatorname{E}\left[ Y_t^2 \right] \\
+                   &amp;amp;= \rho (\operatorname{Var}(Y_t) + \operatorname{E}[Y_t]^2) \\
+                   &amp;amp;= \rho \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;for &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;s separated by more than one time point, iterating the above result yields the expression&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  \operatorname{cov}(Y_{t_1}, Y_{t_2}) = \rho^{\vert t_1 - t_2 \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Now we can fully define the joint distribution of &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\mathbf{Y} \sim MVN(\mathbf{0}, \boldsymbol{\Sigma})
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(\Sigma_{i,j} = \rho^{\vert i - j \vert} \frac{\sigma_\epsilon^2}{1-\rho^2}\)&lt;/span&gt;. This is a Gaussian process!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;2019-08-_files/figure-html/ar_process_gaussian_representation-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;combining-kernel-functions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Combining kernel functions&lt;/h2&gt;
+&lt;p&gt;The nice thing about Gaussian processes is that we can combine multiple kernel functions to model processes with dependence from different sources. Two ways kernels can be combined are by multiplication and addition. Multiplying two kernels is like an “AND” operation: the correlation between points will be high if the correlation from both kernels is high. Adding two kernels together is like an “OR” operation: correlation is high if either kernel indicates high covariance.&lt;/p&gt;
+&lt;p&gt;As an example, let’s build a Gaussian process that combines an AR process (for temporal correlation) and a spatial process (for spatial correlation) by combining two kernel functions. First, we need to define an outcome variable &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; that varies in time and space: let &lt;span class=&#34;math inline&#34;&gt;\(Y_{c,t}\)&lt;/span&gt; be a random variable indexed by spatial site &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; at timepoint &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;. We take the AR covariance as the first kernel function, to model temporal correlation:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+K_1(i, j) = \rho^{\vert t_i - t_j \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;and a squared-exponential kernel function to model spatial dependence:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+K_2(i, j) = \alpha^2 \exp\left( -\frac{d(i, j)}{2\lambda^2} \right)
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(d(i, j)\)&lt;/span&gt; is the spatial distance between sites &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\lambda\)&lt;/span&gt; is a length-scale parameter, and &lt;span class=&#34;math inline&#34;&gt;\(\alpha^2\)&lt;/span&gt; is a parameter controlling the magnitude of the covariance.&lt;/p&gt;
+&lt;p&gt;Combine the two kernel functions so that two data points are correlated if they are close together in time and space:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+K(i, j) &amp;amp;= K_1(i, j) \times K_2(i, j) \\
+        &amp;amp;= \rho^{\vert t_i - t_j \vert} \frac{\sigma_\epsilon^2}{1 - \rho^2} \alpha^2 \exp\left( -\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Note the parameters &lt;span class=&#34;math inline&#34;&gt;\(\sigma^2_\epsilon\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\alpha^2\)&lt;/span&gt;, which are multipled together, would be unidentifiable in parameter estimation and should be replaced by a single parameter that controls the magnitude of the covariance.&lt;/p&gt;
+&lt;p&gt;To illustrate this Gaussian process model, I started by generating a set of sites with random locations:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;2019-08-_files/figure-html/spatial_locations-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;then I drew from the Gaussian process using the parameters temporal parameters &lt;span class=&#34;math inline&#34;&gt;\(\rho=0.9\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\sigma_\epsilon^2=1\)&lt;/span&gt; and spatial parameters &lt;span class=&#34;math inline&#34;&gt;\(\alpha = 1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\lambda=2\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The plot below shows the time trend in the first six sites:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;2019-08-_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;And the spatial distribution over time of &lt;span class=&#34;math inline&#34;&gt;\(Y_{c,t}\)&lt;/span&gt; is shown below:
+&lt;img src=&#34;2019-08-_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Visually we can see that the Gaussian process generates data that is correlated in both time and space.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modeling-using-the-mean-and-the-covariance&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Modeling using the mean and the covariance&lt;/h2&gt;
+&lt;p&gt;The spatio-temporal Gaussian process we defined in the previous section does its modeling through the variance/covariance matrix, with its mean function set to zero. An alternative way to think about a spatio-temporal process is akin to the first AR representation we looked at, and define &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}_t\)&lt;/span&gt; (the set of all &lt;span class=&#34;math inline&#34;&gt;\(Y_{c,t}\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;) relative to &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}_{t-1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  \mathbf{Y}_{t} = \rho \mathbf{Y}_{t-1} + \boldsymbol{\epsilon}_t
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\epsilon_t} \sim MVN(\mathbf{0}, \boldsymbol{\Sigma}_\epsilon)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;If we set &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma_\epsilon}\)&lt;/span&gt; to be the diagonal matrix &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}_\epsilon = \sigma^2_\epsilon \mathbf{I}_n\)&lt;/span&gt; then we will have an independent AR(1) independent process for each spatial site. It gets more interesting if we define &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Sigma}_\epsilon\)&lt;/span&gt; by a covariance function so we can include dependence between sites, for example dependence based on the distance between the sites. For now, let’s use the squared exponential kernel and define &lt;span class=&#34;math inline&#34;&gt;\(\Sigma_{i,j} = \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Is this process also equivalent to a mean zero Gaussian process with some covariance kernel? We’ll answer this question by deriving the covariance between any two points.&lt;/p&gt;
+&lt;p&gt;The mean of &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y_t}\)&lt;/span&gt; can be shown to be zero in the same way we showed a univariate AR process has mean 0. We also need to know the overall variance/covariance matrix of &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{Y}_t\)&lt;/span&gt;, which we’ll call &lt;span class=&#34;math inline&#34;&gt;\(\boldsymbol{\Phi}\)&lt;/span&gt;; the logic is imilar to the univariate case, and I’ll show it here for completeness:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+    \operatorname{Var}\left(\boldsymbol{Y}_{t}\right) &amp;amp; =\operatorname{Var}\left(\rho^{2}\mathbf{Y}_{t-1} + \boldsymbol{\epsilon}_{t}\right) \\
+     &amp;amp;= \rho^{2}\operatorname{Var}\left(\boldsymbol{Y}_{t-1}\right)+\operatorname{Var}\left(\boldsymbol{\epsilon}_{t}\right) \\
+    \boldsymbol{\Phi} &amp;amp; =\rho^{2}\boldsymbol{\Phi}+\boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi}-\rho^{2}\boldsymbol{\Sigma} &amp;amp;= \boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi}\left(\mathbf{I}-\rho^{2}\mathbf{I}\right) &amp;amp; =\boldsymbol{\Sigma}_\epsilon \\
+    \boldsymbol{\Phi} &amp;amp;=\boldsymbol{\Sigma}_{\epsilon}\left(\mathbf{I}-\rho^{2}\mathbf{I}\right)^{-1}
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;If we pull out two sites at the same time point, their covariance is &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{cov}(Y_{t,c_1}, Y_{t,c_2}) = \frac{\Sigma_{\epsilon, c_1, c_2}}{1-\rho^2}\)&lt;/span&gt;, which looks very similar to the unidimensional AR(1) process variance.&lt;/p&gt;
+&lt;p&gt;Now we derive the covariance between any two sites that are one time point apart:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t},y_{c_2,t+1}\right) &amp;amp; =\mathrm{E}\left[\left(y_{c_1,t}-\mathrm{E}\left[y_{c_1,t}\right]\right)\left(y_{c_2,t}-\mathrm{E}\left[y_{c_2,t}\right]\right)\right]\\
+ &amp;amp; =\mathrm{E}\left[y_{c_1,t}y_{c_2,t}\right]\\
+ &amp;amp; =\mathrm{E}\left[y_{c_1,t}\left[\rho y_{c_2,t}+\epsilon_{c_2,t+1}\right]\right]\\
+ &amp;amp; =\rho\mathrm{E}\left[y_{c_1,t}y_{c_2,t}\right]\\
+ &amp;amp; =\rho\mathrm{cov}\left(y_{c_1,t}y_{c_2,t}\right)\\
+ &amp;amp; =\rho\frac{\Sigma_{i,j}}{1-\rho^2} \\
+ &amp;amp;= \rho \frac{1}{1-\rho^2} \Sigma_{i,j} \\
+ &amp;amp;= \rho \frac{1}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;for sites more than one time point away from each other, we can iterate the above result to get a general expression of the covariance between any two points:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t_1},y_{c_2,t_2}\right) &amp;amp;= \rho^{\vert t_1 - t_2 \vert}\frac{1}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;if we reparameterize &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; to be the product of two parameters &lt;span class=&#34;math inline&#34;&gt;\(\alpha = \sigma^2_\epsilon \alpha\)&lt;/span&gt;, we get&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathrm{cov}\left(y_{c_1,t_1},y_{c_2,t_2}\right) &amp;amp;= \rho^{\vert t_1 - t_2 \vert}\frac{\sigma^2_\epsilon}{1-\rho^2} \alpha^2 \exp\left(-\frac{d(i, j)}{2\lambda^2} \right) \\
+&amp;amp;= K_1(i, j) \times K_2(i,j)
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;which is the product of an AR(1) and squared exponential kernel function as defined in the previous section. In practice we wouldn’t want to separate these parameters because both of them will not be identifiable given observed data, but I separated them here to show how the covariance structure is the product of two kernel functions.&lt;/p&gt;
+&lt;p&gt;Therefore, we can write this process in the form of a Gaussian process with mean zero and covariance kernel given by the product of a temporal and spatial kernel:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+\mathbf{Y} \sim&amp;amp; MVN(\mathbf{0}, \boldsymbol{\Sigma}) \\
+\Sigma_{i,j} =&amp;amp; K_1(i, j) \times K_2(i, j) 
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The spatio-temporal processes defined as a set of conditional distributions and as a joint Gaussian process are equivalent.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;To summarize, AR processes can be written as a Gaussian process model, which is useful because a temporal process can then be easily combined with other sources of dependence. In general, we can build our models by defining conditional distributions with a given mean and covariance, or a joint distribution with mean zero where the model is fully defined by a variance/covariance kernel function. In a future post I will look at Bayesian parameter estimation in these models using Stan.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

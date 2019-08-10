@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Herb Susmann">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Goal: Predict the winner of Jeopardy. As the game progresses, update the predictions to take into account the current score profile.
+Background: A quick search revealed work by The Jeopardy Fan on building a model to predict the Tournament of Champions contestants. He used player&rsquo;s Coryat scores to predict the length of their winning streak, and whether they would qualify for the tournament. I&rsquo;m going for something slightly different than him by focusing on predicting the winner of a single game.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/1/01/01/predicting-jeopardy-winners/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.dd629241ea9333c62c071f4a25f829ff.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/1/01/01/predicting-jeopardy-winners/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@herbps10">
+  <meta property="twitter:creator" content="@herbps10">
+  
+  <meta property="og:site_name" content="Herb Susmann">
+  <meta property="og:url" content="/1/01/01/predicting-jeopardy-winners/">
+  <meta property="og:title" content="Predicting Jeopardy! Winners | Herb Susmann">
+  <meta property="og:description" content="Goal: Predict the winner of Jeopardy. As the game progresses, update the predictions to take into account the current score profile.
+Background: A quick search revealed work by The Jeopardy Fan on building a model to predict the Tournament of Champions contestants. He used player&rsquo;s Coryat scores to predict the length of their winning streak, and whether they would qualify for the tournament. I&rsquo;m going for something slightly different than him by focusing on predicting the winner of a single game."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+    
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Predicting Jeopardy! Winners | Herb Susmann</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Herb Susmann</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/project/"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/publication/"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Predicting Jeopardy! Winners</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="" itemprop="datePublished">
+<meta content="" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jan 1, 0001</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    7 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/1/01/01/predicting-jeopardy-winners/&amp;text=Predicting%20Jeopardy!%20Winners" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/1/01/01/predicting-jeopardy-winners/&amp;t=Predicting%20Jeopardy!%20Winners" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Predicting%20Jeopardy!%20Winners&amp;body=/1/01/01/predicting-jeopardy-winners/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/1/01/01/predicting-jeopardy-winners/&amp;title=Predicting%20Jeopardy!%20Winners" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Predicting%20Jeopardy!%20Winners%20/1/01/01/predicting-jeopardy-winners/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/1/01/01/predicting-jeopardy-winners/&amp;title=Predicting%20Jeopardy!%20Winners" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <p><strong>Goal:</strong> Predict the winner of Jeopardy. As the game progresses, update the predictions to take into account the current score profile.</p>
+
+<p><strong>Background</strong>: A quick search revealed work by <a href="https://thejeopardyfan.com/2016/04/making-jeopardy-predictions-a-methodology.html" target="_blank">The Jeopardy Fan</a> on building a model to predict the Tournament of Champions contestants. He used player&rsquo;s <a href="http://j-archive.com/help.php#coryatscore" target="_blank">Coryat scores</a> to predict the length of their winning streak, and whether they would qualify for the tournament. I&rsquo;m going for something slightly different than him by focusing on predicting the winner of a single game. I&rsquo;m also going to use the real game score, instead of Coryat scores.</p>
+
+<p><strong>Data:</strong> The <a href="http://j-archive.com" target="_blank">J-Archive</a> is an incredible resource for Jeopardy! data, thanks to the work of their archivists. They have every game ever played, every question asked, along with which contestants answered and whether they were correct or not. I downloaded data from seasons 22-33 for fitting and testing the models.</p>
+
+<p><strong>Intuition:</strong> Let&rsquo;s explore the dataset a little bit to get a sense of how we might build a classification model to predict winners. You can easily make plots that show how a contestant&rsquo;s score changes over the course of a game, like this one that shows Roger Craig setting a one-day earnings record:
+<img src='/public/images/game5977.png' alt='Jeopardy! Game 5977 score trajectory' class='large'/></p>
+
+<p>Expanding this type of plot beyond a single game, here is a plot showing all of the games from season 27, with each trajectory colored by whether the contestant won the game:</p>
+
+<p><img src='/public/images/season27-trajectories.png' alt='Jeopardy! season 27 score trajectories' class='large' /></p>
+
+<p>The winners tend to have higher scores throughout the game, but you can still see a few people who had high scores and still lost. If we show more seasons at once we can see more of the overall trend, but we lose the ability to see individual trajectories clearly:</p>
+
+<p><img src='/public/images/season22-33-trajectories.png' alt='Jeopardy! season 22-33 score trajectories' class='large' /></p>
+
+<p>Another way to look at this is by plotting the median scores, with a ribbon showing the 5% and 95% quantiles:</p>
+
+<p><img src='/public/images/season22-33-trajectories-ribbon.png' class='large' /></p>
+
+<p>It looks like there is some separation between the winners and losers just in terms of their score, and the separation becomes more pronounced as the game progresses, which a model should be able to pick up on and use for prediction.</p>
+
+<p>We should temper our expectations, though. Especially in the first graph, you can see how much of a randomizer the Final Jeopardy round is. Here&rsquo;s a table showing how the contestant&rsquo;s rank going in to Final Jeopardy corresponds to winning or losing (data from seasons 22-33):</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Rank</th>
+<th align="right">Won</th>
+<th align="right">Lost</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">Third</td>
+<td align="right">171 (6%)</td>
+<td align="right">2554 (94%)</td>
+</tr>
+
+<tr>
+<td align="left">Tied for second</td>
+<td align="right">8 (12%)</td>
+<td align="right">60 (88%)</td>
+</tr>
+
+<tr>
+<td align="left">Second</td>
+<td align="right">591 (22%)</td>
+<td align="right">2116 (75%)</td>
+</tr>
+
+<tr>
+<td align="left">Tied for first</td>
+<td align="right">17 (47%)</td>
+<td align="right">19 (53%)</td>
+</tr>
+
+<tr>
+<td align="left">First</td>
+<td align="right">1991 (73%)</td>
+<td align="right"><strong>750 (27%)</strong></td>
+</tr>
+</tbody>
+</table>
+
+<p>27% of contestants in first place going in to Final Jeopardy still lose. It&rsquo;s going to be very difficult to accurately predict when an upset will happen, so this gives us a sense of the limits of any prediction model.</p>
+
+<p><strong>Modeling and Results</strong>: One of the goals is to predict the winner as the game progresses. In each game of Jeopardy! there are up to 61 questions: 30 in Single Jeopardy, 30 in Double Jeopardy, and 1 in Final Jeopardy. I decided to fit a logistic regression model after every question, so we can see how the classification accuracy improves as the game gets closer to the end.</p>
+
+<p>I used data from seasons 22-32 for training, and held out season 33 for testing.</p>
+
+<p>There are 61 questions in each game; call them $q<em>{1},q</em>{2},&hellip;,q<em>{i},&hellip;,q</em>{61}$, where $q<em>{1}$ is the first question asked in the game, $q</em>{2}$ is the second, and so on. The actual point value of each question might be different, depending on the order they are chosen in the game (for example, $q<em>{1}$ might be a <span>$</span>200 question in one game, and a <span>$</span>1,000 question in another.)  I fitted 61 logistic regression models ${M</em>{1}, M<em>{2}, &hellip;,M</em>{n}}$ that predict whether the player won the game based on their score at the end of question $i$. We would expect model $M_{1}$ to do poorly, because the first question isn&rsquo;t very informative of who is going to end up winning; and the accuracy to improve as the game progresses.</p>
+
+<p>For example, here is the fitted logistic model for question 30:</p>
+
+<p><img src='/public/images/logistic-regression-curve-question-30.png' /></p>
+
+<p>We can visualize the accuracy of the all models at once by plotting their <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic" target="_blank">ROC curves</a>.</p>
+
+<p><img src='/public/images/roc1.png' class='large' /></p>
+
+<p>As we would expect, the model has lousy accuracy at the beginning of the game, but improves steadily as the game progresses. However, it is not perfect even after the game is over. This is because the score itself doesn&rsquo;t determine the winner; what matters is who has the highest score.</p>
+
+<p>To address this, I added two new features to bring in information about the contestants compare to each other within the game:</p>
+
+<ul>
+<li><em>rank</em> - categorical variable indicating the contestant&rsquo;s current rank (first place, tied for first, second place, etc.)</li>
+<li><em>distance from lead</em> - the difference in points between the contestant and the leader. If the contestant is in the lead, it is a negative number indicating how far they are ahead.</li>
+</ul>
+
+<p>I built two new sets of models using these features. I also added a very simple model for comparison: predict the winner of the game to be whoever is in the lead. This model doesn&rsquo;t output probabilities, so it will show up on the ROC curves as a single point (I call this model &ldquo;current leader&rdquo; in the legend.) Here&rsquo;s how they compare to the original model:</p>
+
+<p><img src='/public/images/rocs1.png' class='large' /></p>
+
+<p>The new models aren&rsquo;t that much better than the original model. The biggest difference I see is that they have perfect accuracy at the end of the game, as you would expect since they have access to the final ranking of the contestants.</p>
+
+<p>The &ldquo;current leader&rdquo; reference model falls right on the curves, indicating the logistic models don&rsquo;t do better than it. They may be more useful, though, since they output probabilities rather than a dichotomous prediction.</p>
+
+<p><strong>Visualizing predictions</strong>: Now that we have these models, let&rsquo;s see a contestant&rsquo;s probability of winning (conditioned on the model) evolves over the course of a game. I&rsquo;m going to take the set of models that use the <em>distance from lead</em> predictor and apply them to a game from season 33.</p>
+
+<p><img src='/public/images/game7573.png' class='large' /></p>
+
+<p>Gavin takes the lead in the prediction model at the same time he takes the lead, in the middle of Double Jeopardy.</p>
+
+<p>Here&rsquo;s another one from season 33 where the prediction flips towards the end of the game:</p>
+
+<p><img src='/public/images/game7544.png' class='large' /></p>
+
+<p>The highest probability of winning is assigned to whoever is in the lead, which reflects the logic of the simple reference model.</p>
+
+<p><strong>Next steps:</strong>
+I think a significant shortcoming of the approach I took here is that I fit completely separate models for each question; they aren&rsquo;t connected in any way, and so they don&rsquo;t have any &ldquo;memory&rdquo; of how each contestant has performed previously in the game (except via their current score), or in prior games. Perhaps there&rsquo;s a way to incorporate some ideas from partial pooling models to share strength between questions. Or maybe a model could be built that estimates a latent &ldquo;ability&rdquo; score for each participant, conditioned on their previous performance. A bonus of this would be that the winners ability score could be fed in to their next game, as a form of prior information about how well the contestant will do. Doing this in a Bayesian framework seems like a good choice.</p>
+
+<p>I think there are also a few things that could be done to improve performance in the endgame. Right now the models don&rsquo;t take into account how much money is still available. Incorporating this should help, especially in the end game when there isn&rsquo;t very much money still on the board. It could also be used to find runaway scores, where one contestant has more money than is possible for a competitor to gain. We could also build a model for predicting the Final Jeopardy bets, so the end game model could have a better understanding of how likely an upset will be.</p>
+
+<p>Finally, I&rsquo;d also be interested in changing the goal slightly to predict winners in terms of Coryat score, which I&rsquo;m sure would perform better since the uncertainty of daily doubles and the Final Jeopardy wager would be removed.</p>
+
+<p><strong>Source code:</strong>
+The source code for this analysis is on Github: <a href="https://github.com/herbps10/jeopardy" target="_blank">https://github.com/herbps10/jeopardy</a></p>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu52a603635ecebd45650b162dadabb4e5_12861_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Herb Susmann</a></h5>
+      <h6 class="card-subtitle">Graduate Student</h6>
+      <p class="card-text" itemprop="description">Gradate student in Biostatistics at UMass Amherst matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="/#contact" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.16bbb3750feb7244c9bc409a5a4fe678.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

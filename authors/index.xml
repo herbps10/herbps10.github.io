@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Authors | Herb Susmann</title>
+    <link>/authors/</link>
+      <atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
+    <description>Authors</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Authors</title>
+      <link>/authors/</link>
+    </image>
+    
+    <item>
+      <title></title>
+      <link>/authors/admin/</link>
+      <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>/authors/admin/</guid>
+      <description>&lt;p&gt;I grew up near Ithaca, New York, where I was home-schooled for elementary school, an experience that shaped my belief in the value of self-directed, intrinsically motivated learning. I went to college at SUNY Geneseo where I received a degree in Mathematics in 2014. I spent four years working as a software developer at &lt;a href=&#34;https://silentspring.org&#34; target=&#34;_blank&#34;&gt;Silent Spring Institute&lt;/a&gt; where I developed digital tools for communicating complex scientific data to a lay audience. I began a doctoral program in biostatistics at UMass Amherst in 2018, where I am working with &lt;a href=&#34;https://people.umass.edu/lalkema/&#34; target=&#34;_blank&#34;&gt;Leontine Alkema&lt;/a&gt; on spatial Bayesian modeling.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Julia Green Brody</title>
+      <link>/authors/julia-green-brody/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/julia-green-brody/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Katerine E. Boronow</title>
+      <link>/authors/katerine-e.-boronow/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/katerine-e.-boronow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kenneth C. Arnold</title>
+      <link>/authors/kenneth-c.-arnold/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/kenneth-c.-arnold/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Krzysztof Z. Gajos</title>
+      <link>/authors/krzysztof-z.-gajos/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/krzysztof-z.-gajos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Laurie Havas</title>
+      <link>/authors/laurie-havas/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/laurie-havas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Phil Brown</title>
+      <link>/authors/phil-brown/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/phil-brown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rachel Morello-Frosch</title>
+      <link>/authors/rachel-morello-frosch/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/rachel-morello-frosch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ruthann A. Rudel</title>
+      <link>/authors/ruthann-a.-rudel/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/authors/ruthann-a.-rudel/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

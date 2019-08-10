@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rachel Morello-Frosch | Herb Susmann</title>
+    <link>/authors/rachel-morello-frosch/</link>
+      <atom:link href="/authors/rachel-morello-frosch/index.xml" rel="self" type="application/rss+xml" />
+    <description>Rachel Morello-Frosch</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 01 Feb 2017 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Rachel Morello-Frosch</title>
+      <link>/authors/rachel-morello-frosch/</link>
+    </image>
+    
+    <item>
+      <title>DERBI: A Digital Method to Help Researchers Offer “Right-to-Know” Personal Exposure Results</title>
+      <link>/publication/derbi/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/publication/derbi/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

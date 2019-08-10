@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Krzysztof Z. Gajos | Herb Susmann</title>
+    <link>/authors/krzysztof-z.-gajos/</link>
+      <atom:link href="/authors/krzysztof-z.-gajos/index.xml" rel="self" type="application/rss+xml" />
+    <description>Krzysztof Z. Gajos</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 01 Feb 2017 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Krzysztof Z. Gajos</title>
+      <link>/authors/krzysztof-z.-gajos/</link>
+    </image>
+    
+    <item>
+      <title>DERBI: A Digital Method to Help Researchers Offer “Right-to-Know” Personal Exposure Results</title>
+      <link>/publication/derbi/</link>
+      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      <guid>/publication/derbi/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
