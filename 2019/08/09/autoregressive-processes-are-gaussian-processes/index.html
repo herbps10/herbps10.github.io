@@ -28,7 +28,7 @@
   
     
   
-  <meta name="description" content="Autoregressive (AR) processes are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a Gaussian process. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.">
+  <meta name="description" content="Autoregressive (AR) processes are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a Gaussian process. One reason having a Guassian process representation is useful is because it makes it more clear how an AR process can be incorporated into larger models, like a spatio-temporal model.">
 
   
   <link rel="alternate" hreflang="en-us" href="/2019/08/09/autoregressive-processes-are-gaussian-processes/">
@@ -126,7 +126,7 @@
   <meta property="og:site_name" content="Herb Susmann">
   <meta property="og:url" content="/2019/08/09/autoregressive-processes-are-gaussian-processes/">
   <meta property="og:title" content="Autoregressive Processes are Gaussian Processes | Herb Susmann">
-  <meta property="og:description" content="Autoregressive (AR) processes are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a Gaussian process. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="Autoregressive (AR) processes are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a Gaussian process. One reason having a Guassian process representation is useful is because it makes it more clear how an AR process can be incorporated into larger models, like a spatio-temporal model."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -466,7 +466,7 @@
       
 
 
-<p><a href="https://en.wikipedia.org/wiki/Autoregressive_model">Autoregressive (AR) processes</a> are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a <a href="https://en.wikipedia.org/wiki/Gaussian_process">Gaussian process</a>. Having a Guassian process representation is useful because it is more clear how the AR process could be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.</p>
+<p><a href="https://en.wikipedia.org/wiki/Autoregressive_model">Autoregressive (AR) processes</a> are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a <a href="https://en.wikipedia.org/wiki/Gaussian_process">Gaussian process</a>. One reason having a Guassian process representation is useful is because it makes it more clear how an AR process can be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.</p>
 <div id="ar-processes" class="section level2">
 <h2>AR processes</h2>
 <p>Let <span class="math inline">\(\mathbf{Y} = \left\{ Y_1, Y_2, \dots, Y_n \right\}\)</span> be a set of random variables indexed by time. An aurogressive model assumes that <span class="math inline">\(\mathbf{Y}\)</span> is correlated over time. An AR model is typically described by defining <span class="math inline">\(Y_t\)</span> in terms of <span class="math inline">\(Y_{t-1}\)</span>:</p>
