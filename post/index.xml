@@ -36,27 +36,6 @@
     </item>
     
     <item>
-      <title>U.S. Union Membership Visualization</title>
-      <link>/2019/12/15/u-s-union-membership-visualization/</link>
-      <pubDate>Sun, 15 Dec 2019 00:00:00 +0000</pubDate>
-      <guid>/2019/12/15/u-s-union-membership-visualization/</guid>
-      <description>
-[Data](http://unionstats.gsu.edu/MonthlyLaborReviewArticle.htm): Barry T. Hirsch, David A. Macpherson, and Wayne G. Vroman, “Estimates of Union Density by State,” Monthly Labor Review, Vol. 124, No. 7, July 2001, pp. 51-55.
-
-&lt;div&gt;
-  &lt;div id=&#34;observablehq-4c635148&#34;&gt;&lt;/div&gt;
-  &lt;script type=&#34;module&#34;&gt;
-  import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;;
-  import define from &#34;https://api.observablehq.com/@herbps10/u-s-union-membership-1964-2018.js?v=3&#34;;
-  const inspect = Inspector.into(&#34;#observablehq-4c635148&#34;);
-  (new Runtime).module(define, name =&gt; (name === &#34;chart&#34;) &amp;&amp; inspect());
-  &lt;/script&gt;
-&lt;/div&gt;
-
-[You can view the source code for this on Observable.](https://observablehq.com/@herbps10/u-s-union-membership-1964-2018)</description>
-    </item>
-    
-    <item>
       <title>Presidential Primary Polling Analysis in Stan</title>
       <link>/2019/08/10/presidential-primary-polling-analysis-in-stan/</link>
       <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
