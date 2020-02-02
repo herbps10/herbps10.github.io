@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kathryn M. Rodgers | Herb Susmann</title>
+    <link>/authors/kathryn-m.-rodgers/</link>
+      <atom:link href="/authors/kathryn-m.-rodgers/index.xml" rel="self" type="application/rss+xml" />
+    <description>Kathryn M. Rodgers</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Kathryn M. Rodgers</title>
+      <link>/authors/kathryn-m.-rodgers/</link>
+    </image>
+    
+    <item>
+      <title>Dietary Habits Related to Food Packaging and Population Exposure to PFASs</title>
+      <link>/publication/pfas/</link>
+      <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/publication/pfas/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

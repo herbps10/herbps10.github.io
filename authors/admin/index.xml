@@ -5,12 +5,20 @@
     <link>/authors/admin/</link>
       <atom:link href="/authors/admin/index.xml" rel="self" type="application/rss+xml" />
     <description>Herb Susmann</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Herb Susmann</title>
       <link>/authors/admin/</link>
     </image>
+    
+    <item>
+      <title>Dietary Habits Related to Food Packaging and Population Exposure to PFASs</title>
+      <link>/publication/pfas/</link>
+      <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/publication/pfas/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Presidential Primary Polling Analysis in Stan</title>
@@ -98,7 +106,7 @@ generated quantities {
     <item>
       <title></title>
       <link>/authors/admin/</link>
-      <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
       <guid>/authors/admin/</guid>
       <description>&lt;p&gt;I grew up near Ithaca, New York, where I was home-schooled for elementary school, an experience that shaped my belief in the value of self-directed, intrinsically motivated learning. I went to college at SUNY Geneseo where I received a degree in Mathematics in 2014. I spent four years working as a software developer at &lt;a href=&#34;https://silentspring.org&#34; target=&#34;_blank&#34;&gt;Silent Spring Institute&lt;/a&gt; where I developed digital tools for communicating complex scientific data to a lay audience. I began a doctoral program in biostatistics at UMass Amherst in 2018, where I am working with &lt;a href=&#34;https://people.umass.edu/lalkema/&#34; target=&#34;_blank&#34;&gt;Leontine Alkema&lt;/a&gt; on spatial Bayesian modeling.&lt;/p&gt;
 </description>

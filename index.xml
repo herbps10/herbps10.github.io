@@ -36,6 +36,58 @@
     </item>
     
     <item>
+      <title>Firearm Background Check Timeseries Modeling</title>
+      <link>/2020/02/01/firearm-background-check-timeseries-modeling/</link>
+      <pubDate>Sat, 01 Feb 2020 00:00:00 +0000</pubDate>
+      <guid>/2020/02/01/firearm-background-check-timeseries-modeling/</guid>
+      <description>
+
+
+&lt;p&gt;Gun dealers in the U.S. are required to conduct instant background checks before selling weapons to individuals. The FBI &lt;a href=&#34;https://www.fbi.gov/file-repository/nics_firearm_checks_-_month_year.pdf/view&#34;&gt;provides data&lt;/a&gt; for the number of these background checks performed by month/year, which serves as a proxy for the total number of gun sales in the U.S.&lt;/p&gt;
+&lt;p&gt;I brought the data into R for a quick and dirty analysis, with the intent of finding spikes in background checks around major events.&lt;/p&gt;
+&lt;p&gt;First, let’s take a look raw data. There are a few obvious spikes in the later years, which correspond to the Sandy Hook (December 2012) and San Bernadino (December 2015) shootings.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-02-01-firearm-background-check-timeseries-modeling/index_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Next, I fit a negative binomial generalized linear model that accounts for an overall trend using a 3rd order cubic spline and monthly seasonal variation:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model &amp;lt;- MASS::glm.nb(value ~ bs(date) + month, dat)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Even such a simple model does a decent job fitting the data, although it gets much worse in later years as the variance in the data increases:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-02-01-firearm-background-check-timeseries-modeling/index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;More interesting is the plot of the residuals from the model, which show spikes in background checks that aren’t accounted for by the model. This makes a couple of other peaks jump out that are correlated with notable events, like 9/11 and Obama’s election:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-02-01-firearm-background-check-timeseries-modeling/index_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;There are a few other peaks that I don’t have explanations for, like in late 1999 and in the beginning of 2014.&lt;/p&gt;
+&lt;p&gt;I think it’s interesting how the model residuals let us see spikes in background checks that we couldn’t see in the raw data. The tradeoff is that the model residuals are conditional on the model choice; choosing a different model might lead to a different plot. If we want to answer the question “were there spikes in gun background checks”, we now have to condition our conclusions on that model choice, which complicates interpretation.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>U.S. Union Membership Visualization</title>
+      <link>/2019/12/15/u-s-union-membership-visualization/</link>
+      <pubDate>Sun, 15 Dec 2019 00:00:00 +0000</pubDate>
+      <guid>/2019/12/15/u-s-union-membership-visualization/</guid>
+      <description>
+[Data](http://unionstats.gsu.edu/MonthlyLaborReviewArticle.htm): Barry T. Hirsch, David A. Macpherson, and Wayne G. Vroman, “Estimates of Union Density by State,” Monthly Labor Review, Vol. 124, No. 7, July 2001, pp. 51-55.
+
+&lt;div&gt;
+  &lt;div id=&#34;observablehq-4c635148&#34;&gt;&lt;/div&gt;
+  &lt;script type=&#34;module&#34;&gt;
+  import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;;
+  import define from &#34;https://api.observablehq.com/@herbps10/u-s-union-membership-1964-2018.js?v=3&#34;;
+  const inspect = Inspector.into(&#34;#observablehq-4c635148&#34;);
+  (new Runtime).module(define, name =&gt; (name === &#34;chart&#34;) &amp;&amp; inspect());
+  &lt;/script&gt;
+&lt;/div&gt;
+
+[You can view the source code for this on Observable.](https://observablehq.com/@herbps10/u-s-union-membership-1964-2018)</description>
+    </item>
+    
+    <item>
+      <title>Dietary Habits Related to Food Packaging and Population Exposure to PFASs</title>
+      <link>/publication/pfas/</link>
+      <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/publication/pfas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Presidential Primary Polling Analysis in Stan</title>
       <link>/2019/08/10/presidential-primary-polling-analysis-in-stan/</link>
       <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>

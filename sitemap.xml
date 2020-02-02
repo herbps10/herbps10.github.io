@@ -19,19 +19,81 @@
   </url>
   
   <url>
-    <loc>/authors/admin/</loc>
-    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/</loc>
-    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-    <priority>0</priority>
+    <loc>/2020/02/01/firearm-background-check-timeseries-modeling/</loc>
+    <lastmod>2020-02-01T19:48:46-05:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
+    <lastmod>2020-02-01T19:48:46-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019/12/15/u-s-union-membership-visualization/</loc>
+    <lastmod>2019-12-15T21:01:12-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/admin/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/publication_types/2/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/authors/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/publication/pfas/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/kathryn-m.-rodgers/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/authors/laurel-a.-schaider/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/publication_types/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/publication/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/ruthann-a.-rudel/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/silent-spring-institute/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -48,12 +110,6 @@
   <url>
     <loc>/project/reactor/</loc>
     <lastmod>2019-08-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -125,12 +181,6 @@
   </url>
   
   <url>
-    <loc>/publication_types/2/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/tags/derbi-silent-spring-institute/</loc>
     <lastmod>2017-02-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -178,24 +228,7 @@
   </url>
   
   <url>
-    <loc>/publication_types/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/publication/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/authors/rachel-morello-frosch/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/ruthann-a.-rudel/</loc>
     <lastmod>2017-02-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
