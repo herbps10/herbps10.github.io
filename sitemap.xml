@@ -19,12 +19,17 @@
   </url>
   
   <url>
-    <loc>/2020/02/01/firearm-background-check-timeseries-modeling/</loc>
-    <lastmod>2020-02-01T19:48:46-05:00</lastmod>
+    <loc>/2020/07/06/gaussian-process-derivatives/</loc>
+    <lastmod>2020-07-06T13:42:41-04:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
+    <lastmod>2020-07-06T13:42:41-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2020/02/01/firearm-background-check-timeseries-modeling/</loc>
     <lastmod>2020-02-01T19:48:46-05:00</lastmod>
   </url>
   
