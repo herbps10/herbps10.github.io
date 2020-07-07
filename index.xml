@@ -143,11 +143,13 @@ k^{\mathrm{all}}(x_i, x_j, d_i, d_j) = \begin{cases}
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We also need a new function to form the joint covariance matrix:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;joint_covariance_from_kernel &amp;lt;- function(x, d, kernel, ...) {
-  outer(1:length(x), 1:length(x), function(i, j) kernel(x[i], x[j], d[i], d[j], ...))
+  outer(1:length(x), 1:length(x),
+        function(i, j) kernel(x[i], x[j], d[i], d[j], ...))
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Finally, I’m going to split out the plotting code into a separate function as it gets more complicated than before:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot_joint_gp &amp;lt;- function(x, y, d) {
-  plot(x[d == 0], y[d == 0], type = &amp;#39;l&amp;#39;, ylim = range(y), col = &amp;#39;black&amp;#39;, xlab = &amp;#39;x&amp;#39;, ylab = &amp;#39;y&amp;#39;)
+  plot(x[d == 0], y[d == 0], type = &amp;#39;l&amp;#39;, ylim = range(y), 
+       col = &amp;#39;black&amp;#39;, xlab = &amp;#39;x&amp;#39;, ylab = &amp;#39;y&amp;#39;)
   lines(x[d == 1], y[d == 1], type = &amp;#39;l&amp;#39;, col = &amp;#39;blue&amp;#39;, lty = 2)
   abline(h = 0, lty = 3, col = &amp;quot;gray&amp;quot;)
   legend(&amp;#39;topright&amp;#39;, legend = c(&amp;quot;GP&amp;quot;, &amp;quot;Derivative of GP&amp;quot;),

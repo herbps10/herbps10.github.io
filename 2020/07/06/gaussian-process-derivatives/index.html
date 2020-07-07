@@ -570,11 +570,13 @@ k^{\mathrm{all}}(x_i, x_j, d_i, d_j) = \begin{cases}
 }</code></pre>
 <p>We also need a new function to form the joint covariance matrix:</p>
 <pre class="r"><code>joint_covariance_from_kernel &lt;- function(x, d, kernel, ...) {
-  outer(1:length(x), 1:length(x), function(i, j) kernel(x[i], x[j], d[i], d[j], ...))
+  outer(1:length(x), 1:length(x),
+        function(i, j) kernel(x[i], x[j], d[i], d[j], ...))
 }</code></pre>
 <p>Finally, I’m going to split out the plotting code into a separate function as it gets more complicated than before:</p>
 <pre class="r"><code>plot_joint_gp &lt;- function(x, y, d) {
-  plot(x[d == 0], y[d == 0], type = &#39;l&#39;, ylim = range(y), col = &#39;black&#39;, xlab = &#39;x&#39;, ylab = &#39;y&#39;)
+  plot(x[d == 0], y[d == 0], type = &#39;l&#39;, ylim = range(y), 
+       col = &#39;black&#39;, xlab = &#39;x&#39;, ylab = &#39;y&#39;)
   lines(x[d == 1], y[d == 1], type = &#39;l&#39;, col = &#39;blue&#39;, lty = 2)
   abline(h = 0, lty = 3, col = &quot;gray&quot;)
   legend(&#39;topright&#39;, legend = c(&quot;GP&quot;, &quot;Derivative of GP&quot;),
