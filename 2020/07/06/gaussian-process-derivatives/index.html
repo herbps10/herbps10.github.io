@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Herb Susmann">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="A Gaussian Process (GP) is a process for which any finite set of observations follows a multivariate normal distribution. GPs are defined by their mean and a kernel function that gives the covariance between any two observations. They are useful in Bayesian statistics as priors over function spaces.
+To denote a GP prior over a set of observations \(\bm{y} = \{y_1, y_2, \cdots, y_n\}\) at points \(\bm{x} = \{ x_1, x_2, \cdots, x_n\}\), we write:\[\bm{y} \sim \mathcal{GP}(\bm{\mu}, \bm{\Sigma})\]">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/2020/07/06/gaussian-process-derivatives/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.dd629241ea9333c62c071f4a25f829ff.css">
+
+  
+    
+    
+    
+    
+      
+    
+    
+    
+    <link rel="stylesheet" href="/css/academic.ca445caa71dda91c09e3fe30bfc46d9c.css">
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/2020/07/06/gaussian-process-derivatives/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@herbps10">
+  <meta property="twitter:creator" content="@herbps10">
+  
+  <meta property="og:site_name" content="Herb Susmann">
+  <meta property="og:url" content="/2020/07/06/gaussian-process-derivatives/">
+  <meta property="og:title" content="Derivatives of a Gaussian Process | Herb Susmann">
+  <meta property="og:description" content="A Gaussian Process (GP) is a process for which any finite set of observations follows a multivariate normal distribution. GPs are defined by their mean and a kernel function that gives the covariance between any two observations. They are useful in Bayesian statistics as priors over function spaces.
+To denote a GP prior over a set of observations \(\bm{y} = \{y_1, y_2, \cdots, y_n\}\) at points \(\bm{x} = \{ x_1, x_2, \cdots, x_n\}\), we write:\[\bm{y} \sim \mathcal{GP}(\bm{\mu}, \bm{\Sigma})\]"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-07-06T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-07-06T13:42:41-04:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Derivatives of a Gaussian Process | Herb Susmann</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Herb Susmann</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/project/"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/publication/"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Derivatives of a Gaussian Process</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2020-07-06 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2020-07-06 13:42:41 -0400 EDT" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    <time>Jul 6, 2020</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    6 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/2020/07/06/gaussian-process-derivatives/&amp;text=Derivatives%20of%20a%20Gaussian%20Process" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/2020/07/06/gaussian-process-derivatives/&amp;t=Derivatives%20of%20a%20Gaussian%20Process" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Derivatives%20of%20a%20Gaussian%20Process&amp;body=/2020/07/06/gaussian-process-derivatives/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/2020/07/06/gaussian-process-derivatives/&amp;title=Derivatives%20of%20a%20Gaussian%20Process" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Derivatives%20of%20a%20Gaussian%20Process%20/2020/07/06/gaussian-process-derivatives/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/2020/07/06/gaussian-process-derivatives/&amp;title=Derivatives%20of%20a%20Gaussian%20Process" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<p>A <a href="https://en.wikipedia.org/wiki/Gaussian_process"><em>Gaussian Process</em></a> (GP) is a process for which any finite set of observations follows a multivariate normal distribution. GPs are defined by their mean and a kernel function that gives the covariance between any two observations. They are useful in Bayesian statistics as priors over function spaces.</p>
+<p>To denote a GP prior over a set of observations <span class="math inline">\(\bm{y} = \{y_1, y_2, \cdots, y_n\}\)</span> at points <span class="math inline">\(\bm{x} = \{ x_1, x_2, \cdots, x_n\}\)</span>, we write:
+<span class="math display">\[
+\bm{y} \sim \mathcal{GP}(\bm{\mu}, \bm{\Sigma})
+\]</span></p>
+<p>where the covariance matrix <span class="math inline">\(\bm{\Sigma}\)</span> is computed via a kernel function <span class="math inline">\(k(x, x^\prime)\)</span>. A popular choice of kernel function that we will consider in this post is the <a href="https://www.cs.toronto.edu/~duvenaud/cookbook"><em>squared exponential kernel</em></a>:
+<span class="math display">\[
+k(x_i, x_j) = \alpha^2 \exp\left(-
+\frac{(x_i - x_j)^2}{2\ell^2} \right)
+\]</span></p>
+<p>where <span class="math inline">\(\alpha\)</span> is a scale parameter and <span class="math inline">\(\ell\)</span> is a length-scale parameter which controls the strength of the association between points as they become farther apart.</p>
+<p>Intuitively, in order to define a GP we need to be able to write down the covariance between any two points.</p>
+<p>Let’s write this kernel function in R, and use it to draw samples from a GP. For simplicity, we will fix <span class="math inline">\(\bm{\mu} = \bm{0}\)</span> for all the GPs we work with in this post. First, define the kernel function:</p>
+<pre class="r"><code>k &lt;- function(x_i, x_j, alpha, l) {
+  alpha^2 * exp(-(x_i - x_j)^2 / (2 * l^2))
+}</code></pre>
+<p>Let’s write a helper function that, given a kernel and a set of points, generates a full covariance matrix:</p>
+<pre class="r"><code>covariance_from_kernel &lt;- function(x, kernel, ...) {
+  outer(x, x, kernel, ...)
+}</code></pre>
+<p>and a function to draw from a mean-zero GP with a given covariance kernel:</p>
+<pre class="r"><code>gp_draw &lt;- function(draws, x, Sigma, ...) {
+  mu &lt;- rep(0, length(x))
+  mvtnorm::rmvnorm(draws, mu, Sigma)
+}</code></pre>
+<p>Now we can draw 10 samples from a mean-zero GP with a squared-exponential kernel with parameters <span class="math inline">\(\alpha=1\)</span>, <span class="math inline">\(l=1\)</span>:</p>
+<pre class="r"><code>n &lt;- 100 # number of points to draw
+x &lt;- seq(1, 10, length.out = n) # position of each point
+
+# Kernel parameters
+alpha &lt;- 1
+l &lt;- 1
+
+set.seed(1)
+
+# Draw 10 samples
+Sigma &lt;- covariance_from_kernel(x, k, alpha = alpha, l = l)
+y &lt;- gp_draw(10, x, Sigma)
+
+matplot(x, t(y), type = &#39;l&#39;, xlab = &#39;x&#39;, ylab = &#39;y&#39;)</code></pre>
+<p><img src="/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draws_from_gp-1.png" width="672" /></p>
+<div id="derivative-of-a-gp" class="section level2">
+<h2>Derivative of a GP</h2>
+<p>The derivative of a GP is also a GP, with its existence determined by the differentiability of the kernel function. The squared exponential kernel is infinitely differentiable, so the associated Gaussian Process has infinitely many derivatives.</p>
+<p>This derivative is useful because we may have prior knowledge about likely values of the derivative. For example, monotonicity constraints can be encoded as prior knowledge that the derivative is always positive or negative. In other cases we may have direct observations of the derivative that we would like to incorporate into model fitting.</p>
+<p>Let <span class="math inline">\(\bm{y}^\prime = \{ y^\prime_1, y^\prime_2, \cdots, y^\prime_{n^\prime} \}\)</span> be a set of derivative observations. The derivative GP, which we’ll denote <span class="math inline">\(\mathcal{GP}^\prime\)</span>, is given by
+<span class="math display">\[
+\bm{y}^\prime \sim \mathcal{GP}^\prime(\frac{d}{dx}\bm{\mu}, \frac{d}{dx}\bm{\Sigma})
+\]</span>
+where the derivative of the covariance matrix is defined by the derivative of the original kernel function with respect to both of its inputs, which we will denote <span class="math inline">\(k_{11}\)</span> to indicate that both arguments are derivative observations:
+<span class="math display">\[
+  k_{11}(x_i, x_j) = \frac{\partial}{\partial x_i \ \partial x_j} k(x_i, x_j) = \frac{ \alpha^2 }{ \ell^4 }\left( l^2 - (x_i - x_j)^2 \right) \exp\left( -\frac{(x_i - x_j)^2}{2\ell^2} \right)
+\]</span></p>
+<p>This is enough information to be able to draw random samples from the derivative of a GP. Let’s write the new kernel <span class="math inline">\(k_11\)</span> in R, and sample from the derivative GP:</p>
+<pre class="r"><code>k_11 &lt;- function(x_i, x_j, alpha, l) {
+  alpha^2 / l^2 * (l^2 - (x_i - x_j)^2) * exp(-(x_i - x_j)^2 / (2*l^2))
+}
+
+n_prime &lt;- 100
+x_prime &lt;- seq(1, 10, length.out = n_prime)
+
+# Draw 10 samples
+Sigma_prime &lt;- covariance_from_kernel(x_prime, k_11, alpha = alpha, l = l)
+y_prime &lt;- gp_draw(10, x_prime, Sigma_prime)
+
+matplot(x_prime, t(y_prime), type = &#39;l&#39;, xlab = &#39;x&#39;, ylab = &quot;y&#39;&quot;)</code></pre>
+<p><img src="/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draws_from_derivative_gp-1.png" width="672" /></p>
+<p>It’s hard to interpret this plot because we can’t compare these derivative values to the corresponding normal GP. Fortunately, it’s possible to sample from the joint distributions of the observations and its derivatives, which is in fact also a GP. To define it, we need to know the covariance between an observation and a derivative observation.</p>
+<p>Let <span class="math inline">\(k_{01}(x_i, x_j)\)</span> be the covariance between an observation at <span class="math inline">\(x_i\)</span> and a derivative observation at <span class="math inline">\(x_j\)</span>. Then
+<span class="math display">\[
+k_{01}(x_i, x_j) = \frac{\alpha^2}{\ell^2} (x_i - x_j) \exp\left( -\frac{(x_i - x_j)^2}{2\ell^2} \right)
+\]</span></p>
+<p>Similarly, <span class="math inline">\(k_{10}(x_i, x_j)\)</span> is the covariance between a derivative observation at <span class="math inline">\(x_i\)</span> and an observation at <span class="math inline">\(x_j\)</span>:
+<span class="math display">\[
+k_{10}(x_i, x_j) = \frac{\alpha^2}{\ell^2} (x_j - x_i) \exp\left( -\frac{(x_i - x_j)^2}{2\ell^2} \right)
+\]</span>
+As we would expect from the symmetry of covariance matrices, <span class="math inline">\(k_{01}(x_i, x_j) = k_{10}(x_j, x_i)\)</span>. That means we can get away with just defining one of them in R:</p>
+<pre class="r"><code>k_01 &lt;- function(x_i, x_j, alpha, l) {
+  alpha^2 / l^2 * (x_i - x_j) * exp(-(x_i - x_j)^2 / (2*l^2))
+}</code></pre>
+<p>Now construct a combined vector by concatenating the observations <span class="math inline">\(y\)</span> and derivative observations <span class="math inline">\(y^\prime\)</span>, denoted <span class="math inline">\(y^\mathrm{all}\)</span>, of length <span class="math inline">\(n + n^\prime\)</span>. Let <span class="math inline">\(\bm{x}^{\mathrm{all}}\)</span> be the corresponding positions of each observation in <span class="math inline">\(y^{\mathrm{all}}\)</span>. Let <span class="math inline">\(\bm{d}^{\mathrm{all}}\)</span> be a <span class="math inline">\(n+n^\prime\)</span> length vector where <span class="math inline">\(d^\mathrm{all}_i = 1\)</span> if <span class="math inline">\(y^{\mathrm{all}}_i\)</span> is a derivative observation, and <span class="math inline">\(d^{\mathrm{all}}_i = 0\)</span> if <span class="math inline">\(y^{\mathrm{all}}_i\)</span> is a normal observation. Then define a new kernel over the joint observations:
+<span class="math display">\[
+k^{\mathrm{all}}(x_i, x_j, d_i, d_j) = \begin{cases}
+  k(x_i, x_j) &amp; d_i = 0, d_j = 0 \text{ (both normal observations)} \\
+  k_{01}(x_i, x_j) &amp; d_i = 0, d_j = 0 \text{ (one derivative, one normal)} \\
+  k_{10}(x_i, x_j) &amp; d_i = 1, d_j = 0 \text{ (one derivative, one normal)} \\
+  k_{11}(x_i, x_j) &amp; d_i = 1, d_j = 0 \text{ (both derivatives)}
+\end{cases}
+\]</span></p>
+<p>In R:</p>
+<pre class="r"><code>k_all &lt;- function(x_i, x_j, d_i, d_j, ...) {
+  dplyr::case_when(
+    d_i == 0 &amp; d_j == 0 ~ k(x_i, x_j, ...),
+    d_i == 0 &amp; d_j == 1 ~ k_01(x_i, x_j, ...),
+    d_i == 1 &amp; d_j == 0 ~ k_01(x_j, x_i, ...),
+    d_i == 1 &amp; d_j == 1 ~ k_11(x_i, x_j, ...),
+  )
+}</code></pre>
+<p>We also need a new function to form the joint covariance matrix:</p>
+<pre class="r"><code>joint_covariance_from_kernel &lt;- function(x, d, kernel, ...) {
+  outer(1:length(x), 1:length(x), function(i, j) kernel(x[i], x[j], d[i], d[j], ...))
+}</code></pre>
+<p>Finally, I’m going to split out the plotting code into a separate function as it gets more complicated than before:</p>
+<pre class="r"><code>plot_joint_gp &lt;- function(x, y, d) {
+  plot(x[d == 0], y[d == 0], type = &#39;l&#39;, ylim = range(y), col = &#39;black&#39;, xlab = &#39;x&#39;, ylab = &#39;y&#39;)
+  lines(x[d == 1], y[d == 1], type = &#39;l&#39;, col = &#39;blue&#39;, lty = 2)
+  abline(h = 0, lty = 3, col = &quot;gray&quot;)
+  legend(&#39;topright&#39;, legend = c(&quot;GP&quot;, &quot;Derivative of GP&quot;),
+         col = c(&quot;black&quot;, &quot;blue&quot;), lty = 1:2)
+}</code></pre>
+<p>Now we can sample from the joint distribution of the observations and derivatives:</p>
+<pre class="r"><code>x_all &lt;- c(x, x_prime)
+d_all &lt;- c(rep(0, length(x)), rep(1, length(x_prime)))
+
+Sigma_all &lt;- joint_covariance_from_kernel(x_all, d_all, k_all, alpha = alpha, l = l)
+y_all &lt;- gp_draw(1, x_all, Sigma_all)
+
+plot_joint_gp(x_all, y_all[1,], d_all)</code></pre>
+<p><img src="/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draw_from_joint_gp-1.png" width="672" /></p>
+<p>Let’s plot one more:</p>
+<pre class="r"><code>y_all &lt;- gp_draw(1, x_all, Sigma_all)
+plot_joint_gp(x_all, y_all[1,], d_all)</code></pre>
+<p><img src="/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draw_from_joint_gp2-1.png" width="672" /></p>
+<p>So far we’ve seen how derivatives of GPs are defined, and how to draw from the joint distribution of a GP and its derivative. In future posts we’ll look at fitting GPs in Stan with derivative observations, and at shape-constrained GPs.</p>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hue57d0e8436ae96137a60d1345f821d2b_24465_250x250_fill_lanczos_center_2.png" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Herb Susmann</a></h5>
+      <h6 class="card-subtitle">Graduate Student</h6>
+      <p class="card-text" itemprop="description">Gradate student in Biostatistics at UMass Amherst matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+          <li>
+            <a itemprop="sameAs" href="mailto:hsusmann@umass.edu" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    <script src="/js/academic.min.bec90056665421447c830e8aa2f42710.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" integrity="sha256-gfQwA6PlkZsLqWu4bU4hXPrbTqzixm0B5MdvBLI+Oas=" crossorigin="anonymous"></script>
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
