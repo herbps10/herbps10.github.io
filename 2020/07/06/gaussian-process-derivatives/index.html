@@ -513,7 +513,7 @@ matplot(x, t(y), type = &#39;l&#39;, xlab = &#39;x&#39;, ylab = &#39;y&#39;)</co
 <p><img src="/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draws_from_gp-1.png" width="672" /></p>
 <div id="derivative-of-a-gp" class="section level2">
 <h2>Derivative of a GP</h2>
-<p>The derivative of a GP is also a GP, with its existence determined by the differentiability of the kernel function. The squared exponential kernel is infinitely differentiable, so the associated Gaussian Process has infinitely many derivatives.</p>
+<p>The derivative of a GP is also a GP, with its existence determined by the differentiability of its mean and kernel functions. The squared exponential kernel is infinitely differentiable, so the associated Gaussian Process has infinitely many derivatives.</p>
 <p>This derivative is useful because we may have prior knowledge about likely values of the derivative. For example, monotonicity constraints can be encoded as prior knowledge that the derivative is always positive or negative. In other cases we may have direct observations of the derivative that we would like to incorporate into model fitting.</p>
 <p>Let <span class="math inline">\(\bm{y}^\prime = \{ y^\prime_1, y^\prime_2, \cdots, y^\prime_{n^\prime} \}\)</span> be a set of derivative observations. The derivative GP, which we’ll denote <span class="math inline">\(\mathcal{GP}^\prime\)</span>, is given by
 <span class="math display">\[
@@ -594,6 +594,13 @@ plot_joint_gp(x_all, y_all[1,], d_all)</code></pre>
 plot_joint_gp(x_all, y_all[1,], d_all)</code></pre>
 <p><img src="/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draw_from_joint_gp2-1.png" width="672" /></p>
 <p>So far we’ve seen how derivatives of GPs are defined, and how to draw from the joint distribution of a GP and its derivative. In future posts we’ll look at fitting GPs in Stan with derivative observations, and at shape-constrained GPs.</p>
+<div id="references" class="section level3">
+<h3>References</h3>
+<ul>
+<li>Andrew McHutchon, <a href="http://mlg.eng.cam.ac.uk/mchutchon/DifferentiatingGPs.pdf">Differentiating Gaussian Processes</a></li>
+<li>Rasmussen et al. 2006, <em>Gaussian Processes for Machine Learning</em>, <a href="http://www.gaussianprocess.org/gpml/chapters/RW9.pdf">Chapter 9</a></li>
+</ul>
+</div>
 </div>
 
     </div>

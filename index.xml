@@ -86,7 +86,7 @@ matplot(x, t(y), type = &amp;#39;l&amp;#39;, xlab = &amp;#39;x&amp;#39;, ylab = 
 &lt;p&gt;&lt;img src=&#34;/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draws_from_gp-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;div id=&#34;derivative-of-a-gp&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Derivative of a GP&lt;/h2&gt;
-&lt;p&gt;The derivative of a GP is also a GP, with its existence determined by the differentiability of the kernel function. The squared exponential kernel is infinitely differentiable, so the associated Gaussian Process has infinitely many derivatives.&lt;/p&gt;
+&lt;p&gt;The derivative of a GP is also a GP, with its existence determined by the differentiability of its mean and kernel functions. The squared exponential kernel is infinitely differentiable, so the associated Gaussian Process has infinitely many derivatives.&lt;/p&gt;
 &lt;p&gt;This derivative is useful because we may have prior knowledge about likely values of the derivative. For example, monotonicity constraints can be encoded as prior knowledge that the derivative is always positive or negative. In other cases we may have direct observations of the derivative that we would like to incorporate into model fitting.&lt;/p&gt;
 &lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(\bm{y}^\prime = \{ y^\prime_1, y^\prime_2, \cdots, y^\prime_{n^\prime} \}\)&lt;/span&gt; be a set of derivative observations. The derivative GP, which we’ll denote &lt;span class=&#34;math inline&#34;&gt;\(\mathcal{GP}^\prime\)&lt;/span&gt;, is given by
 &lt;span class=&#34;math display&#34;&gt;\[
@@ -167,6 +167,13 @@ plot_joint_gp(x_all, y_all[1,], d_all)&lt;/code&gt;&lt;/pre&gt;
 plot_joint_gp(x_all, y_all[1,], d_all)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2020-07-06-gaussian-process-derivatives.en_files/figure-html/draw_from_joint_gp2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;So far we’ve seen how derivatives of GPs are defined, and how to draw from the joint distribution of a GP and its derivative. In future posts we’ll look at fitting GPs in Stan with derivative observations, and at shape-constrained GPs.&lt;/p&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;References&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Andrew McHutchon, &lt;a href=&#34;http://mlg.eng.cam.ac.uk/mchutchon/DifferentiatingGPs.pdf&#34;&gt;Differentiating Gaussian Processes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Rasmussen et al. 2006, &lt;em&gt;Gaussian Processes for Machine Learning&lt;/em&gt;, &lt;a href=&#34;http://www.gaussianprocess.org/gpml/chapters/RW9.pdf&#34;&gt;Chapter 9&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 </description>
     </item>
