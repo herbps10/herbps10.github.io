@@ -28,8 +28,7 @@
   
     
   
-  <meta name="description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some tedious notation and bookkeeping.
-I’m going to take an aside to introduce a slightly different notation than I used in the last post.">
+  <meta name="description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some somewhat tedious notation and bookkeeping.">
 
   
   <link rel="alternate" hreflang="en-us" href="/2020/12/01/conditioning-on-gaussian-process-derivative-observations/">
@@ -127,8 +126,7 @@ I’m going to take an aside to introduce a slightly different notation than I u
   <meta property="og:site_name" content="Herb Susmann">
   <meta property="og:url" content="/2020/12/01/conditioning-on-gaussian-process-derivative-observations/">
   <meta property="og:title" content="Conditioning on Gaussian Process Derivative Observations | Herb Susmann">
-  <meta property="og:description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some tedious notation and bookkeeping.
-I’m going to take an aside to introduce a slightly different notation than I used in the last post."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some somewhat tedious notation and bookkeeping."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -470,8 +468,8 @@ I’m going to take an aside to introduce a slightly different notation than I u
       
 
 
-<p>In the <a href="http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/">first post</a> of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some tedious notation and bookkeeping.</p>
-<p>I’m going to take an aside to introduce a slightly different notation than I used in the last post. The new notation looks at Gaussian Processes as a prior over a function class. It takes a bit of setup, and we will end up re-writing some of what was already done in the first post, but overall it’s a useful (and more rigorous) way of talking about Gaussian Processes.</p>
+<p>In the <a href="http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/">first post</a> of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some somewhat tedious notation and bookkeeping.</p>
+<p>I’m going to take an aside to introduce a slightly different notation than I used in the last post. The new notation looks at Gaussian Processes as priors over a function class. It takes a bit of setup, and we will end up re-writing some of what was already done in the first post, but overall it’s a useful (and more rigorous) way of talking about Gaussian Processes.</p>
 <p>Let’s say we we have some observations of a univariate function <span class="math inline">\(f(x) : \mathbb{R} \mapsto \mathbb{R}\)</span>. We wish to use these observations to estimate the function <span class="math inline">\(f\)</span> over its entire domain. Without any prior knowledge, it could be any of an infinity of possible functions. The set of all possible functions that <span class="math inline">\(f\)</span> could be is called a <em>function space</em>. In this example, <span class="math inline">\(f\)</span> is in the space of all functions that map numbers in <span class="math inline">\(\mathbb{R}\)</span> to <span class="math inline">\(\mathbb{R}\)</span>.</p>
 <p>We could stop here and say that <span class="math inline">\(f\)</span> could truly be any function. However, in many real world settings we actually do know something about what the function can look like. Broadly, we probably know something about the <em>smoothness</em> of <span class="math inline">\(f\)</span>. In some cases we might also know that it should be periodic. Gaussian Processes provide a flexible way to encode these types of prior knowledge about <span class="math inline">\(f\)</span> as a prior over an infinite dimensional function space.</p>
 <p>When thinking about Gaussian Processes as a prior over a function space, the notation is slightly different than in the previous post. We write:
@@ -580,7 +578,7 @@ k^{\mathrm{all}}(x_i, x_j, d_i, d_j) = \begin{cases}
 
 x_tilde_all &lt;- c(x_tilde, x_tilde)
 d_tilde_all &lt;- c(rep(0, length(x_tilde)), rep(1, length(x_tilde)))</code></pre>
-<p>Fortunately, the conditional distribution of a multivariate normal distribution has a closed form. Applying the formula, we arrive at
+<p>Fortunately, the conditional distribution of a multivariate normal distribution has <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Conditional_distributions">a closed form</a>. Applying the formula, we arrive at
 <span class="math display">\[
 \tilde{\bm{y}} \mid \tilde{\bm{x}}^{all}, \bm{y}^{all}, \bm{x}^{all} \sim MVN(\bm{K}^\top \bm{\Sigma}^{-1} \bm{y}^{all}, \bm{\Omega} - \bm{K}^\top \bm{\Sigma}^{-1} \bm{K})
 \]</span>
