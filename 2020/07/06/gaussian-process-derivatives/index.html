@@ -525,7 +525,7 @@ where the derivative of the covariance matrix is defined by the derivative of th
 \]</span></p>
 <p>This is enough information to be able to draw random samples from the derivative of a GP. Let’s write the new kernel <span class="math inline">\(k_11\)</span> in R, and sample from the derivative GP:</p>
 <pre class="r"><code>k_11 &lt;- function(x_i, x_j, alpha, l) {
-  alpha^2 / l^2 * (l^2 - (x_i - x_j)^2) * exp(-(x_i - x_j)^2 / (2*l^2))
+  alpha^2 / l^4 * (l^2 - (x_i - x_j)^2) * exp(-(x_i - x_j)^2 / (2*l^2))
 }
 
 n_prime &lt;- 100
@@ -790,6 +790,16 @@ plot_joint_gp(x_all, y_all[1,], d_all)</code></pre>
   
   <div class="container">
     <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
   
 
   <p class="powered-by">
