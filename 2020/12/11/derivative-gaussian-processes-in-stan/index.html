@@ -750,8 +750,10 @@ plot_posterior &lt;- function(posterior, f) {
     geom_line(data = f, aes(x, y_true, linetype = &quot;True function&quot;)) +
     
     # Observed data
-    geom_errorbar(data = f_observed, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
-    geom_point(data = f_observed, aes(x, y, color = observed), size = 2) +
+    geom_errorbar(data = f_observed, 
+                  aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
+    geom_point(data = f_observed, 
+               aes(x, y, color = observed), size = 2) +
     
     scale_linetype_manual(values = c(2, 1)) +
     
@@ -805,17 +807,20 @@ f &lt;- tibble(
   d = d
 )
 
-observed_data &lt;- filter(f, observed)
+f_observed &lt;- filter(f, observed)
 
 labeller &lt;- as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;))
 
 ggplot(f, aes(x = x, y = y_true)) +
   geom_line(aes(lty = &quot;True value&quot;)) +
-  geom_errorbar(data = observed_data, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
-  geom_point(data = observed_data, aes(y = y, color = observed), size = 2) +
-  facet_wrap(~d, ncol = 1, labeller = labeller)</code></pre>
+  geom_errorbar(data = f_observed, 
+                aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
+  geom_point(data = f_observed,
+             aes(y = y, color = observed), size = 2) +
+  facet_wrap(~d, ncol = 1, labeller = labeller) +
+  ggtitle(&quot;True function and observed values&quot;)</code></pre>
 <p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Now let’s use the function we wrote to fit the model in Stan. We’ll run the sampling algorithm for 2,000 iterations, half of which are for warm-up.</p>
+<p>We can use the function we wrote to fit the model in Stan. We’ll run the sampling algorithm for 2,000 iterations, half of which are for warm-up.</p>
 <pre class="r"><code>stanfit &lt;- stan_gaussian_process_derivative(
   model,
   x = x[observed_indices],
