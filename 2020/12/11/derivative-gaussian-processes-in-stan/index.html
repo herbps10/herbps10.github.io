@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Herb Susmann">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Fitting a Gaussian Process and its derivative in Stan.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/2020/12/11/derivative-gaussian-processes-in-stan/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.dd629241ea9333c62c071f4a25f829ff.css">
+
+  
+    
+    
+    
+    
+      
+    
+    
+    
+    <link rel="stylesheet" href="/css/academic.b18feca3f360f9969fa0dddf0cf40c3d.css">
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/2020/12/11/derivative-gaussian-processes-in-stan/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@herbps10">
+  <meta property="twitter:creator" content="@herbps10">
+  
+  <meta property="og:site_name" content="Herb Susmann">
+  <meta property="og:url" content="/2020/12/11/derivative-gaussian-processes-in-stan/">
+  <meta property="og:title" content="Derivative Gaussian Processes in Stan | Herb Susmann">
+  <meta property="og:description" content="Fitting a Gaussian Process and its derivative in Stan."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-12-11T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-12-11T10:17:59-05:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Derivative Gaussian Processes in Stan | Herb Susmann</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Herb Susmann</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/project/"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/publication/"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Derivative Gaussian Processes in Stan</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2020-12-11 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2020-12-11 10:17:59 -0500 EST" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    <time>Dec 11, 2020</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    11 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/2020/12/11/derivative-gaussian-processes-in-stan/&amp;text=Derivative%20Gaussian%20Processes%20in%20Stan" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/2020/12/11/derivative-gaussian-processes-in-stan/&amp;t=Derivative%20Gaussian%20Processes%20in%20Stan" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Derivative%20Gaussian%20Processes%20in%20Stan&amp;body=/2020/12/11/derivative-gaussian-processes-in-stan/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/2020/12/11/derivative-gaussian-processes-in-stan/&amp;title=Derivative%20Gaussian%20Processes%20in%20Stan" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Derivative%20Gaussian%20Processes%20in%20Stan%20/2020/12/11/derivative-gaussian-processes-in-stan/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/2020/12/11/derivative-gaussian-processes-in-stan/&amp;title=Derivative%20Gaussian%20Processes%20in%20Stan" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div class="figure">
+<img src="/img/klee_instruments.jpg" alt="" />
+<p class="caption">Paul Klee: Instruments (1938)</p>
+</div>
+<p>In the first post we showed <a href="http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/">how to sample from a Gaussian Process and its derivative</a>, and in the second <a href="http://herbsusmann.com/2020/12/01/conditioning-on-gaussian-process-derivative-observations/">how to condition a Gaussian Process on derivative observations</a>. So far we have been fixing the hyper parameters of the Gaussian process to fixed values. However, in the real world we usually don’t know these values; we need to estimate them. In this post we use the probabilistic programming language Stan to estimate the model parameters using full Bayesian inference.</p>
+<div id="model-specification" class="section level2">
+<h2>Model Specification</h2>
+<p>Suppose we observe the vector <span class="math inline">\(\bm{y}^{all}\)</span> at positions <span class="math inline">\(\bm{x}^{all}\)</span>, with <span class="math inline">\(\bm{d}^{all}\)</span> indicating whether each element of <span class="math inline">\(\bm{y}^{all}\)</span> is a function or derivative observation.</p>
+<p>We will assume that <span class="math inline">\(\bm{y}^{all}\)</span> are noisy measurements of the underlying function and its derivative. That is, <span class="math inline">\(y_i\)</span> is normally distributed around the truth with a fixed error <span class="math inline">\(s^2\)</span>:
+<span class="math display">\[
+\begin{aligned}
+  y^{all}_i &amp;\sim \mathrm{N}(\mu_i, s^2) \\
+  \mu_i &amp;= \begin{cases}
+    f(x^{all}_i) &amp; d_i = 0, \\
+    f^\prime(x^{all}_i) &amp; d_i = 1
+  \end{cases}
+\end{aligned}
+\]</span>
+In practice we might want to estimate the sampling variance as a separate parameter; for this post we will assume tha <span class="math inline">\(s\)</span> is known.</p>
+<p>We place a mean-zero Gaussian Process prior on <span class="math inline">\(f\)</span> with a squared exponential kernel function <span class="math inline">\(k\)</span>:
+<span class="math display">\[
+\begin{aligned}
+  f &amp;\sim \mathcal{GP}(0, k(x_i, x_j)) \\
+  f^\prime &amp;\sim \mathcal{GP}(0, k_{11}(x_i, x_j))
+\end{aligned}
+\]</span></p>
+<p>The kernel function is written
+<span class="math display">\[
+k(x_i, x_j) = \alpha^2 \exp\left(-
+\frac{(x_i - x_j)^2}{2\ell^2} \right)
+\]</span>
+where <span class="math inline">\(\alpha\)</span> sets the variance and <span class="math inline">\(\ell\)</span> is a length-scale parameter.</p>
+<p>We will predict the values of the function at a grid of points <span class="math inline">\(\bm{x}^{pred}\)</span>. We want to predict the function and its derivative, so we need another <span class="math inline">\(\bm{d}^{pred}\)</span> to indicate whether each grid point corresponds to a funtion or derivative prediction. The Gaussian Process model implies that
+<span class="math display">\[
+\begin{aligned}
+  f^{d_i}(\bm{x}^{pred}) \sim MVN\left(\bm{0}, k_{all}\left(\bm{x}^{pred}, \bm{x}^{pred}, \bm{d}^{pred}, \bm{d}^{pred} \right) \right)
+\end{aligned}
+\]</span>
+where I’m kind of abusing notation a little bit, with <span class="math inline">\(f^{d_i}\)</span> being either the function <span class="math inline">\(f\)</span> or its derivative <span class="math inline">\(f^\prime\)</span> depending on the value of <span class="math inline">\(d_i\)</span>. The overall idea here is that the fact that we placed a Gaussian process prior on <span class="math inline">\(f\)</span> implies that the joint distribution of it and its derivative is multivariate normally distributed according to a big covariance matrix defined by the function <span class="math inline">\(k_{all}\)</span>.</p>
+<p>To complete the model specification we need set priors on the kernel parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\ell\)</span>. The prior choice, particularly for <span class="math inline">\(\ell\)</span>, can be tricky; for a more thorough look at why this is and how to set priors in a principled manner I recommend the case study <a href="https://betanalpha.github.io/assets/case_studies/gaussian_processes.html">Robust Gaussian Process Modeling</a> by Michael Betancourt. For this post we will set informative Gamma priors assuming we know that the true parameter values are <span class="math inline">\(\alpha=1\)</span>, <span class="math inline">\(\ell = 1\)</span>:
+<span class="math display">\[
+\begin{aligned}
+  \alpha &amp;\sim \mathrm{Gamma}(5, 5) \\
+  \ell   &amp;\sim \mathrm{Gamma}(5, 5) \\
+\end{aligned}
+\]</span></p>
+</div>
+<div id="writing-the-model-in-stan" class="section level2">
+<h2>Writing the Model in Stan</h2>
+<p>Recall that the kernel <span class="math inline">\(k^{all}\)</span> takes two observations and returns their covariance depending on whether each observation is a function or derivative observation:
+<span class="math display">\[
+k^{\mathrm{all}}(x_i, x_j, d_i, d_j) = \begin{cases}
+  k(x_i, x_j) &amp; d_i = 0, d_j = 0 \text{ (both normal observations)} \\
+  k_{01}(x_i, x_j) &amp; d_i = 0, d_j = 0 \text{ (one derivative, one normal)} \\
+  k_{10}(x_i, x_j) &amp; d_i = 1, d_j = 0 \text{ (one derivative, one normal)} \\
+  k_{11}(x_i, x_j) &amp; d_i = 1, d_j = 0 \text{ (both derivatives)}
+\end{cases}
+\]</span>
+See the <a href="http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/">first post</a> for the definitions of <span class="math inline">\(k\)</span>, <span class="math inline">\(k_{01}\)</span>, <span class="math inline">\(k_{10}\)</span>, and <span class="math inline">\(k_{11}\)</span>. In Stan we implement this as a function (in the <code>functions</code> block) which takes a vector <code>x</code>, with the argument <code>derivative</code> indicating whether each element of <code>x</code> corresponds to the function or its derivative.</p>
+<p>To implement the Gaussian Process we use an efficient Cholesky Factored implementation. See the <a href="https://mc-stan.org/docs/2_19/stan-users-guide/simulating-from-a-gaussian-process.html">Gaussian Processes</a> from the Stan User’s Guide for more details.</p>
+<p>Also note a restriction of how this model is coded: we require that places the function is observed (<span class="math inline">\(x^{all}\)</span>) is included in the grid of places where the function is predicted (<span class="math inline">\(\bm{x}^{pred}\)</span>). This is so we can write the model to predict at all the points in <span class="math inline">\(\bm{x}^{pred}\)</span> and then link those predictions to the observed data via the likelihood.</p>
+<p>Here is the full Stan model:</p>
+<pre class="stan"><code>functions {
+  matrix kernel(real[] x, int[] derivative, real alpha, real rho) {
+    int N = size(x);
+    matrix[N, N] K;
+    real sq_alpha = square(alpha);
+    real sq_rho = square(rho);
+    real rho4 = pow(rho, 4);
+    
+    real r = -inv(2 * sq_rho);
+    
+    for(i in 1:(N - 1)) {
+      if(derivative[i] == 0) {
+        K[i, i] = sq_alpha;
+      }
+      else if(derivative[i] == 1) {
+        K[i, i] = sq_alpha / sq_rho;
+      }
+      
+      for(j in (i + 1):N) {
+        if(derivative[i] == 0 &amp;&amp; derivative[j] == 0) {
+          K[i, j] = sq_alpha * exp(r * square(x[i] - x[j]));
+        }
+        else if(derivative[i] == 0 &amp;&amp; derivative[j] == 1) {
+          K[i, j] = exp(r * square(x[i] - x[j])) * 
+            (x[i] - x[j]) * sq_alpha / sq_rho;
+        }
+        else if(derivative[i] == 1 &amp;&amp; derivative[j] == 0) {
+          K[i, j] = exp(r * square(x[i] - x[j])) * 
+            (x[j] - x[i]) * sq_alpha / sq_rho;
+        }
+        else if(derivative[i] == 1 &amp;&amp; derivative[j] == 1) {
+          K[i, j] = exp(r * square(x[i] - x[j])) * 
+            (sq_rho - square(x[i] - x[j])) * sq_alpha / rho4;
+        }
+        K[j, i] = K[i, j];
+      }
+    }
+    if(derivative[N] == 0) {
+      K[N, N] = sq_alpha;
+    }
+    else if(derivative[N] == 1) {
+      K[N, N] = sq_rho * sq_alpha / rho4;
+    }
+    
+    return K;
+  }
+}
+data {
+  // Number of grid points
+  int T; 
+  
+  // Grid point locations
+  real pred_xs[T]; 
+  
+  // Indicator of whether each grid point refers
+  // to a function or derivative value
+  int&lt;lower=0, upper=1&gt; pred_derivatives[T];
+  
+  // Number of observations
+  int&lt;lower=1&gt; N;
+  
+  // Observed outcomes
+  vector[N] y; 
+  
+  // Index of observations in grid
+  int&lt;lower=1,upper=T&gt; index[N]; 
+  
+  // Sampling variance
+  real&lt;lower=0&gt; s;
+}
+
+transformed data {
+  real delta = 1e-9;
+  
+  // Square of sampling variance
+  real sq_s = square(s);
+}
+
+parameters {
+  // Length scale parameter
+  real&lt;lower=0&gt; rho;
+  
+  // Variance parameter
+  real&lt;lower=0&gt; alpha;
+  
+  vector[T] eta;
+}
+
+transformed parameters {
+  // Function predicted at grid points
+  vector[T] f;
+  
+  {
+    // Compute covariance kernel
+    matrix[T, T] L_K;
+    matrix[T, T] K = kernel(pred_xs, pred_derivatives, alpha, rho);
+
+    // add small value to diagonal
+    // for numerical stability
+    for (t in 1:T)
+      K[t, t] = K[t, t] + delta;
+
+    L_K = cholesky_decompose(K);
+    f = L_K * eta;
+  }
+}
+model {
+  // Priors
+  rho ~ gamma(5, 5);
+  alpha ~ gamma(5, 5);
+  
+  eta ~ std_normal();
+  
+  // Likelihood
+  // The observations y should be normally
+  // distributed around the function predictions.
+  // The variable index tells us which values in f
+  // correspond to the observations y.
+  y ~ normal(f[index], s);
+}
+</code></pre>
+<p>When I use Stan models in R I like to wrap up the code that calls Stan into a separate function so it’s easier to reuse multiple times.</p>
+<pre class="r"><code>#&#39;
+#&#39; Fit a Gaussian Process with derivatives in Stan
+#&#39; 
+#&#39; @param stan_model RStan model object
+#&#39; @param x x-coordinates of the observed values
+#&#39; @param y observed values of the function or its derivative
+#&#39; @param derivative vector indicating if each value of y is a
+#&#39;                   function observation (0) or derivative (1)
+#&#39; @param pred_xs where to predict the function and its derivative
+#&#39; @param sampling_variance fixed sampling variance
+#&#39; @param ... additional arguments passed to Stan sampler
+stan_gaussian_process_derivative &lt;- function(
+  stan_model, 
+  x, 
+  y,
+  derivative,
+  pred_xs,
+  sampling_variance, 
+  ...
+) {
+  
+  if(length(x) != length(y) || length(y) != length(derivative)) {
+    stop(&quot;x, y, and derivative arguments must have same length&quot;)
+  }
+  
+  if(any(x %in% pred_xs == FALSE)) {
+    stop(&quot;all values of x must be in pred_xs&quot;)
+  }
+  
+  # Repeat the grid twice, first for function values
+  # and second for its derivative
+  grid &lt;- c(pred_xs, pred_xs)
+  derivative_grid &lt;- c(rep(0, length(pred_xs)), rep(1, length(pred_xs)))
+  
+  # Map the observed xs to their positions in the prediction grid
+  x_indices &lt;- match(x, pred_xs)
+  
+  # the derivatives are in the second half
+  # of the grid, so offset their positions
+  x_indices &lt;- ifelse(derivative == 1, x_indices + length(pred_xs), x_indices)
+  
+  # Make sure we did this step correctly:
+  stopifnot(all(grid[x_indices] == x))
+  stopifnot(all(derivative_grid[x_indices] == derivative))
+  
+  stan_data &lt;- list(
+    T = length(grid),
+    pred_xs = grid,
+    pred_derivatives = derivative_grid,
+    N = length(x),
+    y = y,
+    index = x_indices,
+    s = sqrt(sampling_variance)
+  )
+  
+  fit &lt;- rstan::sampling(stan_model, stan_data, ...)
+  
+  # Return the stan data object and the fitted model object
+  list(
+    data = stan_data,
+    fit = fit
+  )
+}</code></pre>
+<p>It’s also convenient to write functions for summarizing the posterior distribution of the function predictions and for plotting the results.</p>
+<p>To summarize the posterior, we use <a href="https://mjskay.github.io/tidybayes/"><code>tidybayes</code></a> to extract posterior medians and 95% credible intervals.</p>
+<pre class="r"><code>#&#39; Summarize posterior medians and credible intervals of 
+#&#39; Gaussian Process derivative fit
+#&#39;
+#&#39; @param fit output from stan_gaussian_process_derivative function
+summarize_gp_posterior &lt;- function(fit) {
+  tidybayes::spread_draws(fit$fit, f[index]) %&gt;%
+    mutate(x = fit$data$pred_xs[index],
+           d = fit$data$pred_derivatives[index]) %&gt;%
+    group_by(d, x) %&gt;%
+    tidybayes::median_qi(f)
+}</code></pre>
+<p>For plotting, we’ll take the summarized posterior and plot it along with the true function values and the observed data.</p>
+<pre class="r"><code>#&#39; Plot the posterior distribution from the model fit
+#&#39; and compare to the true function and observed data
+#&#39; 
+#&#39; @param posterior output from summarize_gp_posterior function
+#&#39; @param f data frame containing true function values and observed data
+plot_posterior &lt;- function(posterior, f) {
+  # Facet labeller
+  labeller &lt;- as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;))
+  
+  observed_data &lt;- filter(f, observed)
+  
+  ggplot(posterior, aes(x = x)) +
+    # Posterior distribution
+    geom_ribbon(aes(y = f, ymin = .lower, ymax = .upper), alpha = 0.2) +
+    geom_line(aes(y = f, linetype = &quot;Posterior median&quot;)) +
+    
+    # True function
+    geom_line(data = f, aes(x, y_true, linetype = &quot;True function&quot;)) +
+    
+    # Observed data
+    geom_errorbar(data = observed_data, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
+    geom_point(data = observed_data, aes(x, y, color = observed), size = 2) +
+    
+    scale_linetype_manual(values = c(2, 1)) +
+    
+    facet_wrap(~d, ncol = 1, labeller = labeller)
+}</code></pre>
+</div>
+<div id="example-fitting-simulated-data" class="section level2">
+<h2>Example: Fitting Simulated Data</h2>
+<p>Let’s draw some simulated data from a Gaussian Process. We’ll use the same code as the previous post, with a slight change to make the observed data have normally distributed error.</p>
+<pre class="r"><code>set.seed(9)
+
+# Set hyperparameters
+alpha &lt;- 1
+l &lt;- 1
+
+# Points at which to observe the function and its derivative
+x &lt;- rep(seq(0, 10, 0.25), 2)
+d &lt;- c(rep(0, length(x) / 2), rep(1, length(x) / 2))
+
+# Joint covariance matrix
+Sigma &lt;- joint_covariance_from_kernel(x, d, k_all, alpha = alpha, l = l)
+
+# Draw from joint GP
+y_true &lt;- gp_draw(1, x, Sigma)[1, ]
+
+# Add random error
+sampling_variance &lt;- 0.025
+y &lt;- rnorm(length(y_true), mean = y_true, sd = sqrt(sampling_variance))</code></pre>
+<p>Now let’s choose a few function and derivative values which we’ll use as our observed data:</p>
+<pre class="r"><code># Pick a few function and derivative values to use as observed data, making
+# sure to pick an equal number of each type
+N &lt;- 10
+observed_indices &lt;- c(
+  sample(which(d == 0), N / 2),
+  sample(which(d == 1), N / 2)
+)
+
+# We&#39;ll call the observed data y_all so that it matches with the math notation
+x_all &lt;- x[observed_indices]
+y_all &lt;- y[observed_indices]
+d_all &lt;- d[observed_indices]</code></pre>
+<p>Let’s plot the observed values with error bars, along with the true value of the function:</p>
+<pre class="r"><code># Create a data frame for plotting
+f &lt;- tibble(
+  x = x,
+  y_true = y_true,
+  y = y,
+  y_lower = y - 1.96 * sqrt(sampling_variance),
+  y_upper = y + 1.96 * sqrt(sampling_variance),
+  observed = seq_along(x) %in% observed_indices,
+  d = d
+)
+
+observed_data &lt;- filter(f, observed)
+
+labeller &lt;- as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;))
+
+ggplot(f, aes(x = x, y = y_true)) +
+  geom_line(aes(lty = &quot;True value&quot;)) +
+  geom_errorbar(data = observed_data, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
+  geom_point(data = observed_data, aes(y = y, color = observed), size = 2) +
+  facet_wrap(~d, ncol = 1, labeller = labeller)</code></pre>
+<p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Now let’s use the function we wrote to fit the model in Stan. We’ll run the sampling algorithm for 2,000 iterations, half of which are for warm-up.</p>
+<pre class="r"><code>stanfit &lt;- stan_gaussian_process_derivative(
+  model,
+  x = x[observed_indices],
+  y = y[observed_indices],
+  derivative = d[observed_indices],
+  pred_xs = x,
+  sampling_variance = sampling_variance,
+  
+  # Sampling algorithm parameters
+  iter = 2000,
+  cores = 4
+)</code></pre>
+<pre class="r"><code>plot_posterior(summarize_gp_posterior(stanfit), f) +
+  ggtitle(&quot;Stan Gaussian Proces Model Posterior&quot;)</code></pre>
+<p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Let’s also check the posterior distributions for the kernel hyperparameters:</p>
+<pre class="r"><code>fit_matrix &lt;- as.matrix(stanfit$fit)[, c(&quot;alpha&quot;, &quot;rho&quot;)]
+
+bayesplot::mcmc_recover_hist(fit_matrix, c(1, 1))</code></pre>
+<p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>bayesplot::mcmc_recover_intervals(fit_matrix, c(1, 1))</code></pre>
+<p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p>The posterior mode underestimates the hyperparameters, although the true values are well within the 90% credible intervals.</p>
+<p>Let’s fit the model again, but this time leave out the derivative observations so we can see how much they influence the model fit. This is where wrapping up all the code into functions pays off, as we won’t need to rewrite all of the model fitting code.</p>
+<pre class="r"><code>observed_no_derivatives &lt;- observed_indices[d[observed_indices] == 0]
+
+stanfit_no_derivatives &lt;- stan_gaussian_process_derivative(
+  model,
+  x = x[observed_no_derivatives],
+  y = y[observed_no_derivatives],
+  derivative = d[observed_no_derivatives],
+  pred_xs = x,
+  sampling_variance = sampling_variance,
+  
+  # Sampling algorithm parameters
+  iter = 2000,
+  cores = 4
+)</code></pre>
+<p>Now we can compare the two model fits, with and without the derivative values observed.</p>
+<pre class="r"><code>plot_posterior(summarize_gp_posterior(stanfit), f) +
+  ggtitle(&quot;With derivatives observed&quot;)</code></pre>
+<p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>plot_posterior(
+  summarize_gp_posterior(stanfit_no_derivatives),
+  mutate(f, observed = ifelse(d == 0, observed, FALSE))
+) +
+  ggtitle(&quot;Without derivatives observed&quot;)</code></pre>
+<p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<p>Including the derivative observations makes a big difference in the model fit, as we would expect.</p>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hue57d0e8436ae96137a60d1345f821d2b_24465_250x250_fill_lanczos_center_2.png" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Herb Susmann</a></h5>
+      <h6 class="card-subtitle">Graduate Student</h6>
+      <p class="card-text" itemprop="description">Gradate student in Biostatistics at UMass Amherst matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+          <li>
+            <a itemprop="sameAs" href="mailto:hsusmann@umass.edu" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    <script src="/js/academic.min.bec90056665421447c830e8aa2f42710.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" integrity="sha256-gfQwA6PlkZsLqWu4bU4hXPrbTqzixm0B5MdvBLI+Oas=" crossorigin="anonymous"></script>
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -28,8 +28,7 @@
   
     
   
-  <meta name="description" content="A Gaussian Process (GP) is a process for which any finite set of observations follows a multivariate normal distribution. GPs are defined by their mean and a kernel function that gives the covariance between any two observations. They are useful in Bayesian statistics as priors over function spaces.
-To denote a GP prior over a set of observations \(\bm{y} = \{y_1, y_2, \cdots, y_n\}\) at points \(\bm{x} = \{ x_1, x_2, \cdots, x_n\}\), we write:\[\bm{y} \sim \mathcal{GP}(\bm{\mu}, \bm{\Sigma})\]">
+  <meta name="description" content="Drawing from a Gaussian Process and its derivative.">
 
   
   <link rel="alternate" hreflang="en-us" href="/2020/07/06/gaussian-process-derivatives/">
@@ -96,7 +95,7 @@ To denote a GP prior over a set of observations \(\bm{y} = \{y_1, y_2, \cdots, y
     
     
     
-    <link rel="stylesheet" href="/css/academic.ca445caa71dda91c09e3fe30bfc46d9c.css">
+    <link rel="stylesheet" href="/css/academic.b18feca3f360f9969fa0dddf0cf40c3d.css">
   
 
   
@@ -127,8 +126,7 @@ To denote a GP prior over a set of observations \(\bm{y} = \{y_1, y_2, \cdots, y
   <meta property="og:site_name" content="Herb Susmann">
   <meta property="og:url" content="/2020/07/06/gaussian-process-derivatives/">
   <meta property="og:title" content="Derivatives of a Gaussian Process | Herb Susmann">
-  <meta property="og:description" content="A Gaussian Process (GP) is a process for which any finite set of observations follows a multivariate normal distribution. GPs are defined by their mean and a kernel function that gives the covariance between any two observations. They are useful in Bayesian statistics as priors over function spaces.
-To denote a GP prior over a set of observations \(\bm{y} = \{y_1, y_2, \cdots, y_n\}\) at points \(\bm{x} = \{ x_1, x_2, \cdots, x_n\}\), we write:\[\bm{y} \sim \mathcal{GP}(\bm{\mu}, \bm{\Sigma})\]"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="Drawing from a Gaussian Process and its derivative."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -468,8 +466,13 @@ To denote a GP prior over a set of observations \(\bm{y} = \{y_1, y_2, \cdots, y
 
     <div class="article-style" itemprop="articleBody">
       
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<div class="figure">
+<img src="/img/klee_mountains.jpg" alt="" />
+<p class="caption">Paul Klee: Joyfal Mountain Landscape (1929)</p>
+</div>
 <p>A <a href="https://en.wikipedia.org/wiki/Gaussian_process"><em>Gaussian Process</em></a> (GP) is a process for which any finite set of observations follows a multivariate normal distribution. GPs are defined by their mean and a kernel function that gives the covariance between any two observations. They are useful in Bayesian statistics as priors over function spaces.</p>
 <p>To denote a GP prior over a set of observations <span class="math inline">\(\bm{y} = \{y_1, y_2, \cdots, y_n\}\)</span> at points <span class="math inline">\(\bm{x} = \{ x_1, x_2, \cdots, x_n\}\)</span>, we write:
 <span class="math display">\[

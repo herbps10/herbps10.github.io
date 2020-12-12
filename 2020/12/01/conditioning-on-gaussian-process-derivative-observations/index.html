@@ -28,7 +28,7 @@
   
     
   
-  <meta name="description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some somewhat tedious notation and bookkeeping.">
+  <meta name="description" content="Conditioning a Gaussian Process on derivative observations, with code in R.">
 
   
   <link rel="alternate" hreflang="en-us" href="/2020/12/01/conditioning-on-gaussian-process-derivative-observations/">
@@ -95,7 +95,7 @@
     
     
     
-    <link rel="stylesheet" href="/css/academic.ca445caa71dda91c09e3fe30bfc46d9c.css">
+    <link rel="stylesheet" href="/css/academic.b18feca3f360f9969fa0dddf0cf40c3d.css">
   
 
   
@@ -126,7 +126,7 @@
   <meta property="og:site_name" content="Herb Susmann">
   <meta property="og:url" content="/2020/12/01/conditioning-on-gaussian-process-derivative-observations/">
   <meta property="og:title" content="Conditioning on Gaussian Process Derivative Observations | Herb Susmann">
-  <meta property="og:description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some somewhat tedious notation and bookkeeping."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="Conditioning a Gaussian Process on derivative observations, with code in R."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -466,8 +466,13 @@
 
     <div class="article-style" itemprop="articleBody">
       
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<div class="figure">
+<img src="/img/klee_may.jpg" alt="" />
+<p class="caption">Paul Klee: May Picture (1925)</p>
+</div>
 <p>In the <a href="http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/">first post</a> of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some somewhat tedious notation and bookkeeping.</p>
 <p>I’m going to take an aside to introduce a slightly different notation than I used in the last post. The new notation looks at Gaussian Processes as priors over a function class. It takes a bit of setup, and we will end up re-writing some of what was already done in the first post, but overall it’s a useful (and more rigorous) way of talking about Gaussian Processes.</p>
 <p>Let’s say we we have some observations of a univariate function <span class="math inline">\(f(x) : \mathbb{R} \mapsto \mathbb{R}\)</span>. We wish to use these observations to estimate the function <span class="math inline">\(f\)</span> over its entire domain. Without any prior knowledge, it could be any of an infinity of possible functions. The set of all possible functions that <span class="math inline">\(f\)</span> could be is called a <em>function space</em>. In this example, <span class="math inline">\(f\)</span> is in the space of all functions that map numbers in <span class="math inline">\(\mathbb{R}\)</span> to <span class="math inline">\(\mathbb{R}\)</span>.</p>
@@ -555,10 +560,12 @@ f &lt;- tibble(
   d = d
 )
 
+labeller &lt;- as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;))
+
 ggplot(f, aes(x = x, y = y)) +
   geom_line(aes(lty = &quot;True value&quot;)) +
   geom_point(data = filter(f, observed), aes(color = observed), size = 2) +
-  facet_wrap(~d, ncol = 1, labeller = as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;)))</code></pre>
+  facet_wrap(~d, ncol = 1, labeller = labeller)</code></pre>
 <p><img src="/post/2020-12-01-conditioning-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>With the data combined into one long vector, the joint distribution of the observed data <span class="math inline">\(\bm{y}^{all}\)</span> is now given by
 <span class="math display">\[
@@ -597,20 +604,26 @@ Sigma &lt;- joint_covariance_from_kernel(x_all, d_all, k_all, alpha = alpha, l =
 Sigma &lt;- Sigma + diag(1e-4, nrow(Sigma))
 
 # Covariance between the prediction points
-Omega &lt;- joint_covariance_from_kernel(x_tilde_all, d_tilde_all, k_all, alpha = alpha, l = l)
+Omega &lt;- joint_covariance_from_kernel(x_tilde_all, d_tilde_all, k_all, 
+                                      alpha = alpha, l = l)
 
 # Covariance between the observed and prediction points
 # We calculate K by computing the covariance between x_all and x_tilde_all
-K &lt;- outer(1:length(x_all), 1:length(x_tilde_all),
-        function(i, j) k_all(x_all[i], x_tilde_all[j], d_all[i], d_tilde_all[j], alpha = alpha, l = l))</code></pre>
+K &lt;- outer(
+  1:length(x_all),
+  1:length(x_tilde_all),
+  function(i, j) {
+    k_all(x_all[i], x_tilde_all[j], d_all[i], d_tilde_all[j], alpha = alpha, l = l)
+  }
+)</code></pre>
 <p>Then apply the conditioning formula to get the conditional mean and covariance matrix:</p>
 <pre class="r"><code>mu_conditional &lt;- t(K) %*% solve(Sigma) %*% y_all
 Sigma_conditional &lt;- Omega - t(K) %*% solve(Sigma) %*% K</code></pre>
 <p>For plotting, it’s helpful to extract the marginal variances of each prediction, which are the diagonal entries of the conditional covariance matrix. We can also use this to get a 95% prediction interval:</p>
 <pre class="r"><code>variance_conditional &lt;- diag(Sigma_conditional)
 
-# Floating point errors sometimes causes the variances to be very close to zero, but negative.
-# if this happens, just set the variance to zero:
+# Floating point errors sometimes causes the variances to be very close to zero, 
+# but negative. If this happens, just set the variance to zero:
 variance_conditional &lt;- ifelse(variance_conditional &lt; 0, 0, variance_conditional)
 
 # 95% intervals
@@ -631,7 +644,7 @@ ggplot(f_conditional, aes(x = x, y = y)) +
   geom_line(aes(lty = &quot;True value&quot;), data = f) +
   geom_point(aes(color = observed), data = filter(f, observed)) +
   scale_linetype_manual(values = c(2, 1)) +
-  facet_wrap(~d, ncol = 1, labeller = as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;)))</code></pre>
+  facet_wrap(~d, ncol = 1, labeller = labeller)</code></pre>
 <p><img src="/post/2020-12-01-conditioning-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>The inclusion of derivative information between <span class="math inline">\(x=2.5\)</span> and <span class="math inline">\(x=5.0\)</span> appears to have a big effect on the predictions. Even though there are no function values in this region, the derivatives are able to guide the predictions.</p>
 <p>It would be nice to be able to compare these predictions to ones that don’t use any derivative information. To make this easier, let’s wrap up our code into a helper function which will handle the conditional multivariate normal calculations:</p>
@@ -668,7 +681,7 @@ condition_joint_gp &lt;- function(x_tilde, d_tilde, y, x, d, kernel, ...) {
     geom_line(aes(lty = &quot;True value&quot;), data = f) +
     geom_point(aes(color = observed), data = filter(f, observed)) +
     scale_linetype_manual(values = c(2, 1)) +
-    facet_wrap(~d, ncol = 1, labeller = as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;)))
+    facet_wrap(~d, ncol = 1, labeller = labeller)
 }</code></pre>
 <p>Now let’s condition on just the function observations, leaving out the derivative points, and plotting the results.</p>
 <pre class="r"><code>non_derivative_indices &lt;- which(d_all == 0)
@@ -686,7 +699,10 @@ f_conditional_no_derivatives &lt;- condition_joint_gp(
 
 
 # First, plot the predictions that don&#39;t use derivative information
-plot_conditional(f_conditional_no_derivatives, mutate(f, observed = ifelse(d == 1, FALSE, observed))) +
+plot_conditional(
+  f_conditional_no_derivatives,
+  mutate(f, observed = ifelse(d == 1, FALSE, observed))
+) +
   ggtitle(&quot;Predictions without derivative observations&quot;)</code></pre>
 <p><img src="/post/2020-12-01-conditioning-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <pre class="r"><code># Then plot again the predictions that use the derivatives

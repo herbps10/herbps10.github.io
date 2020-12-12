@@ -36,13 +36,427 @@
     </item>
     
     <item>
+      <title>Derivative Gaussian Processes in Stan</title>
+      <link>/2020/12/11/derivative-gaussian-processes-in-stan/</link>
+      <pubDate>Fri, 11 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>/2020/12/11/derivative-gaussian-processes-in-stan/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/img/klee_instruments.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Paul Klee: Instruments (1938)&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;In the first post we showed &lt;a href=&#34;http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/&#34;&gt;how to sample from a Gaussian Process and its derivative&lt;/a&gt;, and in the second &lt;a href=&#34;http://herbsusmann.com/2020/12/01/conditioning-on-gaussian-process-derivative-observations/&#34;&gt;how to condition a Gaussian Process on derivative observations&lt;/a&gt;. So far we have been fixing the hyper parameters of the Gaussian process to fixed values. However, in the real world we usually don’t know these values; we need to estimate them. In this post we use the probabilistic programming language Stan to estimate the model parameters using full Bayesian inference.&lt;/p&gt;
+&lt;div id=&#34;model-specification&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model Specification&lt;/h2&gt;
+&lt;p&gt;Suppose we observe the vector &lt;span class=&#34;math inline&#34;&gt;\(\bm{y}^{all}\)&lt;/span&gt; at positions &lt;span class=&#34;math inline&#34;&gt;\(\bm{x}^{all}\)&lt;/span&gt;, with &lt;span class=&#34;math inline&#34;&gt;\(\bm{d}^{all}\)&lt;/span&gt; indicating whether each element of &lt;span class=&#34;math inline&#34;&gt;\(\bm{y}^{all}\)&lt;/span&gt; is a function or derivative observation.&lt;/p&gt;
+&lt;p&gt;We will assume that &lt;span class=&#34;math inline&#34;&gt;\(\bm{y}^{all}\)&lt;/span&gt; are noisy measurements of the underlying function and its derivative. That is, &lt;span class=&#34;math inline&#34;&gt;\(y_i\)&lt;/span&gt; is normally distributed around the truth with a fixed error &lt;span class=&#34;math inline&#34;&gt;\(s^2\)&lt;/span&gt;:
+&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  y^{all}_i &amp;amp;\sim \mathrm{N}(\mu_i, s^2) \\
+  \mu_i &amp;amp;= \begin{cases}
+    f(x^{all}_i) &amp;amp; d_i = 0, \\
+    f^\prime(x^{all}_i) &amp;amp; d_i = 1
+  \end{cases}
+\end{aligned}
+\]&lt;/span&gt;
+In practice we might want to estimate the sampling variance as a separate parameter; for this post we will assume tha &lt;span class=&#34;math inline&#34;&gt;\(s\)&lt;/span&gt; is known.&lt;/p&gt;
+&lt;p&gt;We place a mean-zero Gaussian Process prior on &lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; with a squared exponential kernel function &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;:
+&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  f &amp;amp;\sim \mathcal{GP}(0, k(x_i, x_j)) \\
+  f^\prime &amp;amp;\sim \mathcal{GP}(0, k_{11}(x_i, x_j))
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The kernel function is written
+&lt;span class=&#34;math display&#34;&gt;\[
+k(x_i, x_j) = \alpha^2 \exp\left(-
+\frac{(x_i - x_j)^2}{2\ell^2} \right)
+\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; sets the variance and &lt;span class=&#34;math inline&#34;&gt;\(\ell\)&lt;/span&gt; is a length-scale parameter.&lt;/p&gt;
+&lt;p&gt;We will predict the values of the function at a grid of points &lt;span class=&#34;math inline&#34;&gt;\(\bm{x}^{pred}\)&lt;/span&gt;. We want to predict the function and its derivative, so we need another &lt;span class=&#34;math inline&#34;&gt;\(\bm{d}^{pred}\)&lt;/span&gt; to indicate whether each grid point corresponds to a funtion or derivative prediction. The Gaussian Process model implies that
+&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  f^{d_i}(\bm{x}^{pred}) \sim MVN\left(\bm{0}, k_{all}\left(\bm{x}^{pred}, \bm{x}^{pred}, \bm{d}^{pred}, \bm{d}^{pred} \right) \right)
+\end{aligned}
+\]&lt;/span&gt;
+where I’m kind of abusing notation a little bit, with &lt;span class=&#34;math inline&#34;&gt;\(f^{d_i}\)&lt;/span&gt; being either the function &lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; or its derivative &lt;span class=&#34;math inline&#34;&gt;\(f^\prime\)&lt;/span&gt; depending on the value of &lt;span class=&#34;math inline&#34;&gt;\(d_i\)&lt;/span&gt;. The overall idea here is that the fact that we placed a Gaussian process prior on &lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; implies that the joint distribution of it and its derivative is multivariate normally distributed according to a big covariance matrix defined by the function &lt;span class=&#34;math inline&#34;&gt;\(k_{all}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;To complete the model specification we need set priors on the kernel parameters &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\ell\)&lt;/span&gt;. The prior choice, particularly for &lt;span class=&#34;math inline&#34;&gt;\(\ell\)&lt;/span&gt;, can be tricky; for a more thorough look at why this is and how to set priors in a principled manner I recommend the case study &lt;a href=&#34;https://betanalpha.github.io/assets/case_studies/gaussian_processes.html&#34;&gt;Robust Gaussian Process Modeling&lt;/a&gt; by Michael Betancourt. For this post we will set informative Gamma priors assuming we know that the true parameter values are &lt;span class=&#34;math inline&#34;&gt;\(\alpha=1\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\ell = 1\)&lt;/span&gt;:
+&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+  \alpha &amp;amp;\sim \mathrm{Gamma}(5, 5) \\
+  \ell   &amp;amp;\sim \mathrm{Gamma}(5, 5) \\
+\end{aligned}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;writing-the-model-in-stan&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Writing the Model in Stan&lt;/h2&gt;
+&lt;p&gt;Recall that the kernel &lt;span class=&#34;math inline&#34;&gt;\(k^{all}\)&lt;/span&gt; takes two observations and returns their covariance depending on whether each observation is a function or derivative observation:
+&lt;span class=&#34;math display&#34;&gt;\[
+k^{\mathrm{all}}(x_i, x_j, d_i, d_j) = \begin{cases}
+  k(x_i, x_j) &amp;amp; d_i = 0, d_j = 0 \text{ (both normal observations)} \\
+  k_{01}(x_i, x_j) &amp;amp; d_i = 0, d_j = 0 \text{ (one derivative, one normal)} \\
+  k_{10}(x_i, x_j) &amp;amp; d_i = 1, d_j = 0 \text{ (one derivative, one normal)} \\
+  k_{11}(x_i, x_j) &amp;amp; d_i = 1, d_j = 0 \text{ (both derivatives)}
+\end{cases}
+\]&lt;/span&gt;
+See the &lt;a href=&#34;http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/&#34;&gt;first post&lt;/a&gt; for the definitions of &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(k_{01}\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(k_{10}\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(k_{11}\)&lt;/span&gt;. In Stan we implement this as a function (in the &lt;code&gt;functions&lt;/code&gt; block) which takes a vector &lt;code&gt;x&lt;/code&gt;, with the argument &lt;code&gt;derivative&lt;/code&gt; indicating whether each element of &lt;code&gt;x&lt;/code&gt; corresponds to the function or its derivative.&lt;/p&gt;
+&lt;p&gt;To implement the Gaussian Process we use an efficient Cholesky Factored implementation. See the &lt;a href=&#34;https://mc-stan.org/docs/2_19/stan-users-guide/simulating-from-a-gaussian-process.html&#34;&gt;Gaussian Processes&lt;/a&gt; from the Stan User’s Guide for more details.&lt;/p&gt;
+&lt;p&gt;Also note a restriction of how this model is coded: we require that places the function is observed (&lt;span class=&#34;math inline&#34;&gt;\(x^{all}\)&lt;/span&gt;) is included in the grid of places where the function is predicted (&lt;span class=&#34;math inline&#34;&gt;\(\bm{x}^{pred}\)&lt;/span&gt;). This is so we can write the model to predict at all the points in &lt;span class=&#34;math inline&#34;&gt;\(\bm{x}^{pred}\)&lt;/span&gt; and then link those predictions to the observed data via the likelihood.&lt;/p&gt;
+&lt;p&gt;Here is the full Stan model:&lt;/p&gt;
+&lt;pre class=&#34;stan&#34;&gt;&lt;code&gt;functions {
+  matrix kernel(real[] x, int[] derivative, real alpha, real rho) {
+    int N = size(x);
+    matrix[N, N] K;
+    real sq_alpha = square(alpha);
+    real sq_rho = square(rho);
+    real rho4 = pow(rho, 4);
+    
+    real r = -inv(2 * sq_rho);
+    
+    for(i in 1:(N - 1)) {
+      if(derivative[i] == 0) {
+        K[i, i] = sq_alpha;
+      }
+      else if(derivative[i] == 1) {
+        K[i, i] = sq_alpha / sq_rho;
+      }
+      
+      for(j in (i + 1):N) {
+        if(derivative[i] == 0 &amp;amp;&amp;amp; derivative[j] == 0) {
+          K[i, j] = sq_alpha * exp(r * square(x[i] - x[j]));
+        }
+        else if(derivative[i] == 0 &amp;amp;&amp;amp; derivative[j] == 1) {
+          K[i, j] = exp(r * square(x[i] - x[j])) * 
+            (x[i] - x[j]) * sq_alpha / sq_rho;
+        }
+        else if(derivative[i] == 1 &amp;amp;&amp;amp; derivative[j] == 0) {
+          K[i, j] = exp(r * square(x[i] - x[j])) * 
+            (x[j] - x[i]) * sq_alpha / sq_rho;
+        }
+        else if(derivative[i] == 1 &amp;amp;&amp;amp; derivative[j] == 1) {
+          K[i, j] = exp(r * square(x[i] - x[j])) * 
+            (sq_rho - square(x[i] - x[j])) * sq_alpha / rho4;
+        }
+        K[j, i] = K[i, j];
+      }
+    }
+    if(derivative[N] == 0) {
+      K[N, N] = sq_alpha;
+    }
+    else if(derivative[N] == 1) {
+      K[N, N] = sq_rho * sq_alpha / rho4;
+    }
+    
+    return K;
+  }
+}
+data {
+  // Number of grid points
+  int T; 
+  
+  // Grid point locations
+  real pred_xs[T]; 
+  
+  // Indicator of whether each grid point refers
+  // to a function or derivative value
+  int&amp;lt;lower=0, upper=1&amp;gt; pred_derivatives[T];
+  
+  // Number of observations
+  int&amp;lt;lower=1&amp;gt; N;
+  
+  // Observed outcomes
+  vector[N] y; 
+  
+  // Index of observations in grid
+  int&amp;lt;lower=1,upper=T&amp;gt; index[N]; 
+  
+  // Sampling variance
+  real&amp;lt;lower=0&amp;gt; s;
+}
+
+transformed data {
+  real delta = 1e-9;
+  
+  // Square of sampling variance
+  real sq_s = square(s);
+}
+
+parameters {
+  // Length scale parameter
+  real&amp;lt;lower=0&amp;gt; rho;
+  
+  // Variance parameter
+  real&amp;lt;lower=0&amp;gt; alpha;
+  
+  vector[T] eta;
+}
+
+transformed parameters {
+  // Function predicted at grid points
+  vector[T] f;
+  
+  {
+    // Compute covariance kernel
+    matrix[T, T] L_K;
+    matrix[T, T] K = kernel(pred_xs, pred_derivatives, alpha, rho);
+
+    // add small value to diagonal
+    // for numerical stability
+    for (t in 1:T)
+      K[t, t] = K[t, t] + delta;
+
+    L_K = cholesky_decompose(K);
+    f = L_K * eta;
+  }
+}
+model {
+  // Priors
+  rho ~ gamma(5, 5);
+  alpha ~ gamma(5, 5);
+  
+  eta ~ std_normal();
+  
+  // Likelihood
+  // The observations y should be normally
+  // distributed around the function predictions.
+  // The variable index tells us which values in f
+  // correspond to the observations y.
+  y ~ normal(f[index], s);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;When I use Stan models in R I like to wrap up the code that calls Stan into a separate function so it’s easier to reuse multiple times.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#&amp;#39;
+#&amp;#39; Fit a Gaussian Process with derivatives in Stan
+#&amp;#39; 
+#&amp;#39; @param stan_model RStan model object
+#&amp;#39; @param x x-coordinates of the observed values
+#&amp;#39; @param y observed values of the function or its derivative
+#&amp;#39; @param derivative vector indicating if each value of y is a
+#&amp;#39;                   function observation (0) or derivative (1)
+#&amp;#39; @param pred_xs where to predict the function and its derivative
+#&amp;#39; @param sampling_variance fixed sampling variance
+#&amp;#39; @param ... additional arguments passed to Stan sampler
+stan_gaussian_process_derivative &amp;lt;- function(
+  stan_model, 
+  x, 
+  y,
+  derivative,
+  pred_xs,
+  sampling_variance, 
+  ...
+) {
+  
+  if(length(x) != length(y) || length(y) != length(derivative)) {
+    stop(&amp;quot;x, y, and derivative arguments must have same length&amp;quot;)
+  }
+  
+  if(any(x %in% pred_xs == FALSE)) {
+    stop(&amp;quot;all values of x must be in pred_xs&amp;quot;)
+  }
+  
+  # Repeat the grid twice, first for function values
+  # and second for its derivative
+  grid &amp;lt;- c(pred_xs, pred_xs)
+  derivative_grid &amp;lt;- c(rep(0, length(pred_xs)), rep(1, length(pred_xs)))
+  
+  # Map the observed xs to their positions in the prediction grid
+  x_indices &amp;lt;- match(x, pred_xs)
+  
+  # the derivatives are in the second half
+  # of the grid, so offset their positions
+  x_indices &amp;lt;- ifelse(derivative == 1, x_indices + length(pred_xs), x_indices)
+  
+  # Make sure we did this step correctly:
+  stopifnot(all(grid[x_indices] == x))
+  stopifnot(all(derivative_grid[x_indices] == derivative))
+  
+  stan_data &amp;lt;- list(
+    T = length(grid),
+    pred_xs = grid,
+    pred_derivatives = derivative_grid,
+    N = length(x),
+    y = y,
+    index = x_indices,
+    s = sqrt(sampling_variance)
+  )
+  
+  fit &amp;lt;- rstan::sampling(stan_model, stan_data, ...)
+  
+  # Return the stan data object and the fitted model object
+  list(
+    data = stan_data,
+    fit = fit
+  )
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s also convenient to write functions for summarizing the posterior distribution of the function predictions and for plotting the results.&lt;/p&gt;
+&lt;p&gt;To summarize the posterior, we use &lt;a href=&#34;https://mjskay.github.io/tidybayes/&#34;&gt;&lt;code&gt;tidybayes&lt;/code&gt;&lt;/a&gt; to extract posterior medians and 95% credible intervals.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#&amp;#39; Summarize posterior medians and credible intervals of 
+#&amp;#39; Gaussian Process derivative fit
+#&amp;#39;
+#&amp;#39; @param fit output from stan_gaussian_process_derivative function
+summarize_gp_posterior &amp;lt;- function(fit) {
+  tidybayes::spread_draws(fit$fit, f[index]) %&amp;gt;%
+    mutate(x = fit$data$pred_xs[index],
+           d = fit$data$pred_derivatives[index]) %&amp;gt;%
+    group_by(d, x) %&amp;gt;%
+    tidybayes::median_qi(f)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For plotting, we’ll take the summarized posterior and plot it along with the true function values and the observed data.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#&amp;#39; Plot the posterior distribution from the model fit
+#&amp;#39; and compare to the true function and observed data
+#&amp;#39; 
+#&amp;#39; @param posterior output from summarize_gp_posterior function
+#&amp;#39; @param f data frame containing true function values and observed data
+plot_posterior &amp;lt;- function(posterior, f) {
+  # Facet labeller
+  labeller &amp;lt;- as_labeller(c(&amp;quot;0&amp;quot; = &amp;quot;Function&amp;quot;, &amp;quot;1&amp;quot; = &amp;quot;Derivative&amp;quot;))
+  
+  observed_data &amp;lt;- filter(f, observed)
+  
+  ggplot(posterior, aes(x = x)) +
+    # Posterior distribution
+    geom_ribbon(aes(y = f, ymin = .lower, ymax = .upper), alpha = 0.2) +
+    geom_line(aes(y = f, linetype = &amp;quot;Posterior median&amp;quot;)) +
+    
+    # True function
+    geom_line(data = f, aes(x, y_true, linetype = &amp;quot;True function&amp;quot;)) +
+    
+    # Observed data
+    geom_errorbar(data = observed_data, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
+    geom_point(data = observed_data, aes(x, y, color = observed), size = 2) +
+    
+    scale_linetype_manual(values = c(2, 1)) +
+    
+    facet_wrap(~d, ncol = 1, labeller = labeller)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;example-fitting-simulated-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Example: Fitting Simulated Data&lt;/h2&gt;
+&lt;p&gt;Let’s draw some simulated data from a Gaussian Process. We’ll use the same code as the previous post, with a slight change to make the observed data have normally distributed error.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(9)
+
+# Set hyperparameters
+alpha &amp;lt;- 1
+l &amp;lt;- 1
+
+# Points at which to observe the function and its derivative
+x &amp;lt;- rep(seq(0, 10, 0.25), 2)
+d &amp;lt;- c(rep(0, length(x) / 2), rep(1, length(x) / 2))
+
+# Joint covariance matrix
+Sigma &amp;lt;- joint_covariance_from_kernel(x, d, k_all, alpha = alpha, l = l)
+
+# Draw from joint GP
+y_true &amp;lt;- gp_draw(1, x, Sigma)[1, ]
+
+# Add random error
+sampling_variance &amp;lt;- 0.025
+y &amp;lt;- rnorm(length(y_true), mean = y_true, sd = sqrt(sampling_variance))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now let’s choose a few function and derivative values which we’ll use as our observed data:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Pick a few function and derivative values to use as observed data, making
+# sure to pick an equal number of each type
+N &amp;lt;- 10
+observed_indices &amp;lt;- c(
+  sample(which(d == 0), N / 2),
+  sample(which(d == 1), N / 2)
+)
+
+# We&amp;#39;ll call the observed data y_all so that it matches with the math notation
+x_all &amp;lt;- x[observed_indices]
+y_all &amp;lt;- y[observed_indices]
+d_all &amp;lt;- d[observed_indices]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s plot the observed values with error bars, along with the true value of the function:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Create a data frame for plotting
+f &amp;lt;- tibble(
+  x = x,
+  y_true = y_true,
+  y = y,
+  y_lower = y - 1.96 * sqrt(sampling_variance),
+  y_upper = y + 1.96 * sqrt(sampling_variance),
+  observed = seq_along(x) %in% observed_indices,
+  d = d
+)
+
+observed_data &amp;lt;- filter(f, observed)
+
+labeller &amp;lt;- as_labeller(c(&amp;quot;0&amp;quot; = &amp;quot;Function&amp;quot;, &amp;quot;1&amp;quot; = &amp;quot;Derivative&amp;quot;))
+
+ggplot(f, aes(x = x, y = y_true)) +
+  geom_line(aes(lty = &amp;quot;True value&amp;quot;)) +
+  geom_errorbar(data = observed_data, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
+  geom_point(data = observed_data, aes(y = y, color = observed), size = 2) +
+  facet_wrap(~d, ncol = 1, labeller = labeller)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Now let’s use the function we wrote to fit the model in Stan. We’ll run the sampling algorithm for 2,000 iterations, half of which are for warm-up.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;stanfit &amp;lt;- stan_gaussian_process_derivative(
+  model,
+  x = x[observed_indices],
+  y = y[observed_indices],
+  derivative = d[observed_indices],
+  pred_xs = x,
+  sampling_variance = sampling_variance,
+  
+  # Sampling algorithm parameters
+  iter = 2000,
+  cores = 4
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot_posterior(summarize_gp_posterior(stanfit), f) +
+  ggtitle(&amp;quot;Stan Gaussian Proces Model Posterior&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Let’s also check the posterior distributions for the kernel hyperparameters:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_matrix &amp;lt;- as.matrix(stanfit$fit)[, c(&amp;quot;alpha&amp;quot;, &amp;quot;rho&amp;quot;)]
+
+bayesplot::mcmc_recover_hist(fit_matrix, c(1, 1))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bayesplot::mcmc_recover_intervals(fit_matrix, c(1, 1))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-10-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The posterior mode underestimates the hyperparameters, although the true values are well within the 90% credible intervals.&lt;/p&gt;
+&lt;p&gt;Let’s fit the model again, but this time leave out the derivative observations so we can see how much they influence the model fit. This is where wrapping up all the code into functions pays off, as we won’t need to rewrite all of the model fitting code.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;observed_no_derivatives &amp;lt;- observed_indices[d[observed_indices] == 0]
+
+stanfit_no_derivatives &amp;lt;- stan_gaussian_process_derivative(
+  model,
+  x = x[observed_no_derivatives],
+  y = y[observed_no_derivatives],
+  derivative = d[observed_no_derivatives],
+  pred_xs = x,
+  sampling_variance = sampling_variance,
+  
+  # Sampling algorithm parameters
+  iter = 2000,
+  cores = 4
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we can compare the two model fits, with and without the derivative values observed.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot_posterior(summarize_gp_posterior(stanfit), f) +
+  ggtitle(&amp;quot;With derivatives observed&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot_posterior(
+  summarize_gp_posterior(stanfit_no_derivatives),
+  mutate(f, observed = ifelse(d == 0, observed, FALSE))
+) +
+  ggtitle(&amp;quot;Without derivatives observed&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-12-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Including the derivative observations makes a big difference in the model fit, as we would expect.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Conditioning on Gaussian Process Derivative Observations</title>
       <link>/2020/12/01/conditioning-on-gaussian-process-derivative-observations/</link>
       <pubDate>Tue, 01 Dec 2020 00:00:00 +0000</pubDate>
       <guid>/2020/12/01/conditioning-on-gaussian-process-derivative-observations/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/img/klee_may.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Paul Klee: May Picture (1925)&lt;/p&gt;
+&lt;/div&gt;
 &lt;p&gt;In the &lt;a href=&#34;http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/&#34;&gt;first post&lt;/a&gt; of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is pretty straightforward because the conditional distribution of the multivariate normal has a closed form, although applying it in this context requires some somewhat tedious notation and bookkeeping.&lt;/p&gt;
 &lt;p&gt;I’m going to take an aside to introduce a slightly different notation than I used in the last post. The new notation looks at Gaussian Processes as priors over a function class. It takes a bit of setup, and we will end up re-writing some of what was already done in the first post, but overall it’s a useful (and more rigorous) way of talking about Gaussian Processes.&lt;/p&gt;
 &lt;p&gt;Let’s say we we have some observations of a univariate function &lt;span class=&#34;math inline&#34;&gt;\(f(x) : \mathbb{R} \mapsto \mathbb{R}\)&lt;/span&gt;. We wish to use these observations to estimate the function &lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; over its entire domain. Without any prior knowledge, it could be any of an infinity of possible functions. The set of all possible functions that &lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; could be is called a &lt;em&gt;function space&lt;/em&gt;. In this example, &lt;span class=&#34;math inline&#34;&gt;\(f\)&lt;/span&gt; is in the space of all functions that map numbers in &lt;span class=&#34;math inline&#34;&gt;\(\mathbb{R}\)&lt;/span&gt; to &lt;span class=&#34;math inline&#34;&gt;\(\mathbb{R}\)&lt;/span&gt;.&lt;/p&gt;
@@ -130,10 +544,12 @@ f &amp;lt;- tibble(
   d = d
 )
 
+labeller &amp;lt;- as_labeller(c(&amp;quot;0&amp;quot; = &amp;quot;Function&amp;quot;, &amp;quot;1&amp;quot; = &amp;quot;Derivative&amp;quot;))
+
 ggplot(f, aes(x = x, y = y)) +
   geom_line(aes(lty = &amp;quot;True value&amp;quot;)) +
   geom_point(data = filter(f, observed), aes(color = observed), size = 2) +
-  facet_wrap(~d, ncol = 1, labeller = as_labeller(c(&amp;quot;0&amp;quot; = &amp;quot;Function&amp;quot;, &amp;quot;1&amp;quot; = &amp;quot;Derivative&amp;quot;)))&lt;/code&gt;&lt;/pre&gt;
+  facet_wrap(~d, ncol = 1, labeller = labeller)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2020-12-01-conditioning-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;With the data combined into one long vector, the joint distribution of the observed data &lt;span class=&#34;math inline&#34;&gt;\(\bm{y}^{all}\)&lt;/span&gt; is now given by
 &lt;span class=&#34;math display&#34;&gt;\[
@@ -172,20 +588,26 @@ Sigma &amp;lt;- joint_covariance_from_kernel(x_all, d_all, k_all, alpha = alpha,
 Sigma &amp;lt;- Sigma + diag(1e-4, nrow(Sigma))
 
 # Covariance between the prediction points
-Omega &amp;lt;- joint_covariance_from_kernel(x_tilde_all, d_tilde_all, k_all, alpha = alpha, l = l)
+Omega &amp;lt;- joint_covariance_from_kernel(x_tilde_all, d_tilde_all, k_all, 
+                                      alpha = alpha, l = l)
 
 # Covariance between the observed and prediction points
 # We calculate K by computing the covariance between x_all and x_tilde_all
-K &amp;lt;- outer(1:length(x_all), 1:length(x_tilde_all),
-        function(i, j) k_all(x_all[i], x_tilde_all[j], d_all[i], d_tilde_all[j], alpha = alpha, l = l))&lt;/code&gt;&lt;/pre&gt;
+K &amp;lt;- outer(
+  1:length(x_all),
+  1:length(x_tilde_all),
+  function(i, j) {
+    k_all(x_all[i], x_tilde_all[j], d_all[i], d_tilde_all[j], alpha = alpha, l = l)
+  }
+)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Then apply the conditioning formula to get the conditional mean and covariance matrix:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mu_conditional &amp;lt;- t(K) %*% solve(Sigma) %*% y_all
 Sigma_conditional &amp;lt;- Omega - t(K) %*% solve(Sigma) %*% K&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;For plotting, it’s helpful to extract the marginal variances of each prediction, which are the diagonal entries of the conditional covariance matrix. We can also use this to get a 95% prediction interval:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;variance_conditional &amp;lt;- diag(Sigma_conditional)
 
-# Floating point errors sometimes causes the variances to be very close to zero, but negative.
-# if this happens, just set the variance to zero:
+# Floating point errors sometimes causes the variances to be very close to zero, 
+# but negative. If this happens, just set the variance to zero:
 variance_conditional &amp;lt;- ifelse(variance_conditional &amp;lt; 0, 0, variance_conditional)
 
 # 95% intervals
@@ -206,7 +628,7 @@ ggplot(f_conditional, aes(x = x, y = y)) +
   geom_line(aes(lty = &amp;quot;True value&amp;quot;), data = f) +
   geom_point(aes(color = observed), data = filter(f, observed)) +
   scale_linetype_manual(values = c(2, 1)) +
-  facet_wrap(~d, ncol = 1, labeller = as_labeller(c(&amp;quot;0&amp;quot; = &amp;quot;Function&amp;quot;, &amp;quot;1&amp;quot; = &amp;quot;Derivative&amp;quot;)))&lt;/code&gt;&lt;/pre&gt;
+  facet_wrap(~d, ncol = 1, labeller = labeller)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2020-12-01-conditioning-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The inclusion of derivative information between &lt;span class=&#34;math inline&#34;&gt;\(x=2.5\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(x=5.0\)&lt;/span&gt; appears to have a big effect on the predictions. Even though there are no function values in this region, the derivatives are able to guide the predictions.&lt;/p&gt;
 &lt;p&gt;It would be nice to be able to compare these predictions to ones that don’t use any derivative information. To make this easier, let’s wrap up our code into a helper function which will handle the conditional multivariate normal calculations:&lt;/p&gt;
@@ -243,7 +665,7 @@ condition_joint_gp &amp;lt;- function(x_tilde, d_tilde, y, x, d, kernel, ...) {
     geom_line(aes(lty = &amp;quot;True value&amp;quot;), data = f) +
     geom_point(aes(color = observed), data = filter(f, observed)) +
     scale_linetype_manual(values = c(2, 1)) +
-    facet_wrap(~d, ncol = 1, labeller = as_labeller(c(&amp;quot;0&amp;quot; = &amp;quot;Function&amp;quot;, &amp;quot;1&amp;quot; = &amp;quot;Derivative&amp;quot;)))
+    facet_wrap(~d, ncol = 1, labeller = labeller)
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now let’s condition on just the function observations, leaving out the derivative points, and plotting the results.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;non_derivative_indices &amp;lt;- which(d_all == 0)
@@ -261,7 +683,10 @@ f_conditional_no_derivatives &amp;lt;- condition_joint_gp(
 
 
 # First, plot the predictions that don&amp;#39;t use derivative information
-plot_conditional(f_conditional_no_derivatives, mutate(f, observed = ifelse(d == 1, FALSE, observed))) +
+plot_conditional(
+  f_conditional_no_derivatives,
+  mutate(f, observed = ifelse(d == 1, FALSE, observed))
+) +
   ggtitle(&amp;quot;Predictions without derivative observations&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2020-12-01-conditioning-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Then plot again the predictions that use the derivatives
@@ -285,6 +710,7 @@ plot_conditional(f_conditional, f) +
       <pubDate>Tue, 04 Aug 2020 00:00:00 +0000</pubDate>
       <guid>/2020/08/04/friends/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;/rmarkdown-libs/core-js/shim.min.js&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;/rmarkdown-libs/react/react.min.js&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;/rmarkdown-libs/react/react-dom.min.js&#34;&gt;&lt;/script&gt;
@@ -341,7 +767,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#nesysomsrl .gt_table {
+#sbztriajcj .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -364,7 +790,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-left-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_heading {
+#sbztriajcj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -376,7 +802,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-right-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_title {
+#sbztriajcj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -386,7 +812,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-bottom-width: 0;
 }
 
-#nesysomsrl .gt_subtitle {
+#sbztriajcj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -396,13 +822,13 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-top-width: 0;
 }
 
-#nesysomsrl .gt_bottom_border {
+#sbztriajcj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_col_headings {
+#sbztriajcj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -417,7 +843,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-right-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_col_heading {
+#sbztriajcj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -437,7 +863,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   overflow-x: hidden;
 }
 
-#nesysomsrl .gt_column_spanner_outer {
+#sbztriajcj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -449,15 +875,15 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   padding-right: 4px;
 }
 
-#nesysomsrl .gt_column_spanner_outer:first-child {
+#sbztriajcj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nesysomsrl .gt_column_spanner_outer:last-child {
+#sbztriajcj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nesysomsrl .gt_column_spanner {
+#sbztriajcj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -469,7 +895,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   width: 100%;
 }
 
-#nesysomsrl .gt_group_heading {
+#sbztriajcj .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -491,7 +917,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   vertical-align: middle;
 }
 
-#nesysomsrl .gt_empty_group_heading {
+#sbztriajcj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -506,19 +932,19 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   vertical-align: middle;
 }
 
-#nesysomsrl .gt_striped {
+#sbztriajcj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nesysomsrl .gt_from_md &gt; :first-child {
+#sbztriajcj .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#nesysomsrl .gt_from_md &gt; :last-child {
+#sbztriajcj .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#nesysomsrl .gt_row {
+#sbztriajcj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -537,7 +963,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   overflow-x: hidden;
 }
 
-#nesysomsrl .gt_stub {
+#sbztriajcj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -549,7 +975,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   padding-left: 12px;
 }
 
-#nesysomsrl .gt_summary_row {
+#sbztriajcj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -559,7 +985,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   padding-right: 5px;
 }
 
-#nesysomsrl .gt_first_summary_row {
+#sbztriajcj .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -569,7 +995,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-top-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_grand_summary_row {
+#sbztriajcj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -579,7 +1005,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   padding-right: 5px;
 }
 
-#nesysomsrl .gt_first_grand_summary_row {
+#sbztriajcj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -589,7 +1015,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-top-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_table_body {
+#sbztriajcj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -598,7 +1024,7 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-bottom-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_footnotes {
+#sbztriajcj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -612,13 +1038,13 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-right-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_footnote {
+#sbztriajcj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#nesysomsrl .gt_sourcenotes {
+#sbztriajcj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -632,46 +1058,46 @@ write_csv(friends_raw, &amp;quot;./friends.csv&amp;quot;)&lt;/code&gt;&lt;/pre&g
   border-right-color: #D3D3D3;
 }
 
-#nesysomsrl .gt_sourcenote {
+#sbztriajcj .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#nesysomsrl .gt_left {
+#sbztriajcj .gt_left {
   text-align: left;
 }
 
-#nesysomsrl .gt_center {
+#sbztriajcj .gt_center {
   text-align: center;
 }
 
-#nesysomsrl .gt_right {
+#sbztriajcj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nesysomsrl .gt_font_normal {
+#sbztriajcj .gt_font_normal {
   font-weight: normal;
 }
 
-#nesysomsrl .gt_font_bold {
+#sbztriajcj .gt_font_bold {
   font-weight: bold;
 }
 
-#nesysomsrl .gt_font_italic {
+#sbztriajcj .gt_font_italic {
   font-style: italic;
 }
 
-#nesysomsrl .gt_super {
+#sbztriajcj .gt_super {
   font-size: 65%;
 }
 
-#nesysomsrl .gt_footnote_marks {
+#sbztriajcj .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 &lt;/style&gt;
-&lt;div id=&#34;nesysomsrl&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+&lt;div id=&#34;sbztriajcj&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
   
   &lt;thead class=&#34;gt_col_headings&#34;&gt;
     &lt;tr&gt;
@@ -761,7 +1187,7 @@ head(friends, n = 10) %&amp;gt;%
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#vaqlnchokx .gt_table {
+#qmevdwtfnk .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -784,7 +1210,7 @@ head(friends, n = 10) %&amp;gt;%
   border-left-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_heading {
+#qmevdwtfnk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -796,7 +1222,7 @@ head(friends, n = 10) %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_title {
+#qmevdwtfnk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -806,7 +1232,7 @@ head(friends, n = 10) %&amp;gt;%
   border-bottom-width: 0;
 }
 
-#vaqlnchokx .gt_subtitle {
+#qmevdwtfnk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -816,13 +1242,13 @@ head(friends, n = 10) %&amp;gt;%
   border-top-width: 0;
 }
 
-#vaqlnchokx .gt_bottom_border {
+#qmevdwtfnk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_col_headings {
+#qmevdwtfnk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -837,7 +1263,7 @@ head(friends, n = 10) %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_col_heading {
+#qmevdwtfnk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -857,7 +1283,7 @@ head(friends, n = 10) %&amp;gt;%
   overflow-x: hidden;
 }
 
-#vaqlnchokx .gt_column_spanner_outer {
+#qmevdwtfnk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -869,15 +1295,15 @@ head(friends, n = 10) %&amp;gt;%
   padding-right: 4px;
 }
 
-#vaqlnchokx .gt_column_spanner_outer:first-child {
+#qmevdwtfnk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vaqlnchokx .gt_column_spanner_outer:last-child {
+#qmevdwtfnk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vaqlnchokx .gt_column_spanner {
+#qmevdwtfnk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -889,7 +1315,7 @@ head(friends, n = 10) %&amp;gt;%
   width: 100%;
 }
 
-#vaqlnchokx .gt_group_heading {
+#qmevdwtfnk .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -911,7 +1337,7 @@ head(friends, n = 10) %&amp;gt;%
   vertical-align: middle;
 }
 
-#vaqlnchokx .gt_empty_group_heading {
+#qmevdwtfnk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -926,19 +1352,19 @@ head(friends, n = 10) %&amp;gt;%
   vertical-align: middle;
 }
 
-#vaqlnchokx .gt_striped {
+#qmevdwtfnk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vaqlnchokx .gt_from_md &gt; :first-child {
+#qmevdwtfnk .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#vaqlnchokx .gt_from_md &gt; :last-child {
+#qmevdwtfnk .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#vaqlnchokx .gt_row {
+#qmevdwtfnk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -957,7 +1383,7 @@ head(friends, n = 10) %&amp;gt;%
   overflow-x: hidden;
 }
 
-#vaqlnchokx .gt_stub {
+#qmevdwtfnk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -969,7 +1395,7 @@ head(friends, n = 10) %&amp;gt;%
   padding-left: 12px;
 }
 
-#vaqlnchokx .gt_summary_row {
+#qmevdwtfnk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -979,7 +1405,7 @@ head(friends, n = 10) %&amp;gt;%
   padding-right: 5px;
 }
 
-#vaqlnchokx .gt_first_summary_row {
+#qmevdwtfnk .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -989,7 +1415,7 @@ head(friends, n = 10) %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_grand_summary_row {
+#qmevdwtfnk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -999,7 +1425,7 @@ head(friends, n = 10) %&amp;gt;%
   padding-right: 5px;
 }
 
-#vaqlnchokx .gt_first_grand_summary_row {
+#qmevdwtfnk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1009,7 +1435,7 @@ head(friends, n = 10) %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_table_body {
+#qmevdwtfnk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1018,7 +1444,7 @@ head(friends, n = 10) %&amp;gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_footnotes {
+#qmevdwtfnk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1032,13 +1458,13 @@ head(friends, n = 10) %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_footnote {
+#qmevdwtfnk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#vaqlnchokx .gt_sourcenotes {
+#qmevdwtfnk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1052,46 +1478,46 @@ head(friends, n = 10) %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#vaqlnchokx .gt_sourcenote {
+#qmevdwtfnk .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#vaqlnchokx .gt_left {
+#qmevdwtfnk .gt_left {
   text-align: left;
 }
 
-#vaqlnchokx .gt_center {
+#qmevdwtfnk .gt_center {
   text-align: center;
 }
 
-#vaqlnchokx .gt_right {
+#qmevdwtfnk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vaqlnchokx .gt_font_normal {
+#qmevdwtfnk .gt_font_normal {
   font-weight: normal;
 }
 
-#vaqlnchokx .gt_font_bold {
+#qmevdwtfnk .gt_font_bold {
   font-weight: bold;
 }
 
-#vaqlnchokx .gt_font_italic {
+#qmevdwtfnk .gt_font_italic {
   font-style: italic;
 }
 
-#vaqlnchokx .gt_super {
+#qmevdwtfnk .gt_super {
   font-size: 65%;
 }
 
-#vaqlnchokx .gt_footnote_marks {
+#qmevdwtfnk .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 &lt;/style&gt;
-&lt;div id=&#34;vaqlnchokx&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+&lt;div id=&#34;qmevdwtfnk&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
   
   &lt;thead class=&#34;gt_col_headings&#34;&gt;
     &lt;tr&gt;
@@ -1188,7 +1614,7 @@ word_counts %&amp;gt;%
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#nutqdpjnfa .gt_table {
+#evvrpqbanf .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1211,7 +1637,7 @@ word_counts %&amp;gt;%
   border-left-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_heading {
+#evvrpqbanf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1223,7 +1649,7 @@ word_counts %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_title {
+#evvrpqbanf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1233,7 +1659,7 @@ word_counts %&amp;gt;%
   border-bottom-width: 0;
 }
 
-#nutqdpjnfa .gt_subtitle {
+#evvrpqbanf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1243,13 +1669,13 @@ word_counts %&amp;gt;%
   border-top-width: 0;
 }
 
-#nutqdpjnfa .gt_bottom_border {
+#evvrpqbanf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_col_headings {
+#evvrpqbanf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1264,7 +1690,7 @@ word_counts %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_col_heading {
+#evvrpqbanf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1284,7 +1710,7 @@ word_counts %&amp;gt;%
   overflow-x: hidden;
 }
 
-#nutqdpjnfa .gt_column_spanner_outer {
+#evvrpqbanf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1296,15 +1722,15 @@ word_counts %&amp;gt;%
   padding-right: 4px;
 }
 
-#nutqdpjnfa .gt_column_spanner_outer:first-child {
+#evvrpqbanf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nutqdpjnfa .gt_column_spanner_outer:last-child {
+#evvrpqbanf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nutqdpjnfa .gt_column_spanner {
+#evvrpqbanf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1316,7 +1742,7 @@ word_counts %&amp;gt;%
   width: 100%;
 }
 
-#nutqdpjnfa .gt_group_heading {
+#evvrpqbanf .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1338,7 +1764,7 @@ word_counts %&amp;gt;%
   vertical-align: middle;
 }
 
-#nutqdpjnfa .gt_empty_group_heading {
+#evvrpqbanf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1353,19 +1779,19 @@ word_counts %&amp;gt;%
   vertical-align: middle;
 }
 
-#nutqdpjnfa .gt_striped {
+#evvrpqbanf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nutqdpjnfa .gt_from_md &gt; :first-child {
+#evvrpqbanf .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#nutqdpjnfa .gt_from_md &gt; :last-child {
+#evvrpqbanf .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#nutqdpjnfa .gt_row {
+#evvrpqbanf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1384,7 +1810,7 @@ word_counts %&amp;gt;%
   overflow-x: hidden;
 }
 
-#nutqdpjnfa .gt_stub {
+#evvrpqbanf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1396,7 +1822,7 @@ word_counts %&amp;gt;%
   padding-left: 12px;
 }
 
-#nutqdpjnfa .gt_summary_row {
+#evvrpqbanf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1406,7 +1832,7 @@ word_counts %&amp;gt;%
   padding-right: 5px;
 }
 
-#nutqdpjnfa .gt_first_summary_row {
+#evvrpqbanf .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1416,7 +1842,7 @@ word_counts %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_grand_summary_row {
+#evvrpqbanf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1426,7 +1852,7 @@ word_counts %&amp;gt;%
   padding-right: 5px;
 }
 
-#nutqdpjnfa .gt_first_grand_summary_row {
+#evvrpqbanf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1436,7 +1862,7 @@ word_counts %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_table_body {
+#evvrpqbanf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1445,7 +1871,7 @@ word_counts %&amp;gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_footnotes {
+#evvrpqbanf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1459,13 +1885,13 @@ word_counts %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_footnote {
+#evvrpqbanf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#nutqdpjnfa .gt_sourcenotes {
+#evvrpqbanf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1479,46 +1905,46 @@ word_counts %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#nutqdpjnfa .gt_sourcenote {
+#evvrpqbanf .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#nutqdpjnfa .gt_left {
+#evvrpqbanf .gt_left {
   text-align: left;
 }
 
-#nutqdpjnfa .gt_center {
+#evvrpqbanf .gt_center {
   text-align: center;
 }
 
-#nutqdpjnfa .gt_right {
+#evvrpqbanf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nutqdpjnfa .gt_font_normal {
+#evvrpqbanf .gt_font_normal {
   font-weight: normal;
 }
 
-#nutqdpjnfa .gt_font_bold {
+#evvrpqbanf .gt_font_bold {
   font-weight: bold;
 }
 
-#nutqdpjnfa .gt_font_italic {
+#evvrpqbanf .gt_font_italic {
   font-style: italic;
 }
 
-#nutqdpjnfa .gt_super {
+#evvrpqbanf .gt_super {
   font-size: 65%;
 }
 
-#nutqdpjnfa .gt_footnote_marks {
+#evvrpqbanf .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 &lt;/style&gt;
-&lt;div id=&#34;nutqdpjnfa&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+&lt;div id=&#34;evvrpqbanf&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
   
   &lt;thead class=&#34;gt_col_headings&#34;&gt;
     &lt;tr&gt;
@@ -1621,7 +2047,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#gxslgjtkij .gt_table {
+#tbudbfxpnl .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1644,7 +2070,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-left-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_heading {
+#tbudbfxpnl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1656,7 +2082,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-right-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_title {
+#tbudbfxpnl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1666,7 +2092,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-bottom-width: 0;
 }
 
-#gxslgjtkij .gt_subtitle {
+#tbudbfxpnl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1676,13 +2102,13 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-top-width: 0;
 }
 
-#gxslgjtkij .gt_bottom_border {
+#tbudbfxpnl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_col_headings {
+#tbudbfxpnl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1697,7 +2123,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-right-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_col_heading {
+#tbudbfxpnl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1717,7 +2143,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   overflow-x: hidden;
 }
 
-#gxslgjtkij .gt_column_spanner_outer {
+#tbudbfxpnl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1729,15 +2155,15 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   padding-right: 4px;
 }
 
-#gxslgjtkij .gt_column_spanner_outer:first-child {
+#tbudbfxpnl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gxslgjtkij .gt_column_spanner_outer:last-child {
+#tbudbfxpnl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gxslgjtkij .gt_column_spanner {
+#tbudbfxpnl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1749,7 +2175,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   width: 100%;
 }
 
-#gxslgjtkij .gt_group_heading {
+#tbudbfxpnl .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1771,7 +2197,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   vertical-align: middle;
 }
 
-#gxslgjtkij .gt_empty_group_heading {
+#tbudbfxpnl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1786,19 +2212,19 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   vertical-align: middle;
 }
 
-#gxslgjtkij .gt_striped {
+#tbudbfxpnl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gxslgjtkij .gt_from_md &gt; :first-child {
+#tbudbfxpnl .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#gxslgjtkij .gt_from_md &gt; :last-child {
+#tbudbfxpnl .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#gxslgjtkij .gt_row {
+#tbudbfxpnl .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1817,7 +2243,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   overflow-x: hidden;
 }
 
-#gxslgjtkij .gt_stub {
+#tbudbfxpnl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1829,7 +2255,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   padding-left: 12px;
 }
 
-#gxslgjtkij .gt_summary_row {
+#tbudbfxpnl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1839,7 +2265,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   padding-right: 5px;
 }
 
-#gxslgjtkij .gt_first_summary_row {
+#tbudbfxpnl .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1849,7 +2275,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-top-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_grand_summary_row {
+#tbudbfxpnl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1859,7 +2285,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   padding-right: 5px;
 }
 
-#gxslgjtkij .gt_first_grand_summary_row {
+#tbudbfxpnl .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1869,7 +2295,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-top-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_table_body {
+#tbudbfxpnl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1878,7 +2304,7 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-bottom-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_footnotes {
+#tbudbfxpnl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1892,13 +2318,13 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-right-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_footnote {
+#tbudbfxpnl .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#gxslgjtkij .gt_sourcenotes {
+#tbudbfxpnl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1912,46 +2338,46 @@ word_lemma_counts &amp;lt;- add_cumulative_stats(word_lemmas)&lt;/code&gt;&lt;/p
   border-right-color: #D3D3D3;
 }
 
-#gxslgjtkij .gt_sourcenote {
+#tbudbfxpnl .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#gxslgjtkij .gt_left {
+#tbudbfxpnl .gt_left {
   text-align: left;
 }
 
-#gxslgjtkij .gt_center {
+#tbudbfxpnl .gt_center {
   text-align: center;
 }
 
-#gxslgjtkij .gt_right {
+#tbudbfxpnl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gxslgjtkij .gt_font_normal {
+#tbudbfxpnl .gt_font_normal {
   font-weight: normal;
 }
 
-#gxslgjtkij .gt_font_bold {
+#tbudbfxpnl .gt_font_bold {
   font-weight: bold;
 }
 
-#gxslgjtkij .gt_font_italic {
+#tbudbfxpnl .gt_font_italic {
   font-style: italic;
 }
 
-#gxslgjtkij .gt_super {
+#tbudbfxpnl .gt_super {
   font-size: 65%;
 }
 
-#gxslgjtkij .gt_footnote_marks {
+#tbudbfxpnl .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 &lt;/style&gt;
-&lt;div id=&#34;gxslgjtkij&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+&lt;div id=&#34;tbudbfxpnl&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
   
   &lt;thead class=&#34;gt_col_headings&#34;&gt;
     &lt;tr&gt;
@@ -2058,7 +2484,7 @@ words_for_prop_result %&amp;gt;%
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#ymdcyjcmgh .gt_table {
+#xwvhjkwytm .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -2081,7 +2507,7 @@ words_for_prop_result %&amp;gt;%
   border-left-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_heading {
+#xwvhjkwytm .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2093,7 +2519,7 @@ words_for_prop_result %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_title {
+#xwvhjkwytm .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2103,7 +2529,7 @@ words_for_prop_result %&amp;gt;%
   border-bottom-width: 0;
 }
 
-#ymdcyjcmgh .gt_subtitle {
+#xwvhjkwytm .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2113,13 +2539,13 @@ words_for_prop_result %&amp;gt;%
   border-top-width: 0;
 }
 
-#ymdcyjcmgh .gt_bottom_border {
+#xwvhjkwytm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_col_headings {
+#xwvhjkwytm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2134,7 +2560,7 @@ words_for_prop_result %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_col_heading {
+#xwvhjkwytm .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2154,7 +2580,7 @@ words_for_prop_result %&amp;gt;%
   overflow-x: hidden;
 }
 
-#ymdcyjcmgh .gt_column_spanner_outer {
+#xwvhjkwytm .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2166,15 +2592,15 @@ words_for_prop_result %&amp;gt;%
   padding-right: 4px;
 }
 
-#ymdcyjcmgh .gt_column_spanner_outer:first-child {
+#xwvhjkwytm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ymdcyjcmgh .gt_column_spanner_outer:last-child {
+#xwvhjkwytm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ymdcyjcmgh .gt_column_spanner {
+#xwvhjkwytm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2186,7 +2612,7 @@ words_for_prop_result %&amp;gt;%
   width: 100%;
 }
 
-#ymdcyjcmgh .gt_group_heading {
+#xwvhjkwytm .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2208,7 +2634,7 @@ words_for_prop_result %&amp;gt;%
   vertical-align: middle;
 }
 
-#ymdcyjcmgh .gt_empty_group_heading {
+#xwvhjkwytm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2223,19 +2649,19 @@ words_for_prop_result %&amp;gt;%
   vertical-align: middle;
 }
 
-#ymdcyjcmgh .gt_striped {
+#xwvhjkwytm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ymdcyjcmgh .gt_from_md &gt; :first-child {
+#xwvhjkwytm .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#ymdcyjcmgh .gt_from_md &gt; :last-child {
+#xwvhjkwytm .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#ymdcyjcmgh .gt_row {
+#xwvhjkwytm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2254,7 +2680,7 @@ words_for_prop_result %&amp;gt;%
   overflow-x: hidden;
 }
 
-#ymdcyjcmgh .gt_stub {
+#xwvhjkwytm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2266,7 +2692,7 @@ words_for_prop_result %&amp;gt;%
   padding-left: 12px;
 }
 
-#ymdcyjcmgh .gt_summary_row {
+#xwvhjkwytm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2276,7 +2702,7 @@ words_for_prop_result %&amp;gt;%
   padding-right: 5px;
 }
 
-#ymdcyjcmgh .gt_first_summary_row {
+#xwvhjkwytm .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2286,7 +2712,7 @@ words_for_prop_result %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_grand_summary_row {
+#xwvhjkwytm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2296,7 +2722,7 @@ words_for_prop_result %&amp;gt;%
   padding-right: 5px;
 }
 
-#ymdcyjcmgh .gt_first_grand_summary_row {
+#xwvhjkwytm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2306,7 +2732,7 @@ words_for_prop_result %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_table_body {
+#xwvhjkwytm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2315,7 +2741,7 @@ words_for_prop_result %&amp;gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_footnotes {
+#xwvhjkwytm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2329,13 +2755,13 @@ words_for_prop_result %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_footnote {
+#xwvhjkwytm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#ymdcyjcmgh .gt_sourcenotes {
+#xwvhjkwytm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2349,46 +2775,46 @@ words_for_prop_result %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ymdcyjcmgh .gt_sourcenote {
+#xwvhjkwytm .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#ymdcyjcmgh .gt_left {
+#xwvhjkwytm .gt_left {
   text-align: left;
 }
 
-#ymdcyjcmgh .gt_center {
+#xwvhjkwytm .gt_center {
   text-align: center;
 }
 
-#ymdcyjcmgh .gt_right {
+#xwvhjkwytm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ymdcyjcmgh .gt_font_normal {
+#xwvhjkwytm .gt_font_normal {
   font-weight: normal;
 }
 
-#ymdcyjcmgh .gt_font_bold {
+#xwvhjkwytm .gt_font_bold {
   font-weight: bold;
 }
 
-#ymdcyjcmgh .gt_font_italic {
+#xwvhjkwytm .gt_font_italic {
   font-style: italic;
 }
 
-#ymdcyjcmgh .gt_super {
+#xwvhjkwytm .gt_super {
   font-size: 65%;
 }
 
-#ymdcyjcmgh .gt_footnote_marks {
+#xwvhjkwytm .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 &lt;/style&gt;
-&lt;div id=&#34;ymdcyjcmgh&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+&lt;div id=&#34;xwvhjkwytm&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
   
   &lt;thead class=&#34;gt_col_headings&#34;&gt;
     &lt;tr&gt;
@@ -2458,8 +2884,13 @@ Figure 1: You need to know 750 words to know 90% of all the words used in Friend
       <pubDate>Mon, 06 Jul 2020 00:00:00 +0000</pubDate>
       <guid>/2020/07/06/gaussian-process-derivatives/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/img/klee_mountains.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Paul Klee: Joyfal Mountain Landscape (1929)&lt;/p&gt;
+&lt;/div&gt;
 &lt;p&gt;A &lt;a href=&#34;https://en.wikipedia.org/wiki/Gaussian_process&#34;&gt;&lt;em&gt;Gaussian Process&lt;/em&gt;&lt;/a&gt; (GP) is a process for which any finite set of observations follows a multivariate normal distribution. GPs are defined by their mean and a kernel function that gives the covariance between any two observations. They are useful in Bayesian statistics as priors over function spaces.&lt;/p&gt;
 &lt;p&gt;To denote a GP prior over a set of observations &lt;span class=&#34;math inline&#34;&gt;\(\bm{y} = \{y_1, y_2, \cdots, y_n\}\)&lt;/span&gt; at points &lt;span class=&#34;math inline&#34;&gt;\(\bm{x} = \{ x_1, x_2, \cdots, x_n\}\)&lt;/span&gt;, we write:
 &lt;span class=&#34;math display&#34;&gt;\[
@@ -2603,6 +3034,7 @@ plot_joint_gp(x_all, y_all[1,], d_all)&lt;/code&gt;&lt;/pre&gt;
       <pubDate>Sat, 01 Feb 2020 00:00:00 +0000</pubDate>
       <guid>/2020/02/01/firearm-background-check-timeseries-modeling/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;Gun dealers in the U.S. are required to conduct instant background checks before selling weapons to individuals. The FBI &lt;a href=&#34;https://www.fbi.gov/file-repository/nics_firearm_checks_-_month_year.pdf/view&#34;&gt;provides data&lt;/a&gt; for the number of these background checks performed by month/year, which serves as a proxy for the total number of gun sales in the U.S.&lt;/p&gt;
@@ -2626,6 +3058,7 @@ plot_joint_gp(x_all, y_all[1,], d_all)&lt;/code&gt;&lt;/pre&gt;
       <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
       <guid>/2019/11/18/hello-estimating-equations/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;This post gives a “Hello world” example for estimating equations, illustrating with a small simulation study why it is a useful approach for inference.&lt;/p&gt;
@@ -2666,6 +3099,7 @@ Y_i \sim \mathrm{N}(\mu, \sigma^2)
       <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
       <guid>/2019/08/10/presidential-primary-polling-analysis-in-stan/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. &lt;a href=&#34;https://fivethirtyeight.com&#34;&gt;FiveThirtyEight&lt;/a&gt; publishes several &lt;a href=&#34;https://projects.fivethirtyeight.com/polls&#34;&gt;polling datasets&lt;/a&gt;, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a &lt;a href=&#34;https://gist.github.com/herbps10/d274d3d9c579e4e9eb5c16a16949c315&#34;&gt;Github gist&lt;/a&gt;.&lt;/p&gt;
@@ -2749,6 +3183,7 @@ generated quantities {
       <pubDate>Fri, 09 Aug 2019 00:00:00 +0000</pubDate>
       <guid>/2019/08/09/autoregressive-processes-are-gaussian-processes/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Autoregressive_model&#34;&gt;Autoregressive (AR) processes&lt;/a&gt; are a popular choice for modeling time-varying processes. AR processes are typically written down as a set of conditional distributions, but if we do some algebra we can show how they can also be written as a &lt;a href=&#34;https://en.wikipedia.org/wiki/Gaussian_process&#34;&gt;Gaussian process&lt;/a&gt;. One reason having a Guassian process representation is useful is because it makes it more clear how an AR process can be incorporated into larger models, like a spatio-temporal model. In this post, we’ll start with defining an AR process and deriving its mean and variance, then we’ll derive its joint distribution, which is a Gaussian process.&lt;/p&gt;
@@ -2924,6 +3359,7 @@ K(i, j) &amp;amp;= K_1(i, j) \times K_2(i, j) \\
       <pubDate>Mon, 22 Jul 2019 18:00:00 +0000</pubDate>
       <guid>/2019/07/22/r-formulas-stan/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;Many statistical routines in R use &lt;a href=&#34;https://stat.ethz.ch/R-manual/R-devel/library/stats/html/formula.html&#34;&gt;R formulas&lt;/a&gt; as a flexible way to specify the terms of a model. With a little setup, we can use formulas to build inputs to &lt;a href=&#34;http://mc-stan.org&#34;&gt;Stan&lt;/a&gt; and avoid hard-coding any variables in the model.&lt;/p&gt;
@@ -3242,6 +3678,7 @@ $$&lt;/p&gt;
       <pubDate>Sun, 04 Feb 2018 12:00:00 +0000</pubDate>
       <guid>/2018/02/04/theyre-all-good-dogs/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;From Twitter:&lt;/p&gt;
@@ -3338,6 +3775,7 @@ ggplot(ratings, aes(x = rating, y = n)) +
       <pubDate>Sat, 07 Oct 2017 12:00:00 +0000</pubDate>
       <guid>/2017/10/07/predicting-jeopardy-winners/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt; Predict the winner of Jeopardy. As the game progresses, update the predictions to take into account the current score profile.&lt;/p&gt;
@@ -3428,6 +3866,7 @@ The source code for this analysis is on Github: &lt;a href=&#34;https://github.c
       <pubDate>Sun, 30 Jul 2017 21:13:14 -0500</pubDate>
       <guid>/2017/07/30/bananagrams-probabilities/</guid>
       <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;style type=&#39;text/css&#39;&gt;
