@@ -739,7 +739,7 @@ plot_posterior &lt;- function(posterior, f) {
   # Facet labeller
   labeller &lt;- as_labeller(c(&quot;0&quot; = &quot;Function&quot;, &quot;1&quot; = &quot;Derivative&quot;))
   
-  observed_data &lt;- filter(f, observed)
+  f_observed &lt;- filter(f, observed)
   
   ggplot(posterior, aes(x = x)) +
     # Posterior distribution
@@ -750,8 +750,8 @@ plot_posterior &lt;- function(posterior, f) {
     geom_line(data = f, aes(x, y_true, linetype = &quot;True function&quot;)) +
     
     # Observed data
-    geom_errorbar(data = observed_data, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
-    geom_point(data = observed_data, aes(x, y, color = observed), size = 2) +
+    geom_errorbar(data = f_observed, aes(ymin = y_lower, ymax = y_upper), width = 0.1) +
+    geom_point(data = f_observed, aes(x, y, color = observed), size = 2) +
     
     scale_linetype_manual(values = c(2, 1)) +
     
@@ -829,7 +829,7 @@ ggplot(f, aes(x = x, y = y_true)) +
   cores = 4
 )</code></pre>
 <pre class="r"><code>plot_posterior(summarize_gp_posterior(stanfit), f) +
-  ggtitle(&quot;Stan Gaussian Proces Model Posterior&quot;)</code></pre>
+  ggtitle(&quot;Gaussian Process Posterior&quot;)</code></pre>
 <p><img src="/post/2020-12-11-derivative-gaussian-processes-in-stan_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Let’s also check the posterior distributions for the kernel hyperparameters:</p>
 <pre class="r"><code>fit_matrix &lt;- as.matrix(stanfit$fit)[, c(&quot;alpha&quot;, &quot;rho&quot;)]
