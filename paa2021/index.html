@@ -1,0 +1,275 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>PAA 2021: Temporal Models for Multiple Populations</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <style type='text/css'>
+	body {
+		font-family: sans-serif;
+		font-style: normal;
+		line-height: 1.4;
+	}
+  
+	#container {
+		width: 725px;
+		margin: auto;
+	}
+
+    canvas {
+	  border: 1px solid #ccc;
+	  margin-top: 20px;
+	}
+  </style>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.3/dist/katex.min.css" integrity="sha384-ThssJ7YtjywV52Gj4JE/1SQEDoMEckXyhkFVwaf4nDSm5OBlXeedVYjuuUd0Yua+" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.13.3/dist/katex.min.js" integrity="sha384-Bi8OWqMXO1ta+a4EPkZv7bYGIes7C3krGSZoTGNTAnAn5eYQc7IIXrJ/7ck1drAi" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.13.3/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<div id='container'>
+	
+	<a href="./paa_2021_tmmps.pdf">Download PDF</a>.
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+var slideText = `Slide 1
+_Presentation given at the [Population Association of America (PAA) Annual Meeting 2021](https://www.populationassociation.org/paa-2021/home). Preprint available on Arxiv: [https://arxiv.org/abs/2102.10020](https://arxiv.org/abs/2102.10020)_.
+
+
+Hello, my name is Herb Susmann from the University of Massachusetts Amherst, and today I’ll be presenting joint work with Monica Alexander and Leontine Alkema. We have been working on developing a model class that unifies many existing models of demographic and health indicators in a common framework.
+Slide 2
+An annotated version of these slides is available [online](http://herbsusmann.com/paa2021), and a preprint is available [on ArXiv.](https://arxiv.org/abs/2102.10020).
+Slide 3
+There is growing interest in modeling demographic and health indicators, like the under-five mortality rate or maternal mortality rate, in order to track progress towards meeting international goals.
+
+
+This is a tricky problem because data are not always available in every country and data are of varying quality. Statistical models are needed to combine all the existing data into estimates and projections with uncertainty.
+
+
+Many different models have been created and published, sometimes for the same indicator. But comparing across models is difficult because they each use different notation and conventions.
+
+
+To help compare models, we propose an overarching modelling class that encompasses many existing models under one framework and notation, which we are calling Temporal Models for Multiple Populations (TMMPs.)
+
+
+Slide 4
+As a case study, we’re going to look at two existing models of the under five mortality rate. On the left we have estimates of U5MR from a model created by the Institute for Health Metrics and Evaluation ([Dicker et al. 2018](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(18)31891-9/fulltext#%20)), and on the right are estimates from the UN-IGME model ([Alkema and New 2014](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-8/issue-4/Global-estimation-of-child-mortality-using-a-Bayesian-B-spline/10.1214/14-AOAS768.full)), both showing estimates of the U5MR in Senegal from 1950 to 2019. The models give differing estimates, so a natural question is how the models differ. Comparing them is difficult, though, because the published descriptions of the models use different notations. 
+
+
+What we’re going to do now is introduce our model class, before coming back later to these two models later to show how they can be written using the same notation under our framework.
+
+
+Slide 5
+We call our model class “Temporal Models for Multiple Populations.” It provides a set of building blocks that can be used to construct models of demographic and health indicators.
+
+
+Slide 6
+
+
+Now I’m going to describe the setup for the framework, which is organized around a distinction between the observed data and the true, unobserved values of the indicator over time.
+
+
+First, we define the true values of the indicator in each country and time point, which we call $\\eta_{c,t}$.
+ 
+The process model describes how we think these true values evolve over time, perhaps drawing on values of covariates or on temporal trends we expect to see in the indicator.
+
+
+Then have some observed data yi,  where each data point has some properties associated with it, like a country $c[i]$, time point $t[i]$, or data source $s[i]$.
+
+
+The data model describes the relationship between the observed data and the truth; this is where we can model things like sampling errors and systematic biases.
+Slide 7
+This diagram summarizes the high-level structure of the framework: we have the latent, true values which evolve over time according to the process model, and then the data model describes how the noisy observed data is generated from the process model.
+
+
+In our work so far we’ve focused primarily on understanding the structure of the process model, which we will go into next.
+Slide 8
+In our framework, we break the process model into multiple building blocks.
+
+
+On the left hand side, we have the true value of the indicator $\\eta_{c,t}$, possibly transformed.
+
+
+On the right hand side, we have four components:
+
+
+* The covariate component is a regression function that allows introduction of covariates.
+* The systematic component allows us to model systematic trends that we expect the indicator to follow.
+* The offset can be used to bring in additional outside information, for example from a separate modeling step.
+* Finally the smoothing component is used to allow data-driven deviations from the expected trend given by the other components. 
+
+
+Let’s go through each one of these components one by one.
+Slide 9
+The covariate component is typically some kind of regression function. For example, a neonatal mortality rate model used under five mortality as a covariate in a piecewise linear regression function.
+Slide 10
+The systematic component is useful if we expect the indicator to follow some parametric shape over time. For example, Cahill 2018 uses the systematic component to model adoption of modern family planning methods as following logistic growth curve.
+Slide 11
+The offset term allows for the use of external information. As we’ll see later, the IHME U5MR model brings in smoothed residuals from a separate modeling step as the offset term.
+Slide 12
+The last term, $\\epsilon_{c,t}$, allows the process model to model trends not captured in the other components, while still enforcing some degree of smoothness on the estimates.
+
+
+Existing models use a lot of different approaches for the smoothing component, like B-splines, Gaussian Processes, autoregressive processes and random walks, and spatio-temporal smoothing methods.
+
+
+We added some additional structure to our model class that captures many of these approaches under a common notation.
+Slide 13
+First, we define a vector $\\boldsymbol{\\epsilon}_c$ of all the deviations for a country. This vector can be decomposed into a full rank matrix $\\boldsymbol{B}_c$ and coefficients $\\boldsymbol{\\alpha}_c$. $\\boldsymbol{B}_c$ allows for dimensionality reduction, for example through splines. We then require that the coefficients $\\boldsymbol{\\alpha}_c$ are multivariate normally distributed with mean zero after $r$ levels of differencing, where the covariance matrix is given by some autocovariance function $s$. 
+
+
+Slide 14
+This structure encompasses many popular smoothing models. For example, we can recover an AR(1) process, a second order random walk, and a Gaussian process with Matern covariance kernel by choosing the right values for the level of differencing $r$ and autocovariance function $s$. 
+
+
+Slide 15
+A useful way to analyze these smoothing models is to look at their conditional behavior in projections. These plots show how various smoothing models behave in projections when conditioned on two prior values: we can see, for example, how a first-order random walk simply extends forward the last data point, while the second-order random walk extends a linear trend. 
+
+
+Slide 16
+Each of these components introduces parameters that need to be estimated, with a typical model having hundreds or thousands of parameters. 
+
+
+Hierarchical modeling is a powerful method used in many models to share information about parameters between units. For example, an age-specific mortality model used hierarchical modeling to share information on regression coefficients between counties. 
+
+
+The models we have been describing can be fit using full Bayesian inference with packages like JAGS or Stan, and with approximate inference with tools like INLA as long as the model falls within INLA’s supported class of models. Tools like Template Model Builder are a frequentist method that may also be useful for model fitting.
+Slide 17
+Now let’s return to our case study of the two U5MR models, and see how each one of them fits into our model class. 
+
+
+The UN-IGME model has a process model with systematic and smoothing components.
+
+
+The systematic component models an intercept and a linear trend, where $t^*_c$ here is roughly in the middle of the observed data for country $c$.
+
+
+The smoothing component uses cubic B-splines with knots placed evenly over each country’s observation period. This can be written using the $\\boldsymbol{B}_c$ matrix. The spline coefficients are modeled as following a second order random walk, which means the $\\boldsymbol{\\delta}_c$ are normally distributed with mean zero after two levels of differencing.
+
+
+Slide 18
+The IHME U5MR process model has a covariate component, offset, and smoothing component.
+
+
+The covariate component is a non-linear regression function of income per capita, educational achievement, and child HIV death rate.
+
+
+The offset term adjusts the covariate component using smoothed residuals from a separately estimated mixed-effects model.
+
+
+The smoothing component is a Gaussian process with a Matérn covariance function.
+
+
+Writing the two models in the same framework makes it easier to understand their assumptions and see how they differ from one another. For a complete comparison, we would also need to look at differences in their data models and the data they choose to include.
+
+
+Slide 19
+To summarize, in this presentation we introduced Temporal Models for Multiple Populations, a model class that encompasses many existing models of demographic and health indicators.
+
+
+A key feature of the model class is its distinction between the process model and the data model, which allows for models to separate how the true values evolve from how the (noisy and possibly biased) data are generated.
+
+
+We then focused on the process model, separating it into four components: covariates, systematic trends, offsets, and smoothing.
+
+
+The model class can be used to compare models under a consistent notation, like the IHME and UN U5MR models.
+
+
+Finally, we have found the model class useful as a tool for guiding the development of new models. The model class helps us understand the universe of possible models and organize how we want to explore them by constructing different combinations of process model components.`;
+
+// If absolute URL from the remote server is provided, configure the CORS
+// header on that server.
+var url = 'http://127.0.0.1:4321/paa/paa_2021_tmmps.pdf';
+
+// Loaded via <script> tag, create shortcut to access PDF.js exports.
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+// The workerSrc property shall be specified.
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.worker.min.js';
+
+var numPages = 20;
+var container = document.getElementById("container");
+
+for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+    var canvas = document.createElement("canvas");
+	canvas.setAttribute("id", "slide-" + pageNumber);
+	canvas.setAttribute("height", 544);
+	canvas.setAttribute("width", 725);
+	
+	var text = document.createElement("div");
+	text.setAttribute("id", "text-" + pageNumber);
+	
+	container.append(canvas);
+	container.append(text);
+}
+
+// Asynchronous download of PDF
+var loadingTask = pdfjsLib.getDocument(url);
+loadingTask.promise.then(function(pdf) {
+  
+  // Fetch the first page
+  for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+	  pdf.getPage(pageNumber).then(function(page) {
+		var scale = 2;
+		var viewport = page.getViewport({scale: scale});
+
+		// Prepare canvas using PDF page dimensions
+		var canvas = document.getElementById('slide-' + (page._pageIndex + 1));
+		var context = canvas.getContext('2d');
+		canvas.height = viewport.height;
+		canvas.width = viewport.width;
+
+		// Render PDF page into canvas context
+		var renderContext = {
+		  canvasContext: context,
+		  viewport: viewport
+		};
+		var renderTask = page.render(renderContext);
+
+	  });
+  }
+}, function (reason) {
+  // PDF loading error
+  console.error(reason);
+});
+
+var textUrl = "http://127.0.0.1:4321/paa/paa_2021.txt";
+
+var slides = slideText.split(/Slide [0-9]+/);
+		
+for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+	if(slides[pageNumber] != undefined) {
+		var html = marked(slides[pageNumber].trim().replaceAll('’', "'"));
+		document.getElementById("text-" + pageNumber).innerHTML = html;
+		renderMathInElement(document.getElementById("text-" + pageNumber), { delimiters: [ { left: "$", right: "$", display: false }] });
+	}
+}
+/*
+fetch(textUrl)
+	.then(function(data) { return data.text() })
+	.then(function(res) {
+		
+		
+	});
+*/
+</script>
+
+</body>
+
+</html>
