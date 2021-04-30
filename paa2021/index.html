@@ -53,75 +53,76 @@
 <script>
 // If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
-var url = 'http://herbsusmann.com/paa2021/paa_2021_tmmps.pdf';
+var pdfUrl = 'http://herbsusmann.com/paa2021/paa_2021_tmmps.pdf';
+var textUrl = "http://herbsusmann.com/paa2021/paa_2021.txt";
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
 var pdfjsLib = window['pdfjs-dist/build/pdf'];
-
 // The workerSrc property shall be specified.
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.worker.min.js';
 
-var numPages = 22;
 var container = document.getElementById("container");
 
-for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-    var canvas = document.createElement("canvas");
-	canvas.setAttribute("id", "slide-" + pageNumber);
-	canvas.setAttribute("height", 544);
-	canvas.setAttribute("width", 725);
-	
-	var text = document.createElement("div");
-	text.setAttribute("id", "text-" + pageNumber);
-	
-	container.append(canvas);
-	container.append(text);
-}
+
 
 // Asynchronous download of PDF
-var loadingTask = pdfjsLib.getDocument(url);
+var loadingTask = pdfjsLib.getDocument(pdfUrl);
 loadingTask.promise.then(function(pdf) {
-  // Fetch the first page
-  for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-	  pdf.getPage(pageNumber).then(function(page) {
-		var scale = 2;
-		var viewport = page.getViewport({scale: scale});
+	var numPages = pdf.numPages;
+	
+	for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+		var canvas = document.createElement("canvas");
+		canvas.setAttribute("id", "slide-" + pageNumber);
+		canvas.setAttribute("height", 544);
+		canvas.setAttribute("width", 725);
+		
+		var text = document.createElement("div");
+		text.setAttribute("id", "text-" + pageNumber);
+		
+		container.append(canvas);
+		container.append(text);
+	}
+	
+	fetch(textUrl)
+		.then(function(data) { return data.text() })
+		.then(function(res) {
+			var slides = res.split(/Slide [0-9]+/);
 
-		// Prepare canvas using PDF page dimensions
-		var canvas = document.getElementById('slide-' + (page._pageIndex + 1));
-		var context = canvas.getContext('2d');
-		canvas.height = viewport.height;
-		canvas.width = viewport.width;
+			for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+				if(slides[pageNumber] != undefined) {
+					var html = marked(slides[pageNumber].trim().replaceAll('’', "'"));
+					document.getElementById("text-" + pageNumber).innerHTML = html;
+					renderMathInElement(document.getElementById("text-" + pageNumber), { delimiters: [ { left: "$", right: "$", display: false }] });
+				}
+			}
+			
+		});
+	
+	for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+		pdf.getPage(pageNumber).then(function(page) {
+			var scale = 2;
+			var viewport = page.getViewport({ scale: scale });
 
-		// Render PDF page into canvas context
-		var renderContext = {
-		  canvasContext: context,
-		  viewport: viewport
-		};
-		var renderTask = page.render(renderContext);
+			// Prepare canvas using PDF page dimensions
+			var canvas = document.getElementById('slide-' + (page._pageIndex + 1));
+			var context = canvas.getContext('2d');
+			canvas.height = viewport.height;
+			canvas.width = viewport.width;
 
-	  });
-  }
+			// Render PDF page into canvas context
+			var renderContext = {
+			  canvasContext: context,
+			  viewport: viewport
+			};
+			var renderTask = page.render(renderContext);
+		});
+	}
 }, function (reason) {
-  // PDF loading error
-  console.error(reason);
+	// PDF loading error
+	console.error(reason);
 });
 
-var textUrl = "http://herbsusmann.com/paa2021/paa_2021.txt";
 
-fetch(textUrl)
-	.then(function(data) { return data.text() })
-	.then(function(res) {
-		var slides = res.split(/Slide [0-9]+/);
-
-		for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-			if(slides[pageNumber] != undefined) {
-				var html = marked(slides[pageNumber].trim().replaceAll('’', "'"));
-				document.getElementById("text-" + pageNumber).innerHTML = html;
-				renderMathInElement(document.getElementById("text-" + pageNumber), { delimiters: [ { left: "$", right: "$", display: false }] });
-			}
-		}
-		
-	});
 	
 </script>
 
