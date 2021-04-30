@@ -15,7 +15,7 @@ This is a tricky problem because data are not always available in every country 
 Many different models have been created and published for various indicators, and sometimes for multiple models exist for the same indicator. But comparing across models is difficult because they each use different notation and conventions.
 
 
-To help compare models, we propose an overarching model class that encompasses many existing approaches under one framework and notation, which we are calling Temporal Models for Multiple Populations (TMMPs.)
+To help document models and the assumptions they make, as well as facilitate comparing across models, we propose an overarching model class that encompasses many existing approaches under one framework and notation, which we are calling **Temporal Models for Multiple Populations** (TMMPs.)
 
 
 Slide 4
@@ -72,11 +72,10 @@ Slide 10
 The systematic component is useful if we expect the indicator to follow some parametric function over time. 
 
 
+For example, [Cahill 2018](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(17)33104-5/fulltext) uses the systematic component to model the rate of change of family planning adoption as following country specific logistic growth curves.
 Slide 11
-For example, [Cahill 2018](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(17)33104-5/fulltext) uses the systematic component to model adoption of modern family planning methods as following logistic growth curves.
-Slide 12
 The offset term allows for the use of external information. As we’ll see later, the IHME U5MR model uses the offset term to bring in smoothed residuals from a separate modeling step.
-Slide 13
+Slide 12
 The last term, $\epsilon_{c,t}$, models trends not captured in the other components, while still enforcing some degree of smoothness on the resulting estimates.
 
 
@@ -84,24 +83,23 @@ Existing models use a lot of different approaches for the smoothing component, l
 
 
 We added some additional structure to our model class that captures many of these approaches under a common notation.
-Slide 14
+Slide 13
 First, we define a vector $\boldsymbol{\epsilon}_c$ of all the deviations for a country. This vector can be decomposed into the product of a full rank matrix $\boldsymbol{B}_c$ and coefficients $\boldsymbol{\delta}_c$. $\boldsymbol{B}_c$ allows for dimensionality reduction, for example through splines. We then require that the coefficients $\boldsymbol{\delta}_c$ are multivariate normally distributed with mean zero after $r$ levels of differencing, where the covariance matrix is given by some autocovariance function $s$. 
 
 
-Slide 15
+Slide 14
 This structure encompasses many popular smoothing models. For example, we can recover an AR(1) process, a second order random walk, and a Gaussian process with Matern covariance kernel by choosing the right values for the level of differencing $r$ and autocovariance function $s$. 
 
 
-Slide 16
+Slide 15
 A useful way to analyze these smoothing models is to look at their conditional behavior in projections. These plots show how various smoothing models behave in projections when conditioned on two prior values: we can see, for example, how a first-order random walk simply extends forward the last data point, while the second-order random walk extends a linear trend. 
-Slide 17
+Slide 16
 Each of these components introduces parameters that need to be estimated, with a typical model having hundreds or thousands of parameters. 
 
 
-Hierarchical modeling is a powerful method used in many models to share information about parameters between units, which is helpful especially in data spare settings. For example, an age-specific mortality model used hierarchical modeling to share information on regression coefficients between counties ([Alexander 2017](https://link.springer.com/article/10.1007/s13524-017-0618-7)). 
+Hierarchical modeling is a powerful method used in many models to share information about parameters between units, which is helpful especially in data spare settings. Because this introduces extra assumptions, it’s important to clearly document it, which can be done within the TMMP framework. Here is a table from our paper that compares how the IHME model (left) and UN-IGME model (right) estimate their parameters, including their use of hierarchical modeling.
 
 
-The models we have been describing can be fit using full Bayesian inference via packages like [JAGS](https://mcmc-jags.sourceforge.io/) or [Stan](https://mc-stan.org/), and with approximate inference with tools like [INLA](https://www.r-inla.org/) as long as the model falls within INLA’s supported class of models. Tools like [Template Model Builder](https://kaskr.github.io/adcomp/Introduction.html) are a frequentist method that may also be useful for model fitting.
 Slide 18
 Now let’s return to our case study of the two U5MR models, and see how each one of them fits into our model class. 
 
@@ -133,7 +131,7 @@ Casting each one of the models in our notation provides a foundation for compari
 
 
 Slide 21
-Our paper includes several other examples of existing models rewritten to use the TMMP notation.
+Our paper includes several other examples of existing models rewritten to use the TMMP notation. We also provide a template table listing each element of the framework that can be filled in to document models using the TMMP notation.
 Slide 22
 To summarize, in this presentation we introduced Temporal Models for Multiple Populations, a model class that encompasses many existing models of demographic and health indicators.
 
@@ -144,7 +142,7 @@ A key feature of the model class is its distinction between the process model an
 We then focused on the process model, separating it into four components: covariates, systematic trends, offsets, and smoothing.
 
 
-The model class can be used to document models under a consistent notation. This is in the spirit of transparency -- we’re not saying one model is better than the other, rather that it’s useful to have a shared language to understand different approaches. To help with this, our paper provides a template table listing each element of the TMMP framework that can be filled in. Eventually a standardized documentation step could be considered for inclusion in the [GATHER](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(16)30388-9/fulltext) model reporting guidelines.
+The model class can be used to document models under a consistent notation. This is in the spirit of transparency -- we’re not saying one model is better than the other, rather that it’s useful to have a shared language to understand different approaches. Eventually a standardized documentation step could be considered for inclusion in the [GATHER](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(16)30388-9/fulltext) model reporting guidelines.
 
 
 Once models are documented in the same notation, we also have a consistent starting point for comparing across models, like the two U5MR models we looked at today.
