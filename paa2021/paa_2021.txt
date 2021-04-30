@@ -67,7 +67,7 @@ On the right hand side, we have four components:
 
 Let’s go through each one of these components one by one.
 Slide 9
-The covariate component is typically some kind of regression function. For example, a neonatal mortality rate model used under five mortality as a covariate in a piecewise linear regression function.
+The covariate component is typically some kind of regression function. For example, the IHME U5MR model uses a non-linear regression function of lag-distributed income per capita, educational achievement, and child HIV mortality rate.
 Slide 10
 The systematic component is useful if we expect the indicator to follow some parametric function over time. 
 
