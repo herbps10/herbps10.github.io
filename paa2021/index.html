@@ -23,6 +23,7 @@
 		width: 725px;
 		margin: auto;
 		padding-top: 25px;
+		position: relative;
 	}
 
     canvas {
@@ -35,6 +36,23 @@
 	
 	abbr {
 		text-decoration: none;
+	}
+	
+	.caption {
+		position: absolute;
+		left: -125px;
+		width: 100px;
+		text-align: right;
+		padding-top: 1.3em;
+	}
+	
+	.caption a {
+		color: #ccc;
+		text-decoration: none;
+	}
+	
+	.caption a:hover {
+		text-decoration: underline;
 	}
   </style>
   
@@ -74,7 +92,7 @@ loadingTask.promise.then(function(pdf) {
 	
 	for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
 		var canvas = document.createElement("canvas");
-		canvas.setAttribute("id", "slide-" + pageNumber);
+		canvas.setAttribute("id", "canvas-" + pageNumber);
 		canvas.setAttribute("height", 544);
 		canvas.setAttribute("width", 725);
 		canvas.setAttribute("role", "img");
@@ -82,6 +100,11 @@ loadingTask.promise.then(function(pdf) {
 		var text = document.createElement("div");
 		text.setAttribute("id", "text-" + pageNumber);
 		
+		var caption = document.createElement("div");
+		caption.setAttribute("class", "caption");
+		caption.innerHTML = `<a id='slide-${pageNumber}' href='#slide-${pageNumber}'>Slide ${pageNumber}</a>`;
+		
+		container.append(caption);
 		container.append(canvas);
 		container.append(text);
 	}
@@ -90,12 +113,11 @@ loadingTask.promise.then(function(pdf) {
 		.then(function(data) { return data.text() })
 		.then(function(res) {
 			var slides = res.split(/# Slide/);
-			console.log(slides);
 			
 			for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
 				if(slides[pageNumber] != undefined) {
 					var alt = slides[pageNumber].trim().match(/: (.+?)\n/)[1];
-					var slide = document.getElementById("slide-" + pageNumber);
+					var slide = document.getElementById("canvas-" + pageNumber);
 					slide.setAttribute("aria-label", alt);
 					slide.innerHTML = alt;
 					
@@ -113,7 +135,7 @@ loadingTask.promise.then(function(pdf) {
 			var viewport = page.getViewport({ scale: scale });
 
 			// Prepare canvas using PDF page dimensions
-			var canvas = document.getElementById('slide-' + (page._pageIndex + 1));
+			var canvas = document.getElementById('canvas-' + (page._pageIndex + 1));
 			var context = canvas.getContext('2d');
 			canvas.height = viewport.height;
 			canvas.width = viewport.width;
@@ -126,12 +148,14 @@ loadingTask.promise.then(function(pdf) {
 			var renderTask = page.render(renderContext);
 		});
 	}
+	
+	if(window.location.hash) {
+		document.getElementById(window.location.hash.replace("#", "")).scrollIntoView();
+	}
 }, function (reason) {
 	// PDF loading error
 	console.error(reason);
 });
-
-
 	
 </script>
 
