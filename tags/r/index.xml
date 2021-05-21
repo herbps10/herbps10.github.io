@@ -21,6 +21,7 @@
 &lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
+&lt;p&gt;&lt;em&gt;Note: this post has been updated with more recent data.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. &lt;a href=&#34;https://fivethirtyeight.com&#34;&gt;FiveThirtyEight&lt;/a&gt; publishes several &lt;a href=&#34;https://projects.fivethirtyeight.com/polls&#34;&gt;polling datasets&lt;/a&gt;, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a &lt;a href=&#34;https://gist.github.com/herbps10/d274d3d9c579e4e9eb5c16a16949c315&#34;&gt;Github gist&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; be the true proportion of voters in favor of candidate &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;. Our modeling assumption is that the logit-transform of &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; follows a random walk; that is:
 &lt;span class=&#34;math display&#34;&gt;\[
@@ -82,9 +83,11 @@ generated quantities {
 } &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The raw dataset that we are going to fit:
 &lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/raw_data-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;I fitted the Stan model to the data using the standard HMC-NUTS algorithm and 1000 MCMC iterations. The plot below shows the posterior median with 75% and 95% credible intervals.&lt;/p&gt;
+&lt;p&gt;I fitted the Stan model to the data using the standard HMC-NUTS algorithm and 1,000 MCMC iterations (with 500 of those for warmup.) The plot below shows the posterior median with 75% and 95% credible intervals.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;One issue with this model is that it oversmooths large bumps in the polls. For example, Harris had a bump after the first debate, which the model smooths into an uptick leading into the debate that is not justified in the data. The model could be improved by allowing for these shocks, for example by restarting the random walk after key dates like the debates which we know are likely to cause discontinuities in the results.&lt;/p&gt;
+&lt;p&gt;Let’s zoom in on August-November 2019 where there are more data:
+&lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This model is too simple to be that useful, but it could serve as a starting point for more complex models. The model could be improved by incorporating more information, perhaps by finding a data source that includes more polls or modifying the model to incorporate results from head-to-head matchups. We might also want to model systematic biases by the type of poll (phone or internet) or the pollster.&lt;/p&gt;
 </description>
     </item>
     

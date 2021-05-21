@@ -28,7 +28,8 @@
   
     
   
-  <meta name="description" content="I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. FiveThirtyEight publishes several polling datasets, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a Github gist.">
+  <meta name="description" content="Note: this post has been updated with more recent data.
+I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. FiveThirtyEight publishes several polling datasets, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a Github gist.">
 
   
   <link rel="alternate" hreflang="en-us" href="/2019/08/10/presidential-primary-polling-analysis-in-stan/">
@@ -126,7 +127,8 @@
   <meta property="og:site_name" content="Herb Susmann">
   <meta property="og:url" content="/2019/08/10/presidential-primary-polling-analysis-in-stan/">
   <meta property="og:title" content="Presidential Primary Polling Analysis in Stan | Herb Susmann">
-  <meta property="og:description" content="I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. FiveThirtyEight publishes several polling datasets, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a Github gist."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="Note: this post has been updated with more recent data.
+I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. FiveThirtyEight publishes several polling datasets, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a Github gist."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -481,6 +483,7 @@
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<p><em>Note: this post has been updated with more recent data.</em></p>
 <p>I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. <a href="https://fivethirtyeight.com">FiveThirtyEight</a> publishes several <a href="https://projects.fivethirtyeight.com/polls">polling datasets</a>, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a <a href="https://gist.github.com/herbps10/d274d3d9c579e4e9eb5c16a16949c315">Github gist</a>.</p>
 <p>Let <span class="math inline">\(\delta_{c,t}\)</span> be the true proportion of voters in favor of candidate <span class="math inline">\(c\)</span> at time <span class="math inline">\(t\)</span>. Our modeling assumption is that the logit-transform of <span class="math inline">\(\delta_{c,t}\)</span> follows a random walk; that is:
 <span class="math display">\[
@@ -542,9 +545,11 @@ generated quantities {
 } </code></pre>
 <p>The raw dataset that we are going to fit:
 <img src="/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/raw_data-1.png" width="672" /></p>
-<p>I fitted the Stan model to the data using the standard HMC-NUTS algorithm and 1000 MCMC iterations. The plot below shows the posterior median with 75% and 95% credible intervals.</p>
+<p>I fitted the Stan model to the data using the standard HMC-NUTS algorithm and 1,000 MCMC iterations (with 500 of those for warmup.) The plot below shows the posterior median with 75% and 95% credible intervals.</p>
 <p><img src="/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<p>One issue with this model is that it oversmooths large bumps in the polls. For example, Harris had a bump after the first debate, which the model smooths into an uptick leading into the debate that is not justified in the data. The model could be improved by allowing for these shocks, for example by restarting the random walk after key dates like the debates which we know are likely to cause discontinuities in the results.</p>
+<p>Let’s zoom in on August-November 2019 where there are more data:
+<img src="/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>This model is too simple to be that useful, but it could serve as a starting point for more complex models. The model could be improved by incorporating more information, perhaps by finding a data source that includes more polls or modifying the model to incorporate results from head-to-head matchups. We might also want to model systematic biases by the type of poll (phone or internet) or the pollster.</p>
 
     </div>
 
