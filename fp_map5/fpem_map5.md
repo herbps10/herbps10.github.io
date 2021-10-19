@@ -50,37 +50,37 @@ We describe a general framework for models of this form in our paper on Temporal
 
 The FPEM process model decomposes the trend in modern contraceptive use into two parts, which we call the systematic component and the smoothing component.
 
+An interactive demo of the process model is available at [https://observablehq.com/@herbps10/fpem][https://observablehq.com/@herbps10/fpem].
+
 # Slide 14: Systematic Component
 
 The systematic component describes a parametric trend we expect the indicator to follow over time. The idea is to encode the feature we noticed in the data earlier -- that the trend tends to follow a logistic growth curve over time. 
 
 # Slide 15: Systematic Component
-If we plot the systematic component, we see that the $Omega$ parameter controls level of mCPR in a the reference year, and $\tilde{P}$ controls the asymptote of the curve.
+If we plot the systematic component, we see that the $\Omega$ parameter controls level of mCPR in a the reference year, and $\tilde{P}$ controls the asymptote of the curve.
 
 # Slide 16: Systematic Component
 
 If we plot the function $f$, which gives the rate of change of the indicator (on the logit scale) as a function of its level, we see that the $\omega$ parameter has a nice graphical interpretation as the maximum of the function.
 
-# Slide 17: Systematic Component
-We need to estimate each of the logistic growth parameters for every country. To inform estimates when there aren't many data points available, we use hierarchical modeling to share information between countries.
-
-# Slide 18: Smoothing Component
+# Slide 17: Smoothing Component
 We don't expect the indicator to exactly follow a logistic growth curve: for example, there may be slowdowns, stalls, or dips in contraceptive adoption. To capture this, we allow the rate of change in the indicator to be modified by the smoothing component, to which we assign an AR(1) prior.
-
-# Slide 19: Systematic Component
+# Slide 18: Smoothing Component
 This plot shows a set of draws from the process model when the smoothing model is included.
 
-# Slide 20: Process Model Demo
-An interactive demo of the process model is available at [https://observablehq.com/@herbps10/fpem][https://observablehq.com/@herbps10/fpem].
+# Slide 19: Hierarchical Modeling
+We need to estimate each of the logistic growth parameters for every country. To inform estimates when there aren't many data points available, we use hierarchical modeling to share information between countries.
 
-# Slide 21: Temporal Models for Multiple Populations
+# Slide 20: Data Model
 
-# Slide 22: Temporal Models for Multiple Populations
+The data model describes how the observed data is generated from the truth.
+This is our opportunity to model systematic bias, sampling error and
+non-sampling error.
 
-# Slide 23: Temporal Models for Multiple Populations
+# Slide 21: One country model
 
-# Slide 24: Fpemlocal demo
+# Slide 22: Fpemlocal demo
 Link: [https://github.com/herbps10/fpemdemo](https://github.com/herbps10/fpemdemo)
 
-# Slide 25: Fpemlocal paper
+# Slide 23: Fpemlocal paper
 Link: [_Fpemlocal_: Estimating family planning indicators in R for a single population of interest](https://gatesopenresearch.org/articles/5-24).
