@@ -170,17 +170,8 @@ I often use random walk/autoregressive models in my research as a component in t
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>For my undergraduate degree, I studied Mathematics at the State University of New York at Geneseo. An important mentor during my undergraduate years was Gregg Hartvigsen, who helped spark my interest in applied mathematics and statistics. I then worked from 2014-2018 as a software developer at Silent Spring Institute in Newton, Massachusetts, where I collaborated on projects focused on methods for making complex scientific information accessible to lay audiences.
-Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Biostatistics &amp;amp; Epidemiology at the University of Massachusetts Amherst.</description>
-    </item>
-    
-    <item>
-      <title>Boids</title>
-      <link>/notebooks/boids/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/notebooks/boids/</guid>
-      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/boids.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-763d3248&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
+      <description>For my undergraduate degree, I studied Mathematics at the State University of New York at Geneseo. I then worked from 2014-2018 as a software developer at Silent Spring Institute in Newton, Massachusetts, where I collaborated on projects focused on methods for making complex scientific information accessible to lay audiences.
+Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Biostatistics &amp;amp; Epidemiology at the University of Massachusetts Amherst, with Leontine Alkema as my advisor.</description>
     </item>
     
     <item>
@@ -193,6 +184,15 @@ Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Bios
     </item>
     
     <item>
+      <title>Dirichlet Distribution</title>
+      <link>/notebooks/dirichlet-distribution/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/dirichlet-distribution/</guid>
+      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/dirichlet-distribution.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-763d3248&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
+    </item>
+    
+    <item>
       <title>Gaussian Process Playground</title>
       <link>/notebooks/gaussian-process-playground/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -202,7 +202,7 @@ Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Bios
     </item>
     
     <item>
-      <title>Hamiltonian Monte-Carlo</title>
+      <title>Hamiltonian Markov Chain Monte Carlo</title>
       <link>/notebooks/hamiltonian-monte-carlo/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -225,7 +225,16 @@ Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Bios
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Peer-Reviewed Articles  Forthcoming Temporal models for demographic and global health outcomes in multiple populations: Introducing a new framework to review and standardize documentation of model assumptions and facilitate model comparison. Herbert Susmann, Monica Alexander, and Leontine Alkema. International Statistical Review. [ArXiv Preprint]   2021 Outcomes from Returning Individual versus Only Study-Wide Biomonitoring Results in an Environmental Exposure Study Using the Digital Exposure Report-Back Interface (DERBI). Julia Green Brody, Piera Cirillo, Katherine Boronow, Laurie Havas, Marj Plumb, Herbert Susmann, Krzysztof Gajos, Barbara Cohn.</description>
+      <description>Peer-Reviewed Articles  2021 Outcomes from Returning Individual versus Only Study-Wide Biomonitoring Results in an Environmental Exposure Study Using the Digital Exposure Report-Back Interface (DERBI). Julia Green Brody, Piera Cirillo, Katherine Boronow, Laurie Havas, Marj Plumb, Herbert Susmann, Krzysztof Gajos, Barbara Cohn. Environmental Health Perspectives.   2020 Consumer behavior and exposure to parabens, bisphenols, triclosan, dichlorophenols, and benzophenone-3: Results from a crowdsourced biomonitoring study. Robin Dodson, Katherine Boronow, Herbert Susmanna, Julia Udesky, Kathryn Rodgers, David Weller, Million Woudneh, Julia Green Brody, and Ruthann Rudel.</description>
+    </item>
+    
+    <item>
+      <title>Sampling from Multi-Modal Densities</title>
+      <link>/notebooks/multimodal-densities/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/multimodal-densities/</guid>
+      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/sampling-from-multi-modal-distributions.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-763d3248&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
     </item>
     
     <item>

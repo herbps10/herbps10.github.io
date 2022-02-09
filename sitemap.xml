@@ -82,11 +82,11 @@
   </url><url>
     <loc>/about/</loc>
   </url><url>
-    <loc>/notebooks/boids/</loc>
-  </url><url>
     <loc>/categories/</loc>
   </url><url>
     <loc>/notebooks/b-splines/</loc>
+  </url><url>
+    <loc>/notebooks/dirichlet-distribution/</loc>
   </url><url>
     <loc>/notebooks/gaussian-process-playground/</loc>
   </url><url>
@@ -99,6 +99,8 @@
     <loc>/publication_types/</loc>
   </url><url>
     <loc>/research/</loc>
+  </url><url>
+    <loc>/notebooks/multimodal-densities/</loc>
   </url><url>
     <loc>/software/</loc>
   </url><url>

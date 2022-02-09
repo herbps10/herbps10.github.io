@@ -1,0 +1,134 @@
+html, body, h1, h2, h3, h4, h5, h6 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif; }
+
+body {
+  margin-top: 0px; }
+
+article {
+  background: rgba(255, 255, 255, 0.75);
+  position: relative;
+  z-index: 10; }
+
+.universal-wrapper {
+  position: relative;
+  background: rgba(255, 255, 255, 0.75);
+  z-index: 10;
+  clear: both; }
+
+.container {
+  z-index: 2; }
+
+.section {
+  z-index: 2; }
+
+body .navbar-light {
+  background: transparent !important; }
+
+#about {
+  background-color: transparent;
+  position: relative;
+  z-index: 10; }
+
+.fixed-top {
+  position: relative; }
+
+.navbar-light {
+  box-shadow: none; }
+
+h3 {
+  font-weight: 600; }
+
+#graph {
+  position: absolute;
+  top: -230px;
+  left: -300px;
+  z-index: -1; }
+
+.link {
+  stroke: #ccc;
+  z-index: 1; }
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  z-index: 2; }
+
+.caption {
+  font-style: italic;
+  font-size: 10pt;
+  position: relative;
+  top: -1em; }
+
+table.research {
+  border: none; }
+
+table.research tr {
+  background: white; }
+
+table.research td:first-child {
+  vertical-align: top;
+  min-width: 100px; }
+
+table.list {
+  margin: 0px;
+  border: none; }
+
+table.list tr {
+  background: none; }
+
+hr {
+  border: 0.5px solid #ccc; }
+
+.article-meta {
+  background: none;
+  text-align: left;
+  padding: 0px; }
+
+nav {
+  padding-top: 15px;
+  padding-bottom: 15px; }
+
+.main-title {
+  padding-bottom: 10px; }
+
+.menu {
+  float: right;
+  margin: 0px; }
+
+.menu li a {
+  background-color: #7f8c8d;
+  color: white;
+  border-radius: 0px; }
+
+nav .main-title {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.25em;
+  color: #2980b9; }
+
+a {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: underline; }
+
+.photo {
+  margin-right: 15px;
+  margin-bottom: 5px;
+  float: left;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); }
+
+.observablehq p, .observablehq ul, .observablehq .katex-display {
+  max-width: 640px; }
+
+.observablehq form {
+  padding-top: 10px;
+  padding-bottom: 10px; }
+
+.notebook {
+  width: 960px; }
+
+.notebook .katex {
+  white-space: nowrap; }
