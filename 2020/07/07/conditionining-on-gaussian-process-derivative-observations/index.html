@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Herb Susmann">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is straightforward because the conditional distribution of the multivariate normal has a closed form, although there applying it in this context requires some tedious notation and bookkeeping.
+I’m to take an aside to introduce a slightly different notation that expresses the Gaussian Process prior than the last post.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/2020/07/07/conditionining-on-gaussian-process-derivative-observations/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.dd629241ea9333c62c071f4a25f829ff.css">
+
+  
+    
+    
+    
+    
+      
+    
+    
+    
+    <link rel="stylesheet" href="/css/academic.ca445caa71dda91c09e3fe30bfc46d9c.css">
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/2020/07/07/conditionining-on-gaussian-process-derivative-observations/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@herbps10">
+  <meta property="twitter:creator" content="@herbps10">
+  
+  <meta property="og:site_name" content="Herb Susmann">
+  <meta property="og:url" content="/2020/07/07/conditionining-on-gaussian-process-derivative-observations/">
+  <meta property="og:title" content="Conditionining on Gaussian Process Derivative Observations | Herb Susmann">
+  <meta property="og:description" content="In the first post of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is straightforward because the conditional distribution of the multivariate normal has a closed form, although there applying it in this context requires some tedious notation and bookkeeping.
+I’m to take an aside to introduce a slightly different notation that expresses the Gaussian Process prior than the last post."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-07-07T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-07-07T15:55:20-04:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Conditionining on Gaussian Process Derivative Observations | Herb Susmann</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Herb Susmann</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/project/"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/publication/"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Conditionining on Gaussian Process Derivative Observations</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2020-07-07 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2020-07-07 15:55:20 -0400 EDT" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    <time>Jul 7, 2020</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/2020/07/07/conditionining-on-gaussian-process-derivative-observations/&amp;text=Conditionining%20on%20Gaussian%20Process%20Derivative%20Observations" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/2020/07/07/conditionining-on-gaussian-process-derivative-observations/&amp;t=Conditionining%20on%20Gaussian%20Process%20Derivative%20Observations" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Conditionining%20on%20Gaussian%20Process%20Derivative%20Observations&amp;body=/2020/07/07/conditionining-on-gaussian-process-derivative-observations/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/2020/07/07/conditionining-on-gaussian-process-derivative-observations/&amp;title=Conditionining%20on%20Gaussian%20Process%20Derivative%20Observations" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Conditionining%20on%20Gaussian%20Process%20Derivative%20Observations%20/2020/07/07/conditionining-on-gaussian-process-derivative-observations/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/2020/07/07/conditionining-on-gaussian-process-derivative-observations/&amp;title=Conditionining%20on%20Gaussian%20Process%20Derivative%20Observations" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<p>In the <a href="http://herbsusmann.com/2020/07/06/gaussian-process-derivatives/">first post</a> of this series, we looked at how to draw from the joint distribution of a Gaussian Process and its derivative. In this post, we will show how to condition a Gaussian Process on derivative observations. Overall this is straightforward because the conditional distribution of the multivariate normal has a closed form, although there applying it in this context requires some tedious notation and bookkeeping.</p>
+<p>I’m to take an aside to introduce a slightly different notation that expresses the Gaussian Process prior than the last post. One way of looking at Gaussian Processes is as a prior over a function class. It takes a bit of setup, and we will end up re-writing some of what was already done in the first post, but overall its a useful (and more rigorous) way of talking about Gaussian Processes.</p>
+<p>Let’s say we we have some observations of a univariate function <span class="math inline">\(f(x)\)</span>. We wish to use these observations estimate the function <span class="math inline">\(f\)</span> over its entire domain. Without any prior knowledge, <span class="math inline">\(f\)</span> could be any of an infinity of possible functions. We call the set of all possible functions that <span class="math inline">\(f\)</span> could be its <em>function space</em>. In this example, <span class="math inline">\(f\)</span> is in the space of all functions that map numbers in <span class="math inline">\(\mathbb{R} \mapsto \mathbb{R}\)</span>.</p>
+<p>In many real world settings we actually do know something about what <span class="math inline">\(f\)</span> will look like. Broadly, we probably know something about the <em>smoothness</em> of <span class="math inline">\(f\)</span>. In some cases we might also know that <span class="math inline">\(f\)</span> should be periodic. Gaussian Processes provide a flexible way to encode this prior knowledge as a prior over an infinite function space.</p>
+<p>When thinking about Gaussian Processes as a prior over a function space, the notation is slightly different than in the previous post. We write:
+<span class="math display">\[
+f \sim \mathcal{GP}(\mu(x), k(x_i, x_j))
+\]</span>
+where <span class="math inline">\(\mu\)</span> is a function that gives the mean of the GP at any point <span class="math inline">\(x\)</span>, and <span class="math inline">\(k\)</span> is a kernel function that can be used to form a covariance matrix between any sets of points <span class="math inline">\(\bm{x}\)</span> and <span class="math inline">\(\bm{x}^\prime\)</span>.</p>
+<p>Setting this prior places a restriction on the functions <span class="math inline">\(f\)</span>: for any finite set of points <span class="math inline">\(\bm{x}\)</span> in the domain of <span class="math inline">\(f\)</span>, the corresponding function values <span class="math inline">\(f(\bm{x})\)</span> will be multivariate normally distributed:
+<span class="math display">\[
+f(\bm{x}) \sim MVN\left( \mu(\bm{x}), k(\bm{x}, \bm{x}) \right)
+\]</span>
+This connects the idea of a Gaussian Process as a <em>prior distribution over a function space</em> to its practical implementation in multivariate normal distributions over data points.</p>
+<p>In practice, using GPs mostly involves thinking about and manipulating multivariate normal distributions. Looking at GPs theoretically as a prior over a function space, however, is a useful way to interpret them, especially when we start getting into using Bayesian inference to fit GPs.</p>
+<p>Now, back to the main subject of this post. Suppose we observe <span class="math inline">\(N\)</span> observations <span class="math inline">\(\bm{y} = \{y_1, y_2, \cdots, y_n \}\)</span> at points <span class="math inline">\(\bm{x} = \{x_1, x_2, \cdots, x_n \}\)</span> of a function <span class="math inline">\(f\)</span>. In addition, we have <span class="math inline">\(N^\prime\)</span> observations <span class="math inline">\(\bm{y}^\prime\)</span> at points <span class="math inline">\(\bm{x}^\prime\)</span> of the <em>derivative</em> of <span class="math inline">\(f\)</span>, <span class="math inline">\(f^\prime\)</span>.</p>
+<p>We wish to use both sets of observations to estimate values of the function <span class="math inline">\(f\)</span> at a new set of points, which we will call <span class="math inline">\(\bm{\tilde{x}}\)</span>.</p>
+<p>First, we place a mean-zero Gaussian Process prior with kernel function <span class="math inline">\(k\)</span> on the function <span class="math inline">\(f\)</span>:
+<span class="math display">\[
+f \sim \mathcal{GP}(\bm{0}, k_{00}(x_i, x_j))
+\]</span>
+where <span class="math inline">\(k_00\)</span> is the kernel function that gives the covariance between function values at <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_j\)</span>.</p>
+<p>As we saw in the last post, the derivative of a Gaussian Process is also a Gaussian Process. Setting a GP prior on <span class="math inline">\(f\)</span> therefore induces a GP prior on <span class="math inline">\(f^\prime\)</span>:
+<span class="math display">\[
+f^\prime \sim \mathcal{GP}(\bm{0}, k_{11}(x_i, x_j))
+\]</span>
+where <span class="math inline">\(k_{11}\)</span> is the derivative of the kernel function, giving the covariance between the function derivatives at <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_j\)</span>.</p>
+<p>Taken together, this implies that the finite set of realizations of the function and of the function’s derivative that we have observed will have multivariate normal distributions:
+<span class="math display">\[
+f(\bm{x}) \sim MVN(\bm{0}, k_{00}(\bm{x}, \bm{x}))
+f^\prime(\bm{x}^\prime) \sim MVN(\bm{0}, k_{11}(\bm{x}, \bm{x}))
+\]</span></p>
+<p>What’s more, the joint distribution of <span class="math inline">\(f(\bm{x})\)</span> and <span class="math inline">\(f^\prime(\bm{x}^\prime)\)</span> is multivariate normally distributed:
+<span class="math display">\[
+\begin{bmatrix}f\left(\bm{x}\right)\\
+f^{\prime}\left(\bm{x}^{\prime}\right)
+\end{bmatrix}\sim MVN\left(\begin{bmatrix}\bm{0}\\
+\bm{0}
+\end{bmatrix},\begin{bmatrix}\bm{\Sigma}_{00} &amp; \bm{\Sigma}_{01}\\
+\bm{\Sigma}_{10} &amp; \bm{\Sigma}_{11}
+\end{bmatrix}\right)
+\]</span>
+See the previous post for definitions of <span class="math inline">\(k_{01}\)</span> and <span class="math inline">\(k_{11}\)</span>.</p>
+<p>Now, after all of this notation and setup, we are ready to actually do some prediction. We would like to condition on the observed values <span class="math inline">\(\bm{y}\)</span> (of the function) and <span class="math inline">\(\bm{y}^\prime\)</span> (of the derivative) to predict the values of <span class="math inline">\(f\)</span> at a new set of points <span class="math inline">\(\tilde{\bm{x}}\)</span>.</p>
+<p>To make this easier, we’re going to concatenate our observations into one big vector, like we did in the previous post. That is, we have a new vector <span class="math inline">\(\bm{y}^{all}\)</span> that combines <span class="math inline">\(\bm{y}\)</span> and <span class="math inline">\(\bm{y}^\prime\)</span>, <span class="math inline">\(\bm{x}^{all}\)</span> which combines <span class="math inline">\(\bm{x}\)</span> and <span class="math inline">\(\bm{x}^\prime\)</span>, and a vector <span class="math inline">\(\bm[d}^{all}\)</span> which indicates whether each element is a function or derivative observation.</p>
+<p>First, let’s generate some observed data. I’m going to take one draw from joint GP and its derivative, using the code from the last post:</p>
+<pre class="r"><code>set.seed(9)
+
+# Set hyperparameters
+alpha &lt;- 1
+l &lt;- 1
+
+# Points at which to observe the function and its derivative
+x &lt;- rep(seq(0, 10, 0.1), 2)
+d &lt;- c(rep(0, length(x) / 2), rep(1, length(x) / 2))
+
+# Joint covariance matrix
+Sigma &lt;- joint_covariance_from_kernel(x, d, k_all, alpha = alpha, l = l)
+
+# Draw from joint GP
+y &lt;- gp_draw(1, x, Sigma)[1, ]
+
+# Pick a few function and derivative values to use as observed data, making
+# sure to pick an equal number of each type
+N &lt;- 10
+observed_indices &lt;- c(
+  sample(which(d == 0), N / 2),
+  sample(which(d == 1), N / 2)
+)
+
+# We&#39;ll call the observed data y_all so that it matches with the math notation
+x_all &lt;- x[observed_indices]
+y_all &lt;- y[observed_indices]
+d_all &lt;- d[observed_indices]</code></pre>
+<p>Let’s plot the observed values, along with the true value of the function:</p>
+<pre class="r"><code># Create a data frame for plotting
+f &lt;- tibble(
+  x = x,
+  y = y,
+  observed = seq_along(x) %in% observed_indices,
+  d = d
+)
+
+ggplot(f, aes(x = x, y = y)) +
+  geom_line() +
+  geom_point(data = filter(f, observed), aes(color = observed)) +
+  facet_wrap(~d, ncol = 1)</code></pre>
+<p><img src="/post/2020-07-07-conditionining-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The joint distribution of the observed data <span class="math inline">\(\bm{y}^{all}\)</span> is given by:
+<span class="math display">\[
+\bm{y}^{all} \sim MVN\left(\bm{0}, k^{all}(\bm{x}^{all}, \bm{x}^{all}, \bm{d}^{all}, \bm{d}^{all}) \right)
+\]</span></p>
+<p>We want to predict both the function values and derivatives at a set of new points <span class="math inline">\(\tilde{\bm{x}}\)</span>. Define <span class="math inline">\(\tilde{\bm{x}}^{all}\)</span> to be a vector formed by repeating <span class="math inline">\(\tilde{\bm{x}}\)</span> twice, with <span class="math inline">\(\tilde{\bm{d}}^{all} = \left\{0, 0, \cdots, 0, 1, 1, \cdots, 1\right\}\)</span> indicating whether each element of <span class="math inline">\(\tilde{\bm{x}}\)</span> refers to a function or derivative prediction.</p>
+<pre class="r"><code>x_tilde &lt;- seq(0, 10, 0.1) # Prediction points
+
+x_tilde_all &lt;- c(x_tilde, x_tilde)
+d_tilde_all &lt;- c(rep(0, length(x_tilde)), rep(1, length(x_tilde)))</code></pre>
+<p>Fortunately, the conditional distribution of a multivariate normal distribution has a closed form. Applying the formula, we arrive at
+<span class="math display">\[
+\tilde{\bm{y}} \mid \tilde{\bm{x}}^{all}, \bm{y}^{all}, \bm{x}^{all} \sim MVN(K^\top \Sigma^{-1} \bm{y}^{all}, \Omega - K^\top \Sigma^{-1} K)
+\]</span>
+where</p>
+<ul>
+<li><span class="math inline">\(\Sigma\)</span> is the covariance matrix between observed points <span class="math inline">\(\bm{x}^{all}\)</span></li>
+<li><span class="math inline">\(\Omega\)</span> is the covariance matrix between the new points <span class="math inline">\(\bm{\tilde{x}}\)</span></li>
+<li><span class="math inline">\(K\)</span> is the covariance matrix between the observed points <span class="math inline">\(\bm{x}^{all}\)</span> and new points <span class="math inline">\(\bm{\tilde{x}}\)</span></li>
+</ul>
+<p>First, let’s compute each one of these matrices:</p>
+<pre class="r"><code>Sigma &lt;- joint_covariance_from_kernel(x_all, d_all, k_all, alpha = alpha, l = l)
+
+# Due to computational floating point issues, it is sometimes necessary to
+# add a small constant to the diagonal of Sigma to make sure it&#39;s not singular
+Sigma &lt;- Sigma + diag(1e-4, nrow(Sigma))
+
+Omega &lt;- joint_covariance_from_kernel(x_tilde_all, d_tilde_all, k_all, alpha = alpha, l = l)
+
+# We calculate K by computing the covariance between x_all and x_tilde_all
+K &lt;- outer(1:length(x_all), 1:length(x_tilde_all),
+        function(i, j) k_all(x_all[i], x_tilde_all[j], d_all[i], d_tilde_all[j], alpha = alpha, l = l))</code></pre>
+<p>Then apply the conditioning formula to get the conditional mean and covariance matrix:</p>
+<pre class="r"><code>mu_conditional &lt;- t(K) %*% solve(Sigma) %*% y_all
+Sigma_conditional &lt;- Omega - t(K) %*% solve(Sigma) %*% K</code></pre>
+<p>For plotting, it’s helpful to extract the marginal variance of each prediction, which are the diagonal entries of the conditional covariance matrix. We can also use this to get a 95% prediction interval:</p>
+<pre class="r"><code>variance_conditional &lt;- diag(Sigma_conditional)
+
+# Floating point errors sometimes causes the variances to be very close to zero, but negative.
+# if this happens, just set the variance to zero:
+variance_conditional &lt;- ifelse(variance_conditional &lt; 0, 0, variance_conditional)
+
+# 95% intervals
+lower_bound &lt;- mu_conditional - 1.96 * sqrt(variance_conditional)
+upper_bound &lt;- mu_conditional + 1.96 * sqrt(variance_conditional)</code></pre>
+<p>Let’s plot the result:</p>
+<pre class="r"><code>f_conditional &lt;- tibble(
+  x = x_tilde_all,
+  d = d_tilde_all,
+  y = mu_conditional,
+  lower = lower_bound,
+  upper = upper_bound
+) 
+
+ggplot(f_conditional, aes(x = x, y = y)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  geom_line(lty = 2) +
+  geom_line(data = f) +
+  geom_point(data = filter(f, observed)) +
+  facet_wrap(~d, ncol = 1)</code></pre>
+<p><img src="/post/2020-07-07-conditionining-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>The inclusion of derivative information between <span class="math inline">\(x=2.5\)</span> and <span class="math inline">\(x=5.0\)</span> appears to have a big effect on the predictions. Even though there are no function values in this region, the derivatives are able to guide the predictions.</p>
+<p>It would be nice to be able to compare these predictions to ones that don’t use any derivative information. To make this easier, let’s wrap up our code into a helper function which will handle the conditional multivariate normal calculations:</p>
+<pre class="r"><code># To make this more readable I&#39;m omitting the &quot;_all&quot; suffixes on variable names
+condition_joint_gp &lt;- function(x_tilde, d_tilde, y, x, d, kernel, ...) {
+  Sigma &lt;- joint_covariance_from_kernel(x, d, kernel, ...) +
+    diag(1e-4, length(x))
+  
+  Omega &lt;- joint_covariance_from_kernel(x_tilde, d_tilde, kernel, ...)
+  
+  K &lt;- outer(1:length(x), 1:length(x_tilde),
+          function(i, j) kernel(x[i], x_tilde[j], d[i], d_tilde[j], ...))
+  
+  mu_conditional &lt;- (t(K) %*% solve(Sigma) %*% y)[, 1]
+  Sigma_conditional &lt;- Omega - t(K) %*% solve(Sigma) %*% K
+  
+  var_conditional &lt;- diag(Sigma_conditional)
+  var_conditional &lt;- ifelse(var_conditional &lt; 0, 0, var_conditional)
+  
+  tibble(
+    x     = x_tilde,
+    d     = d_tilde,
+    y     = mu_conditional,
+    var   = var_conditional,
+    lower = y - 1.96 * sqrt(var_conditional),
+    upper = y + 1.96 * sqrt(var_conditional)
+  )
+}</code></pre>
+<p>And let’s also wrap up the plotting code into a function:</p>
+<pre class="r"><code>plot_conditional &lt;- function(f_conditional, f) {
+  ggplot(f_conditional, aes(x = x, y = y)) +
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+    geom_line(lty = 2) +
+    geom_line(data = f) +
+    geom_point(data = filter(f, observed)) +
+    facet_wrap(~d, ncol = 1)
+}</code></pre>
+<p>Now let’s condition on just the function observations, leaving out the derivative points.</p>
+<pre class="r"><code>non_derivative_indices &lt;- which(d_all == 0)
+
+f_conditional_no_derivatives &lt;- condition_joint_gp(
+  x_tilde_all,                   # Prediction points
+  d_tilde_all,                   # Derivative indicator at prediction points
+  y_all[non_derivative_indices], # Observed function values
+  x_all[non_derivative_indices], # Position of observed values
+  d_all[non_derivative_indices], # Derivative indicator of observed values
+  k_all,
+  alpha = alpha,
+  l = l
+)
+
+
+# First, plot the predictions that don&#39;t use derivative information
+plot_conditional(f_conditional_no_derivatives, mutate(f, observed = ifelse(d == 1, FALSE, observed))) +
+  ggtitle(&quot;Predictions without derivative observations&quot;)</code></pre>
+<p><img src="/post/2020-07-07-conditionining-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code># Then plot again the predictions that use the derivatives
+plot_conditional(f_conditional, f) +
+  ggtitle(&quot;Predictions using derivative observations&quot;)</code></pre>
+<p><img src="/post/2020-07-07-conditionining-on-gaussian-process-derivative-observations.en_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p>As we would expect, including more information by providing some derivative observations leads to much better predictions.</p>
+<p>Up until now, we have been fixing the hyperparmaters of the Gaussian Process to known values. However, in the real world it’s rare to know these parameters; we need to estimate them. In a future post I’ll show how to use Stan to estimate the hyperparameter values using full Bayesian inference.</p>
+<div id="references" class="section level3">
+<h3>References</h3>
+<ul>
+<li>Stan Reference Manual, <a href="https://mc-stan.org/docs/2_19/stan-users-guide/fit-gp-section.html">Fitting a Gaussian Process</a></li>
+</ul>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hue57d0e8436ae96137a60d1345f821d2b_24465_250x250_fill_lanczos_center_2.png" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Herb Susmann</a></h5>
+      <h6 class="card-subtitle">Graduate Student</h6>
+      <p class="card-text" itemprop="description">Gradate student in Biostatistics at UMass Amherst matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+          <li>
+            <a itemprop="sameAs" href="mailto:hsusmann@umass.edu" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/herbps10" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    <script src="/js/academic.min.bec90056665421447c830e8aa2f42710.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" integrity="sha256-gfQwA6PlkZsLqWu4bU4hXPrbTqzixm0B5MdvBLI+Oas=" crossorigin="anonymous"></script>
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

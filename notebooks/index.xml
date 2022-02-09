@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notebooks on Herb Susmann</title>
+    <link>/notebooks/</link>
+    <description>Recent content in Notebooks on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Herb Susmann {year}</copyright><atom:link href="/notebooks/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Boids</title>
+      <link>/notebooks/boids/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/boids/</guid>
+      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/boids.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-763d3248&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
+    </item>
+    
+    <item>
+      <title>Curve Fitting with B-Splines</title>
+      <link>/notebooks/b-splines/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/b-splines/</guid>
+      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/b-splines.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-66aca9e3&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
+    </item>
+    
+    <item>
+      <title>Gaussian Process Playground</title>
+      <link>/notebooks/gaussian-process-playground/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/gaussian-process-playground/</guid>
+      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/gaussian-processes.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-870dca1f&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
+    </item>
+    
+    <item>
+      <title>Hamiltonian Monte-Carlo</title>
+      <link>/notebooks/hamiltonian-monte-carlo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/hamiltonian-monte-carlo/</guid>
+      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/hamiltonian-monte-carlo.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-2458977f&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
+    </item>
+    
+    <item>
+      <title>One-step Estimators and Pathwise Derivatives</title>
+      <link>/notebooks/one-step-estimators/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/one-step-estimators/</guid>
+      <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/one-step-estimators-and-pathwise-derivatives.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-4907f595&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
+    </item>
+    
+    <item>
+      <title>Yes Yes No: Collider Bias</title>
+      <link>/notebooks/collider-bias/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/collider-bias/</guid>
+      <description> import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/collider-bias.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-8eac214f&#34;));  Source code: Observable notebook.
+.observablehq--inspect { display: none; }   </description>
+    </item>
+    
+  </channel>
+</rss>
