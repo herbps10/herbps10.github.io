@@ -1,23 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Kenneth C. Arnold | Herb Susmann</title>
+    <title>Kenneth C. Arnold on Herb Susmann</title>
     <link>/authors/kenneth-c.-arnold/</link>
-      <atom:link href="/authors/kenneth-c.-arnold/index.xml" rel="self" type="application/rss+xml" />
-    <description>Kenneth C. Arnold</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 01 Feb 2017 00:00:00 +0000</lastBuildDate>
-    <image>
-      <url>/img/icon-192.png</url>
-      <title>Kenneth C. Arnold</title>
-      <link>/authors/kenneth-c.-arnold/</link>
-    </image>
-    
+    <description>Recent content in Kenneth C. Arnold on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 01 Feb 2017 00:00:00 +0000</lastBuildDate><atom:link href="/authors/kenneth-c.-arnold/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DERBI: A Digital Method to Help Researchers Offer “Right-to-Know” Personal Exposure Results</title>
       <link>/publication/derbi/</link>
       <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
+      
       <guid>/publication/derbi/</guid>
-      <description></description>
+      <description>DERBI is a digital tool for reporting back personal results to participants in exposure studies.</description>
     </item>
     
   </channel>

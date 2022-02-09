@@ -1,23 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Silent Spring Institute | Herb Susmann</title>
+    <title>Silent Spring Institute on Herb Susmann</title>
     <link>/tags/silent-spring-institute/</link>
-      <atom:link href="/tags/silent-spring-institute/index.xml" rel="self" type="application/rss+xml" />
-    <description>Silent Spring Institute</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate>
-    <image>
-      <url>/img/icon-192.png</url>
-      <title>Silent Spring Institute</title>
-      <link>/tags/silent-spring-institute/</link>
-    </image>
-    
+    <description>Recent content in Silent Spring Institute on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/silent-spring-institute/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dietary Habits Related to Food Packaging and Population Exposure to PFASs</title>
       <link>/publication/pfas/</link>
       <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
+      
       <guid>/publication/pfas/</guid>
-      <description></description>
+      <description>DERBI is a digital tool for reporting back personal results to participants in exposure studies.</description>
     </item>
     
   </channel>

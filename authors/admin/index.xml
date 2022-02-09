@@ -1,119 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Herb Susmann</title>
     <link>/authors/admin/</link>
-      <atom:link href="/authors/admin/index.xml" rel="self" type="application/rss+xml" />
-    <description>Herb Susmann</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate>
-    <image>
-      <url>/img/icon-192.png</url>
-      <title>Herb Susmann</title>
-      <link>/authors/admin/</link>
-    </image>
-    
-    <item>
-      <title>Dietary Habits Related to Food Packaging and Population Exposure to PFASs</title>
-      <link>/publication/pfas/</link>
-      <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
-      <guid>/publication/pfas/</guid>
-      <description></description>
-    </item>
-    
+    <description>Recent content on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Herb Susmann {year}</copyright>
+    <lastBuildDate>Sat, 10 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="/authors/admin/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Presidential Primary Polling Analysis in Stan</title>
       <link>/2019/08/10/presidential-primary-polling-analysis-in-stan/</link>
       <pubDate>Sat, 10 Aug 2019 00:00:00 +0000</pubDate>
+      
       <guid>/2019/08/10/presidential-primary-polling-analysis-in-stan/</guid>
-      <description>
-&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
-
-
-&lt;p&gt;&lt;em&gt;Note: this post has been updated with more recent data.&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. &lt;a href=&#34;https://fivethirtyeight.com&#34;&gt;FiveThirtyEight&lt;/a&gt; publishes several &lt;a href=&#34;https://projects.fivethirtyeight.com/polls&#34;&gt;polling datasets&lt;/a&gt;, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a &lt;a href=&#34;https://gist.github.com/herbps10/d274d3d9c579e4e9eb5c16a16949c315&#34;&gt;Github gist&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; be the true proportion of voters in favor of candidate &lt;span class=&#34;math inline&#34;&gt;\(c\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;. Our modeling assumption is that the logit-transform of &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; follows a random walk; that is:
-&lt;span class=&#34;math display&#34;&gt;\[
-\mathrm{logit}(\delta_{c,t}) \sim \mathrm{N}\left(\mathrm{logit}(\delta_{c,t-1}), \tau^2\right)
-\]&lt;/span&gt;
-We can’t observe &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c,t}\)&lt;/span&gt; directly; we have to infer it through the noisy observations we have from polls.&lt;/p&gt;
-&lt;p&gt;Let &lt;span class=&#34;math inline&#34;&gt;\(s_{i}\)&lt;/span&gt; be the sample size of poll &lt;span class=&#34;math inline&#34;&gt;\(c[i]\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(y_{i}\)&lt;/span&gt; the number of poll respondents in favor of candidate &lt;span class=&#34;math inline&#34;&gt;\(c[i]\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t[i]\)&lt;/span&gt;. Let &lt;span class=&#34;math inline&#34;&gt;\(\phi_i\)&lt;/span&gt; be the proportion of poll respondents in favor of candidate &lt;span class=&#34;math inline&#34;&gt;\(c[i]\)&lt;/span&gt; at time &lt;span class=&#34;math inline&#34;&gt;\(t[i]\)&lt;/span&gt;. To incorporate sampling error, we model &lt;span class=&#34;math inline&#34;&gt;\(y_i\)&lt;/span&gt; as binomial:
-&lt;span class=&#34;math display&#34;&gt;\[
-y_i \sim \mathrm{Binomial}(s_i, \phi_i)
-\]&lt;/span&gt;
-We also allow for added variance in our observations by relating &lt;span class=&#34;math inline&#34;&gt;\(\phi_i\)&lt;/span&gt; to the true logit proportion &lt;span class=&#34;math inline&#34;&gt;\(\delta_{c[i], t[i]}\)&lt;/span&gt; with a normal distribution:
-&lt;span class=&#34;math display&#34;&gt;\[
-\mathrm{logit}(\phi_i) \sim \mathrm{N}(\mathrm{logit}(\delta_{c[i], t[i]}), \sigma^2)
-\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;To finish defining the model half-normal priors on the hyperparameters. The prior for &lt;span class=&#34;math inline&#34;&gt;\(\tau^2\)&lt;/span&gt; has a small variance to improve identification of the model (a vaguer prior can cause the MCMC chains to not mix well.)
-&lt;span class=&#34;math display&#34;&gt;\[
-\begin{aligned}
-  \tau^2 &amp;amp;\sim \mathrm{N}(0, 0.02)[0, \infty] \\
-  \sigma^2 &amp;amp;\sim \mathrm{N}(0, 1)[0, \infty] 
-\end{aligned}
-\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Here is the Stan representation of the statistical model:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;S4 class stanmodel &amp;#39;random_walk&amp;#39; coded as follows:
-data {
-  int&amp;lt;lower=0&amp;gt; T; // Number of timepoints
-  int&amp;lt;lower=0&amp;gt; C; // Number of candidates
-  int&amp;lt;lower=0&amp;gt; N; // Number of poll observations
-  
-  int sample_size[N]; // Sample size of each poll
-  int y[N]; // Number of respondents in poll for candidate (approximate)
-  int&amp;lt;lower=1, upper=T&amp;gt; get_t_i[N]; // timepoint for ith observation
-  int&amp;lt;lower=1, upper=C&amp;gt; get_c_i[N]; // candidate for ith observation
-}
-parameters {
-  matrix[C, T] delta_logit; // Percent for candidate c at time t
-  real&amp;lt;lower=0, upper=1&amp;gt; phi[N]; // Percent of participants in poll for candidate
-  real&amp;lt;lower=0&amp;gt; tau; // Random walk variance
-  real&amp;lt;lower=0,upper=0.5&amp;gt; sigma; // Overdispersion of observations
-}
-model {
-  // Priors
-  tau ~ normal(0, 0.2);
-  sigma ~ normal(0, 1);
-  
-  // Random walk
-  for(c in 1:C) {
-    delta_logit[c, 2:T] ~ normal(delta_logit[c, 1:(T - 1)], tau);
-  }
-  
-  // Observed data
-  y ~ binomial(sample_size, phi);
-  for(i in 1:N) {
-    // Overdispersion
-    delta_logit[get_c_i[i], get_t_i[i]] ~ normal(logit(phi[i]), sigma);
-  }
-}
-generated quantities {
-  matrix[C, T] delta = inv_logit(delta_logit);
-} &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The raw dataset that we are going to fit:
-&lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/raw_data-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;I fitted the Stan model to the data using the standard HMC-NUTS algorithm and 1,000 MCMC iterations (with 500 of those for warmup.) The plot below shows the posterior median with 75% and 95% credible intervals.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Let’s zoom in on August-November 2019 where there are more data:
-&lt;img src=&#34;/post/2019-08-10-presidental-primary-polling-analysis-in-stan/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;This model is too simple to be that useful, but it could serve as a starting point for more complex models. The model could be improved by incorporating more information, perhaps by finding a data source that includes more polls or modifying the model to incorporate results from head-to-head matchups. We might also want to model systematic biases by the type of poll (phone or internet) or the pollster.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>DERBI: A Digital Method to Help Researchers Offer “Right-to-Know” Personal Exposure Results</title>
-      <link>/publication/derbi/</link>
-      <pubDate>Wed, 01 Feb 2017 00:00:00 +0000</pubDate>
-      <guid>/publication/derbi/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/authors/admin/</link>
-      <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
-      <guid>/authors/admin/</guid>
-      <description>&lt;p&gt;I grew up near Ithaca, New York, where I was home-schooled for elementary school, an experience that shaped my belief in the value of self-directed, intrinsically motivated learning. I went to college at SUNY Geneseo where I received a degree in Mathematics in 2014. I spent four years working as a software developer at &lt;a href=&#34;https://silentspring.org&#34; target=&#34;_blank&#34;&gt;Silent Spring Institute&lt;/a&gt; where I developed digital tools for communicating complex scientific data to a lay audience. I began a doctoral program in biostatistics at UMass Amherst in 2018, where I am working with &lt;a href=&#34;https://people.umass.edu/lalkema/&#34; target=&#34;_blank&#34;&gt;Leontine Alkema&lt;/a&gt; on spatial Bayesian modeling.&lt;/p&gt;
-</description>
+      <description>Note: this post has been updated with more recent data.
+I often use random walk/autoregressive models in my research as a component in time-series analysis, and I wanted to get some more experience fitting them to data. FiveThirtyEight publishes several polling datasets, including polling for the 2020 Democratic presidential primary. I used Stan to fit a Bayesian random walk model to the polling data, which I describe below. The Stan and R code used in this post is available as a Github gist.</description>
     </item>
     
   </channel>

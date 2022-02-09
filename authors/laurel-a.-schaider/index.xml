@@ -1,23 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Laurel A. Schaider | Herb Susmann</title>
+    <title>Laurel A. Schaider on Herb Susmann</title>
     <link>/authors/laurel-a.-schaider/</link>
-      <atom:link href="/authors/laurel-a.-schaider/index.xml" rel="self" type="application/rss+xml" />
-    <description>Laurel A. Schaider</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate>
-    <image>
-      <url>/img/icon-192.png</url>
-      <title>Laurel A. Schaider</title>
-      <link>/authors/laurel-a.-schaider/</link>
-    </image>
-    
+    <description>Recent content in Laurel A. Schaider on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate><atom:link href="/authors/laurel-a.-schaider/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dietary Habits Related to Food Packaging and Population Exposure to PFASs</title>
       <link>/publication/pfas/</link>
       <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
+      
       <guid>/publication/pfas/</guid>
-      <description></description>
+      <description>DERBI is a digital tool for reporting back personal results to participants in exposure studies.</description>
     </item>
     
   </channel>

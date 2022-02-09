@@ -1,327 +1,107 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
-  <url>
-    <loc>/talk/example/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
-  </url>
-  
   <url>
     <loc>/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/talk/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+    <lastmod>2020-12-11T10:17:59-05:00</lastmod>
+  </url><url>
     <loc>/2020/12/11/derivative-gaussian-processes-in-stan/</loc>
     <lastmod>2020-12-11T10:17:59-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/post/</loc>
     <lastmod>2020-12-11T10:17:59-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2020/12/01/conditioning-on-gaussian-process-derivative-observations/</loc>
     <lastmod>2020-12-01T15:55:20-04:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2020/08/04/friends/</loc>
     <lastmod>2020-08-04T17:06:02-04:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2020/07/06/gaussian-process-derivatives/</loc>
     <lastmod>2020-07-06T13:42:41-04:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2020/02/01/firearm-background-check-timeseries-modeling/</loc>
     <lastmod>2020-02-01T19:48:46-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2019/11/18/hello-estimating-equations/</loc>
-    <lastmod>2019-11-18T21:59:58-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/authors/admin/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication_types/2/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
+  </url><url>
     <loc>/authors/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/publication/pfas/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/kathryn-m.-rodgers/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/laurel-a.-schaider/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/publication_types/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/publication/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/ruthann-a.-rudel/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/silent-spring-institute/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-10-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
+  </url><url>
     <loc>/2019/08/10/presidential-primary-polling-analysis-in-stan/</loc>
     <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/</loc>
-    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/project/reactor/</loc>
-    <lastmod>2019-08-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/r/</loc>
     <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/stan/</loc>
     <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
+  </url><url>
     <loc>/2019/08/09/autoregressive-processes-are-gaussian-processes/</loc>
     <lastmod>2019-08-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2019/07/22/r-formulas-stan/</loc>
     <lastmod>2019-07-22T18:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2019/04/08/smartphone-interface-for-reporting-research-results-to-study-participants/</loc>
     <lastmod>2019-04-08T18:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/slides/</loc>
-    <lastmod>2019-02-05T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/slides/example/</loc>
-    <lastmod>2019-02-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/privacy/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/terms/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2018/02/25/what-poisons-are-in-your-body-nick-kristof/</loc>
     <lastmod>2018-02-25T18:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2018/02/25/more-animals-from-twitter/</loc>
-    <lastmod>2018-02-25T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2018/02/04/theyre-all-good-dogs/</loc>
     <lastmod>2018-02-04T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/</loc>
     <lastmod>2017-10-09T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2017/10/07/predicting-jeopardy-winners/</loc>
     <lastmod>2017-10-07T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2017/07/30/bananagrams-probabilities/</loc>
     <lastmod>2017-07-30T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/derbi-silent-spring-institute/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/publication/derbi/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/julia-green-brody/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/katerine-e.-boronow/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/kenneth-c.-arnold/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/krzysztof-z.-gajos/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/laurie-havas/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/phil-brown/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/authors/rachel-morello-frosch/</loc>
-    <lastmod>2017-02-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/2016/12/29/who-was-in-each-episode-of-star-trek/</loc>
-    <lastmod>2016-12-29T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2016/11/28/build-a-crystal-radio/</loc>
     <lastmod>2016-11-28T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2016/10/21/tobacco-industry-concessions-that-werent-concessions/</loc>
-    <lastmod>2016-10-21T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/2016/06/19/jeopardy-survival-analysis/</loc>
     <lastmod>2016-06-19T12:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/rnhanes/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2014/04/21/performant-r/</loc>
-    <lastmod>2014-04-21T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2014/04/04/raytracing-in-bash/</loc>
-    <lastmod>2014-04-04T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/bash/</loc>
     <lastmod>2014-04-04T21:13:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>/tags/raytracing/</loc>
     <lastmod>2014-04-04T21:13:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/1/01/01/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>/2014/04/04/raytracing-in-bash/</loc>
+    <lastmod>2014-04-04T21:13:14-05:00</lastmod>
+  </url><url>
+    <loc>/about/</loc>
+  </url><url>
+    <loc>/notebooks/boids/</loc>
+  </url><url>
     <loc>/categories/</loc>
-    <priority>0</priority>
+  </url><url>
+    <loc>/notebooks/b-splines/</loc>
+  </url><url>
+    <loc>/notebooks/gaussian-process-playground/</loc>
+  </url><url>
+    <loc>/notebooks/hamiltonian-monte-carlo/</loc>
+  </url><url>
+    <loc>/notebooks/</loc>
+  </url><url>
+    <loc>/notebooks/one-step-estimators/</loc>
+  </url><url>
+    <loc>/publication_types/</loc>
+  </url><url>
+    <loc>/research/</loc>
+  </url><url>
+    <loc>/software/</loc>
+  </url><url>
+    <loc>/notebooks/collider-bias/</loc>
   </url>
-  
-  <url>
-    <loc>/courses/</loc>
-  </url>
-  
 </urlset>

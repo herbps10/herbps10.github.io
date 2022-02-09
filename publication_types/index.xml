@@ -1,24 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Publication_types | Herb Susmann</title>
+    <title>Publication_types on Herb Susmann</title>
     <link>/publication_types/</link>
-      <atom:link href="/publication_types/index.xml" rel="self" type="application/rss+xml" />
-    <description>Publication_types</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate>
-    <image>
-      <url>/img/icon-192.png</url>
-      <title>Publication_types</title>
-      <link>/publication_types/</link>
-    </image>
-    
-    <item>
-      <title>2</title>
-      <link>/publication_types/2/</link>
-      <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
-      <guid>/publication_types/2/</guid>
-      <description></description>
-    </item>
-    
+    <description>Recent content in Publication_types on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Herb Susmann {year}</copyright><atom:link href="/publication_types/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

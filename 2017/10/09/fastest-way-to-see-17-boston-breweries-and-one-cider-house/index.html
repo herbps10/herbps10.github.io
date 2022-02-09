@@ -1,484 +1,54 @@
 <!DOCTYPE html>
 <html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fastest way to see 17 Boston breweries (and one cider house) | Herb Susmann</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
 
-<head>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="generator" content="Source Themes Academic 4.4.0">
+<link rel="stylesheet" href="/css/custom.min.4bb61029a175f9bbf4897065e76d9816772e40a458e63a95a2c1dbe907f3c32e.css">
 
-  
+  </head>
 
-  
-  
-  
-  
-  
+  <body>
+    <svg id='graph' width='800' height='800'></svg>
+    <nav>
+    <a href='/' class='main-title'>Herb Susmann</a>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about">About</a></li>
+      
+      <li><a href="/notebooks">Notebooks</a></li>
+      
+      <li><a href="/research">Research</a></li>
+      
+      <li><a href="/software">Software</a></li>
+      
+    </ul>
+    </nav>
     
-    
-    
-  
-  
-
-  <meta name="author" content="Herb Susmann">
-
-  
-  
-  
-    
-  
-  <meta name="description" content="Calculating an optimal route between all the Boston area breweries using a Traveling Salesman Problem solver.">
-
-  
-  <link rel="alternate" hreflang="en-us" href="/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/">
-
-  
-
-
-  
-
-  
-  
-  
-  <meta name="theme-color" content="#2962ff">
-  
-
-  
-  
-  
-  
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
-
-    
-    
-    
-      
-    
-    
-      
-      
-        
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
-        
-      
-    
-
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
-    
-
-    
-
-  
-
-  
-  
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
-  
-
-  
-  
-  
-  <link rel="stylesheet" href="/css/academic.min.dd629241ea9333c62c071f4a25f829ff.css">
-
-  
-    
-    
-    
-    
-      
-    
-    
-    
-    <link rel="stylesheet" href="/css/academic.b18feca3f360f9969fa0dddf0cf40c3d.css">
-  
-
-  
-  
-  
-
-  
-
-  <link rel="manifest" href="/index.webmanifest">
-  <link rel="icon" type="image/png" href="/img/icon-32.png">
-  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
-
-  <link rel="canonical" href="/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/">
-
-  
-  
-  
-  
-    
-    
-  
-  
-  <meta property="twitter:card" content="summary">
-  
-  <meta property="twitter:site" content="@herbps10">
-  <meta property="twitter:creator" content="@herbps10">
-  
-  <meta property="og:site_name" content="Herb Susmann">
-  <meta property="og:url" content="/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/">
-  <meta property="og:title" content="Fastest way to see 17 Boston breweries (and one cider house) | Herb Susmann">
-  <meta property="og:description" content="Calculating an optimal route between all the Boston area breweries using a Traveling Salesman Problem solver."><meta property="og:image" content="/img/icon-192.png">
-  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
-  
-    
-      <meta property="article:published_time" content="2017-10-09T12:00:00&#43;00:00">
-    
-    <meta property="article:modified_time" content="2017-10-09T12:00:00&#43;00:00">
-  
-
-  
-
-
-  
-
-
-
-
-
-  <title>Fastest way to see 17 Boston breweries (and one cider house) | Herb Susmann</title>
-
-</head>
-
-<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
-
-  <aside class="search-results" id="search">
-  <div class="container">
-    <section class="search-header">
-
-      <div class="row no-gutters justify-content-between mb-3">
-        <div class="col-6">
-          <h1>Search</h1>
-        </div>
-        <div class="col-6 col-search-close">
-          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
-        </div>
-      </div>
-
-      <div id="search-box">
-        
-        
-        
-      </div>
-
-    </section>
-    <section class="section-search-results">
-
-      <div id="search-hits">
-        
-      </div>
-
-    </section>
-  </div>
-</aside>
-
-
-  
-<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
-  <div class="container">
-
-    
-      <a class="navbar-brand" href="/">Herb Susmann</a>
-      
-      <button type="button" class="navbar-toggler" data-toggle="collapse"
-              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span><i class="fas fa-bars"></i></span>
-      </button>
-      
-
-    
-    <div class="collapse navbar-collapse" id="navbar">
-
-      
-      
-      <ul class="navbar-nav mr-auto">
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/post/"><span>Posts</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/project/"><span>Projects</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/publication/"><span>Publications</span></a>
-        </li>
-
-        
-        
-
-      
-
-        
-
-        
-
-        
-
-        
-
-      </ul>
-
-    </div>
-  </div>
-</nav>
-
-
-  <article class="article" itemscope itemtype="http://schema.org/Article">
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-  
-  
-<div class="article-container pt-3">
-  <h1 itemprop="name">Fastest way to see 17 Boston breweries (and one cider house)</h1>
-
-  
-
-  
-    
-
-
-
-<meta content="2017-10-09 12:00:00 &#43;0000 UTC" itemprop="datePublished">
-<meta content="2017-10-09 12:00:00 &#43;0000 UTC" itemprop="dateModified">
-
-<div class="article-metadata">
-
-  
-  
-
-  
-  <span class="article-date">
-    
-    
-      
-    
-    <time>Oct 9, 2017</time>
-  </span>
-  
-
-  
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    3 min read
-  </span>
-  
-
-  
-  
-  
-
-  
-  
-
-  
-    
-<div class="share-box" aria-hidden="true">
-  <ul class="share">
-    
-      
-      
-      
-        
-      
-      
-      
-      <li>
-        <a href="https://twitter.com/intent/tweet?url=/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/&amp;text=Fastest%20way%20to%20see%2017%20Boston%20breweries%20%28and%20one%20cider%20house%29" target="_blank" rel="noopener" class="share-btn-twitter">
-          <i class="fab fa-twitter"></i>
-        </a>
-      </li>
-    
-      
-      
-      
-        
-      
-      
-      
-      <li>
-        <a href="https://www.facebook.com/sharer.php?u=/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/&amp;t=Fastest%20way%20to%20see%2017%20Boston%20breweries%20%28and%20one%20cider%20house%29" target="_blank" rel="noopener" class="share-btn-facebook">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-      </li>
-    
-      
-      
-      
-        
-      
-      
-      
-      <li>
-        <a href="mailto:?subject=Fastest%20way%20to%20see%2017%20Boston%20breweries%20%28and%20one%20cider%20house%29&amp;body=/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/" target="_blank" rel="noopener" class="share-btn-email">
-          <i class="fas fa-envelope"></i>
-        </a>
-      </li>
-    
-      
-      
-      
-        
-      
-      
-      
-      <li>
-        <a href="https://www.linkedin.com/shareArticle?url=/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/&amp;title=Fastest%20way%20to%20see%2017%20Boston%20breweries%20%28and%20one%20cider%20house%29" target="_blank" rel="noopener" class="share-btn-linkedin">
-          <i class="fab fa-linkedin-in"></i>
-        </a>
-      </li>
-    
-      
-      
-      
-        
-      
-      
-      
-      <li>
-        <a href="https://web.whatsapp.com/send?text=Fastest%20way%20to%20see%2017%20Boston%20breweries%20%28and%20one%20cider%20house%29%20/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/" target="_blank" rel="noopener" class="share-btn-whatsapp">
-          <i class="fab fa-whatsapp"></i>
-        </a>
-      </li>
-    
-      
-      
-      
-        
-      
-      
-      
-      <li>
-        <a href="https://service.weibo.com/share/share.php?url=/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/&amp;title=Fastest%20way%20to%20see%2017%20Boston%20breweries%20%28and%20one%20cider%20house%29" target="_blank" rel="noopener" class="share-btn-weibo">
-          <i class="fab fa-weibo"></i>
-        </a>
-      </li>
-    
-  </ul>
+  <div class='container universal-wrapper'>
+<div class="article-meta">
+<h1><span class="title">Fastest way to see 17 Boston breweries (and one cider house)</span></h1>
+
+<h3 class="date">October 10, 2017</h3>
 </div>
 
-
-  
-
-</div>
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-</div>
-
-
-
-  <div class="article-container">
-
-    <div class="article-style" itemprop="articleBody">
-      <p>There have been a few articles in the last couple years that have used traveling salesman problem solvers to find the fastest way to see <a href="http://www.randalolson.com/2016/07/30/the-optimal-u-s-national-parks-centennial-road-trip/" target="_blank">all the national parks</a> or <a href="https://flowingdata.com/2015/10/26/top-brewery-road-trip-routed-algorithmically/" target="_blank">72 breweries in the US</a>. I&rsquo;m going to join the trend on a smaller geographic scale by plotting the fastest way to see 18 breweries (including one cider house) in the Boston area.</p>
-
+<main>
+<p>There have been a few articles in the last couple years that have used traveling salesman problem solvers to find the fastest way to see <a href="http://www.randalolson.com/2016/07/30/the-optimal-u-s-national-parks-centennial-road-trip/">all the national parks</a> or <a href="https://flowingdata.com/2015/10/26/top-brewery-road-trip-routed-algorithmically/">72 breweries in the US</a>. I&rsquo;m going to join the trend on a smaller geographic scale by plotting the fastest way to see 18 breweries (including one cider house) in the Boston area.</p>
 <p>The fastest route takes about 2.5 hours of driving (by your designated driver or using a ride service, of course) from start to finish:</p>
-
 <div style='margin: 15px 0px'>
   <iframe src='/maps/brewery.html' width='700' height='600' style='border: none; position: relative; left: -25px'></iframe>
 </div>
-
 <p>If you take 15 minutes at each brewery to have a beer, and it takes 2.5 hours to drive to each one, you could do it all in only 7 hours. Not bad, that&rsquo;s less than a full day at work!</p>
-
 <p>You won&rsquo;t be able to drive this yourself if you have a beer at every stop, so you&rsquo;ll either need to find a friend to drive you around for seven hours, or take something like a Lyft. I used the Lyft API to estimate how much it would cost, and it comes in at about $176. If you can split this with three friends, and you pay, say, <span>$</span>8 per drink, your total cost would be <span>$</span>188.</p>
-
 <p>Am I going to do this? Probably not. I really don&rsquo;t think I could stomach 17 beers and a cider in one day. And think of all the fun I could have programming in R for seven hours, instead. Yeah. Easy choice.</p>
-
 <p>Here&rsquo;s a list of all the breweries, in order. You could start your tour anywhere, but if I were doing this I&rsquo;d start at Aeronaut, my favorite brewery around here. You&rsquo;d also get to end at Bantam Cider Company to cap off very long night out on a different note.</p>
-
 <ol>
 <li>Aeuronaut Brewery</li>
 <li>Winter Hill Brewing Company</li>
@@ -499,261 +69,39 @@
 <li>Somerville Brewing Company</li>
 <li>Bantam Cider Company</li>
 </ol>
-
-<p>If you want to want do this, here&rsquo;s a <a href="https://www.google.com/maps/dir/Aeronaut+Brewing+Company,+14+Tyler+St,+Somerville,+MA+02143/Winter+Hill+Brewing+Company,+328+Broadway,+Somerville,+MA+02145/Idle+Hands+Craft+Ales,+89+Commercial+St,+Malden,+MA+02148/Night+Shift+Brewing,+87+Santilli+Hwy,+Everett,+MA+02149/Bone+Up+Brewing+Co.,+38+Norman+St,+Everett,+MA+02149/Mystic+Brewery,+174+Williams+St,+Chelsea,+MA+02150/Downeast+Cider+House,+256+Marginal+St+%2332,+East+Boston,+MA+02128/BEERWORKS+Brewing+No.+3+Canal,+112+Canal+St,+Boston,+MA+02114/Trillium+Brewing+Company,+369+Congress+Street,+FL+1A,+Boston,+MA+02210/Harpoon+Brewery+And+Beer+Hall,+306+Northern+Ave,+Boston,+MA+02210/Dorchester+Brewing+Company,+1250+Massachusetts+Ave,+Dorchester,+MA+02125/Samuel+Adams,+30+Germania+St,+Boston,+MA+02130/Turtle+Swamp+Brewing,+3377+Washington+St,+Boston,+MA+02130/John+Harvard's+Brewery+%26+Ale+House,+33+Dunster+St,+Cambridge,+MA+02138/Lamplighter+Brewing+Co.,+284+Broadway,+Cambridge,+MA+02139/Cambridge+Brewing+Company,+1,+1+Kendall+Square,+Cambridge,+MA+02139/Somerville+Brewing+Company+-+Slumbrew,+15+Ward+St,+Somerville,+MA+02143/Bantam+Cider+Company,+40+Merriam+St,+Somerville,+MA+02143/@42.357596,-71.062877,12z/data=!4m109!4m108!1m5!1m1!1s0x89e37736621ba0e3:0xcd08ad34fe7dca73!2m2!1d-71.1062431!2d42.3819603!1m5!1m1!1s0x89e370d461337b9d:0x732c6faaf36fa55!2m2!1d-71.093984!2d42.392658!1m5!1m1!1s0x89e3711a973d8981:0x602f1fd391d76ed7!2m2!1d-71.0747463!2d42.4243919!1m5!1m1!1s0x89e3711a8dbb40d3:0xc68b7f0434ddb595!2m2!1d-71.067886!2d42.4059707!1m5!1m1!1s0x89e371116054c6df:0x30dd9e16e3a944cd!2m2!1d-71.0659377!2d42.4057422!1m5!1m1!1s0x89e371ab8c837f8f:0xc644198c4204f828!2m2!1d-71.044508!2d42.391628!1m5!1m1!1s0x89e370f8a1a1ba83:0x616aeee762a3390d!2m2!1d-71.0324945!2d42.3642794!1m5!1m1!1s0x89e3708e355828b1:0xb7e761efd7866524!2m2!1d-71.060386!2d42.364458!1m5!1m1!1s0x89e37a803cc64d71:0x84333022c52876d!2m2!1d-71.047858!2d42.3498299!1m5!1m1!1s0x89e37a9da5a2cfcb:0xc0be8b883c30f87e!2m2!1d-71.034439!2d42.346892!1m5!1m1!1s0x89e37a4fd2b56dcf:0x4556895a1d1fb907!2m2!1d-71.062317!2d42.322152!1m5!1m1!1s0x89e3797b7da31c79:0x608b218b28d63376!2m2!1d-71.1032285!2d42.3145455!1m5!1m1!1s0x89e379643bcaf91f:0x470aa6cde54a2b0d!2m2!1d-71.1052909!2d42.3088836!1m5!1m1!1s0x89e37742ceb8a909:0x7666471e31ddf163!2m2!1d-71.1192843!2d42.3726027!1m5!1m1!1s0x89e37752b0e81867:0x26811979965d9ac4!2m2!1d-71.0978948!2d42.36795!1m5!1m1!1s0x89e370ade1cbb413:0x3e315a440afb04f9!2m2!1d-71.0912995!2d42.3664092!1m5!1m1!1s0x89e370b65aae14c7:0xdc997b87e8c938a0!2m2!1d-71.0892538!2d42.3748138!1m5!1m1!1s0x89e370b5ff812441:0x94fbd00ab0ecf947!2m2!1d-71.0919018!2d42.3777733" target="_blank">Google Map with all the breweries entered in order</a>. Good luck. Please drink responsibly.</p>
-
+<p>If you want to want do this, here&rsquo;s a <a href="https://www.google.com/maps/dir/Aeronaut+Brewing+Company,+14+Tyler+St,+Somerville,+MA+02143/Winter+Hill+Brewing+Company,+328+Broadway,+Somerville,+MA+02145/Idle+Hands+Craft+Ales,+89+Commercial+St,+Malden,+MA+02148/Night+Shift+Brewing,+87+Santilli+Hwy,+Everett,+MA+02149/Bone+Up+Brewing+Co.,+38+Norman+St,+Everett,+MA+02149/Mystic+Brewery,+174+Williams+St,+Chelsea,+MA+02150/Downeast+Cider+House,+256+Marginal+St+%2332,+East+Boston,+MA+02128/BEERWORKS+Brewing+No.+3+Canal,+112+Canal+St,+Boston,+MA+02114/Trillium+Brewing+Company,+369+Congress+Street,+FL+1A,+Boston,+MA+02210/Harpoon+Brewery+And+Beer+Hall,+306+Northern+Ave,+Boston,+MA+02210/Dorchester+Brewing+Company,+1250+Massachusetts+Ave,+Dorchester,+MA+02125/Samuel+Adams,+30+Germania+St,+Boston,+MA+02130/Turtle+Swamp+Brewing,+3377+Washington+St,+Boston,+MA+02130/John+Harvard's+Brewery+%26+Ale+House,+33+Dunster+St,+Cambridge,+MA+02138/Lamplighter+Brewing+Co.,+284+Broadway,+Cambridge,+MA+02139/Cambridge+Brewing+Company,+1,+1+Kendall+Square,+Cambridge,+MA+02139/Somerville+Brewing+Company+-+Slumbrew,+15+Ward+St,+Somerville,+MA+02143/Bantam+Cider+Company,+40+Merriam+St,+Somerville,+MA+02143/@42.357596,-71.062877,12z/data=!4m109!4m108!1m5!1m1!1s0x89e37736621ba0e3:0xcd08ad34fe7dca73!2m2!1d-71.1062431!2d42.3819603!1m5!1m1!1s0x89e370d461337b9d:0x732c6faaf36fa55!2m2!1d-71.093984!2d42.392658!1m5!1m1!1s0x89e3711a973d8981:0x602f1fd391d76ed7!2m2!1d-71.0747463!2d42.4243919!1m5!1m1!1s0x89e3711a8dbb40d3:0xc68b7f0434ddb595!2m2!1d-71.067886!2d42.4059707!1m5!1m1!1s0x89e371116054c6df:0x30dd9e16e3a944cd!2m2!1d-71.0659377!2d42.4057422!1m5!1m1!1s0x89e371ab8c837f8f:0xc644198c4204f828!2m2!1d-71.044508!2d42.391628!1m5!1m1!1s0x89e370f8a1a1ba83:0x616aeee762a3390d!2m2!1d-71.0324945!2d42.3642794!1m5!1m1!1s0x89e3708e355828b1:0xb7e761efd7866524!2m2!1d-71.060386!2d42.364458!1m5!1m1!1s0x89e37a803cc64d71:0x84333022c52876d!2m2!1d-71.047858!2d42.3498299!1m5!1m1!1s0x89e37a9da5a2cfcb:0xc0be8b883c30f87e!2m2!1d-71.034439!2d42.346892!1m5!1m1!1s0x89e37a4fd2b56dcf:0x4556895a1d1fb907!2m2!1d-71.062317!2d42.322152!1m5!1m1!1s0x89e3797b7da31c79:0x608b218b28d63376!2m2!1d-71.1032285!2d42.3145455!1m5!1m1!1s0x89e379643bcaf91f:0x470aa6cde54a2b0d!2m2!1d-71.1052909!2d42.3088836!1m5!1m1!1s0x89e37742ceb8a909:0x7666471e31ddf163!2m2!1d-71.1192843!2d42.3726027!1m5!1m1!1s0x89e37752b0e81867:0x26811979965d9ac4!2m2!1d-71.0978948!2d42.36795!1m5!1m1!1s0x89e370ade1cbb413:0x3e315a440afb04f9!2m2!1d-71.0912995!2d42.3664092!1m5!1m1!1s0x89e370b65aae14c7:0xdc997b87e8c938a0!2m2!1d-71.0892538!2d42.3748138!1m5!1m1!1s0x89e370b5ff812441:0x94fbd00ab0ecf947!2m2!1d-71.0919018!2d42.3777733">Google Map with all the breweries entered in order</a>. Good luck. Please drink responsibly.</p>
 <p>P.S. Let me know if I missed any breweries in the area!</p>
+<p><strong>Do it yourself:</strong> All the code for this project is <a href="https://github.com/herbps10/brewery-tsp">on Github</a>. I used the Google Maps API for calculating a distance matrix between all the breweries and to get detailed directions between each point on the final tour. The optimal tour was calculated using the <a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem#Asymmetric_TSP">asymmetric traveling salesman problem</a> solver from the <a href="https://cran.r-project.org/web/packages/TSP/index.html">TSP R package</a>. The Lyft price estimate came from it&rsquo;s <a href="https://www.lyft.com/developers">public API</a>. If you want to run the code yourself, you&rsquo;ll need to get a Google Maps API key and a Lyft API key.</p>
 
-<p><strong>Do it yourself:</strong> All the code for this project is <a href="https://github.com/herbps10/brewery-tsp" target="_blank">on Github</a>. I used the Google Maps API for calculating a distance matrix between all the breweries and to get detailed directions between each point on the final tour. The optimal tour was calculated using the <a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem#Asymmetric_TSP" target="_blank">asymmetric traveling salesman problem</a> solver from the <a href="https://cran.r-project.org/web/packages/TSP/index.html" target="_blank">TSP R package</a>. The Lyft price estimate came from it&rsquo;s <a href="https://www.lyft.com/developers" target="_blank">public API</a>. If you want to run the code yourself, you&rsquo;ll need to get a Google Maps API key and a Lyft API key.</p>
-
-    </div>
-
-    
-
-
-    
-
-
-
-    
-      
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-  
-  
-    
-  
-  
-  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
-    
-      
-      <img class="portrait mr-3" src="/authors/admin/avatar_hue57d0e8436ae96137a60d1345f821d2b_24465_250x250_fill_lanczos_center_2.png" itemprop="image" alt="Avatar">
-    
-
-    <div class="media-body">
-      <h5 class="card-title" itemprop="name"><a href="/">Herb Susmann</a></h5>
-      <h6 class="card-subtitle">Graduate Student</h6>
-      <p class="card-text" itemprop="description">Gradate student in Biostatistics at UMass Amherst matter.</p>
-      <ul class="network-icon" aria-hidden="true">
-        
-          
-          
-          
-            
-          
-          
-          
-          
-          
-          <li>
-            <a itemprop="sameAs" href="mailto:hsusmann@umass.edu" >
-              <i class="fas fa-envelope"></i>
-            </a>
-          </li>
-        
-          
-          
-          
-            
-          
-          
-          
-          
-          
-            
-          
-          <li>
-            <a itemprop="sameAs" href="https://twitter.com/herbps10" target="_blank" rel="noopener">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </li>
-        
-          
-          
-          
-            
-          
-          
-          
-          
-          
-            
-          
-          <li>
-            <a itemprop="sameAs" href="https://github.com/herbps10" target="_blank" rel="noopener">
-              <i class="fab fa-github"></i>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-
-
-      
-      
-    
-
-    
-
-    
-
+</main>
 
   </div>
-</article>
-
-      
-
-    
-    
-
-    
-    
-    
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
-
-      
-
-      
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
-        
-      
-
-      
-      
-    
-
-    
-    
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
-    
-
-    
-    
-    <script>hljs.initHighlightingOnLoad();</script>
-    
-
-    
-
-    
-    
-
-    
-
-    
-    
-
-    
-    
-
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-      
-    
-    
-    
-    <script src="/js/academic.min.bec90056665421447c830e8aa2f42710.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" integrity="sha256-gfQwA6PlkZsLqWu4bU4hXPrbTqzixm0B5MdvBLI+Oas=" crossorigin="anonymous"></script>
+  <footer>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
 
 
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/stan.min.js"></script>
+
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+
+<script src="/js/graph.js"></script>
   
-  <div class="container">
-    <footer class="site-footer">
+  <br/><br/>
+  <hr/>
+  &copy; Herb Susmann 2022
   
-  <p class="powered-by">
-    
-      <a href="/privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="/terms/">Terms</a>
-        
-  </p>
-  
-
-  <p class="powered-by">
-    
-
-    Powered by the
-    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
-    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
-
-    
-    <span class="float-right" aria-hidden="true">
-      <a href="#" id="back_to_top">
-        <span class="button_icon">
-          <i class="fas fa-chevron-up fa-2x"></i>
-        </span>
-      </a>
-    </span>
-    
-  </p>
-</footer>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
-    onload="renderMathInElement(document.body);"></script>
-  </div>
-  
-
-  
-<div id="modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Cite</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <pre><code class="tex hljs"></code></pre>
-      </div>
-      <div class="modal-footer">
-        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
-          <i class="fas fa-copy"></i> Copy
-        </a>
-        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
-          <i class="fas fa-download"></i> Download
-        </a>
-        <div id="modal-error"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</body>
+  </footer>
+  </body>
 </html>
+

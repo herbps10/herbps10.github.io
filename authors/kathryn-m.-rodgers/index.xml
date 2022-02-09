@@ -1,23 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Kathryn M. Rodgers | Herb Susmann</title>
+    <title>Kathryn M. Rodgers on Herb Susmann</title>
     <link>/authors/kathryn-m.-rodgers/</link>
-      <atom:link href="/authors/kathryn-m.-rodgers/index.xml" rel="self" type="application/rss+xml" />
-    <description>Kathryn M. Rodgers</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate>
-    <image>
-      <url>/img/icon-192.png</url>
-      <title>Kathryn M. Rodgers</title>
-      <link>/authors/kathryn-m.-rodgers/</link>
-    </image>
-    
+    <description>Recent content in Kathryn M. Rodgers on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 09 Oct 2019 00:00:00 +0000</lastBuildDate><atom:link href="/authors/kathryn-m.-rodgers/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dietary Habits Related to Food Packaging and Population Exposure to PFASs</title>
       <link>/publication/pfas/</link>
       <pubDate>Wed, 09 Oct 2019 00:00:00 +0000</pubDate>
+      
       <guid>/publication/pfas/</guid>
-      <description></description>
+      <description>DERBI is a digital tool for reporting back personal results to participants in exposure studies.</description>
     </item>
     
   </channel>
