@@ -1,16 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.973a0371.css",
-    "main.js": "/static/js/main.e1b7aa55.js",
-    "static/js/787.8d364276.chunk.js": "/static/js/787.8d364276.chunk.js",
-    "static/media/logo.svg": "/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "index.html": "/index.html",
-    "main.973a0371.css.map": "/static/css/main.973a0371.css.map",
-    "main.e1b7aa55.js.map": "/static/js/main.e1b7aa55.js.map",
-    "787.8d364276.chunk.js.map": "/static/js/787.8d364276.chunk.js.map"
+    "main.css": "http://herbsusmann.com/probabordle/static/css/main.973a0371.css",
+    "main.js": "http://herbsusmann.com/probabordle/static/js/main.02971786.js",
+    "static/media/logo.svg": "http://herbsusmann.com/probabordle/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "http://herbsusmann.com/probabordle/index.html",
+    "main.973a0371.css.map": "http://herbsusmann.com/probabordle/static/css/main.973a0371.css.map",
+    "main.02971786.js.map": "http://herbsusmann.com/probabordle/static/js/main.02971786.js.map"
   },
   "entrypoints": [
     "static/css/main.973a0371.css",
-    "static/js/main.e1b7aa55.js"
+    "static/js/main.02971786.js"
   ]
 }
