@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "http://herbsusmann.com/probabordle/static/css/main.ae20b2fe.css",
-    "main.js": "http://herbsusmann.com/probabordle/static/js/main.2a14bfaf.js",
+    "main.js": "http://herbsusmann.com/probabordle/static/js/main.3b30c87a.js",
     "static/media/logo.svg": "http://herbsusmann.com/probabordle/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "http://herbsusmann.com/probabordle/index.html",
     "main.ae20b2fe.css.map": "http://herbsusmann.com/probabordle/static/css/main.ae20b2fe.css.map",
-    "main.2a14bfaf.js.map": "http://herbsusmann.com/probabordle/static/js/main.2a14bfaf.js.map"
+    "main.3b30c87a.js.map": "http://herbsusmann.com/probabordle/static/js/main.3b30c87a.js.map"
   },
   "entrypoints": [
     "static/css/main.ae20b2fe.css",
-    "static/js/main.2a14bfaf.js"
+    "static/js/main.3b30c87a.js"
   ]
 }
