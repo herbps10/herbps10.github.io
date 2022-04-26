@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "http://herbsusmann.com/kunstler/static/css/main.af1db0cc.css",
-    "main.js": "http://herbsusmann.com/kunstler/static/js/main.e16dc24e.js",
+    "main.js": "http://herbsusmann.com/kunstler/static/js/main.9876c151.js",
     "static/media/logo.svg": "http://herbsusmann.com/kunstler/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "http://herbsusmann.com/kunstler/index.html",
     "main.af1db0cc.css.map": "http://herbsusmann.com/kunstler/static/css/main.af1db0cc.css.map",
-    "main.e16dc24e.js.map": "http://herbsusmann.com/kunstler/static/js/main.e16dc24e.js.map"
+    "main.9876c151.js.map": "http://herbsusmann.com/kunstler/static/js/main.9876c151.js.map"
   },
   "entrypoints": [
     "static/css/main.af1db0cc.css",
-    "static/js/main.e16dc24e.js"
+    "static/js/main.9876c151.js"
   ]
 }
