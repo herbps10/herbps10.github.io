@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Fri, 11 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 17 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ADMM for Lasso in Julia</title>
+      <link>/2022/02/17/admm-for-lasso-in-julia/</link>
+      <pubDate>Thu, 17 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/2022/02/17/admm-for-lasso-in-julia/</guid>
+      <description>Alternating Direction Method of Multipliers (ADMM) is a algorithm for solving convex optimization problems of the form \[ \mathrm{minimize} \quad f(x) + g(x) \] where \(f\) and \(g\) are convex. The algorithm operates by alternating updates using the proximal operators of \(f\) and \(g\):
+\[\begin{align*} x^{k+1} &amp;amp;:= \mathrm{prox}_{\lambda f}(z^k - u^k), \\ z^{k+1} &amp;amp;:= \mathrm{prox}_{\lambda g}(x^{k + 1} + u^k), \\ u^{k+1} &amp;amp;:= u^k + x^{k+1} - z^{k+1}. \end{align*}\]</description>
+    </item>
+    
     <item>
       <title>Derivative Gaussian Processes in Stan</title>
       <link>/2020/12/11/derivative-gaussian-processes-in-stan/</link>

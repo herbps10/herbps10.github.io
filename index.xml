@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Fri, 11 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 17 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ADMM for Lasso in Julia</title>
+      <link>/2022/02/17/admm-for-lasso-in-julia/</link>
+      <pubDate>Thu, 17 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/2022/02/17/admm-for-lasso-in-julia/</guid>
+      <description>Alternating Direction Method of Multipliers (ADMM) is a algorithm for solving convex optimization problems of the form \[ \mathrm{minimize} \quad f(x) + g(x) \] where \(f\) and \(g\) are convex. The algorithm operates by alternating updates using the proximal operators of \(f\) and \(g\):
+\[\begin{align*} x^{k+1} &amp;amp;:= \mathrm{prox}_{\lambda f}(z^k - u^k), \\ z^{k+1} &amp;amp;:= \mathrm{prox}_{\lambda g}(x^{k + 1} + u^k), \\ u^{k+1} &amp;amp;:= u^k + x^{k+1} - z^{k+1}. \end{align*}\]</description>
+    </item>
+    
     <item>
       <title>Derivative Gaussian Processes in Stan</title>
       <link>/2020/12/11/derivative-gaussian-processes-in-stan/</link>
@@ -170,7 +180,7 @@ I often use random walk/autoregressive models in my research as a component in t
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>For my undergraduate degree, I studied Mathematics at the State University of New York at Geneseo. I then worked from 2014-2018 as a software developer at Silent Spring Institute in Newton, Massachusetts, where I collaborated on projects focused on methods for making complex scientific information accessible to lay audiences.
+      <description>For my undergraduate degree, I studied Mathematics at the State University of New York at Geneseo. I then worked from 2014-2018 as a software developer at Silent Spring Institute in Newton, Massachusetts, where I worked on methods for making complex scientific information accessible to lay audiences.
 Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Biostatistics &amp;amp; Epidemiology at the University of Massachusetts Amherst, with Leontine Alkema as my advisor.</description>
     </item>
     
@@ -225,7 +235,7 @@ Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Bios
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Peer-Reviewed Articles  2021 Outcomes from Returning Individual versus Only Study-Wide Biomonitoring Results in an Environmental Exposure Study Using the Digital Exposure Report-Back Interface (DERBI). Julia Green Brody, Piera Cirillo, Katherine Boronow, Laurie Havas, Marj Plumb, Herbert Susmann, Krzysztof Gajos, Barbara Cohn. Environmental Health Perspectives.   2020 Consumer behavior and exposure to parabens, bisphenols, triclosan, dichlorophenols, and benzophenone-3: Results from a crowdsourced biomonitoring study. Robin Dodson, Katherine Boronow, Herbert Susmanna, Julia Udesky, Kathryn Rodgers, David Weller, Million Woudneh, Julia Green Brody, and Ruthann Rudel.</description>
+      <description>Peer-Reviewed Articles  2022 Temporal models for demographic and global health outcomes in multiple populations: Introducing a new framework to review and standardize documentation of model assumptions and facilitate model comparison. Herbert Susmann, Monica Alexander, and Leontine Alkema. International Statistical Review. [ArXiv]   2021 Outcomes from Returning Individual versus Only Study-Wide Biomonitoring Results in an Environmental Exposure Study Using the Digital Exposure Report-Back Interface (DERBI). Julia Green Brody, Piera Cirillo, Katherine Boronow, Laurie Havas, Marj Plumb, Herbert Susmann, Krzysztof Gajos, Barbara Cohn.</description>
     </item>
     
     <item>
