@@ -64,21 +64,15 @@
     width: 725px;
     height: 544px;
     z-index: 1;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
   }
 
-  .frame canvas, .pres-frame canvas {
+  .frame canvas {
     width: 100%;
     height: 100%;
   }
 
-  .pres-frame {
-    display: none;
-    position: relative;
-  }
-
-  .pres-frame.active {
-    display: block;
+  .frame.active {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -88,7 +82,7 @@
     background: black;
   }
 
-  .pres-frame canvas {
+  .frame.active canvas {
     position: relative;
     margin: 0px;
     height: 100%;
@@ -108,27 +102,12 @@
     position: absolute;
     left: 0px;
     top: 80px;
-    height: 450px;
+    height: 380px;
     width: 100%;
     overflow: hidden;
     z-index: 5;
     background: white;
-  }
-
-  .pres-frame .iframe-container {
-    position: absolute;
-    left: auto;
-    top: 90px;
-    bottom: 50px;
-    width: 100%;
-    overflow: hidden;
-    z-index: 5;
-    background: white;
-  }
-
-  .pres-frame .iframe-container iframe {
-    bottom: -30px;
-    position: absolute;
+    border-bottom: 100px solid white;
   }
 
 
@@ -136,10 +115,18 @@
     background: white;
     position: relative;
     width: 101%;
-    height: 500px;
+    height: 450px;
     z-index: 5;
     border: none;
     overflow: hidden;
+  }
+
+  .frame.active .iframe-container {
+    left: auto;
+    top: 100px;
+  }
+
+  .frame.active .iframe-container iframe {
   }
 
   .caption button {
@@ -174,7 +161,6 @@
 // If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
 var pdfUrl = './Susmann_Dissertation.pdf';
-var pdfUrlPresentation = './Susmann_Dissertation_Presentation.pdf';
 var textUrl = "./text.md";
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
@@ -187,10 +173,9 @@ var container = document.getElementById("container");
 var activePage = 1;
 var presentationMode = false;
 var numPages = 0;
-var numPresentationPages = 0;
-var pageRatio = 4/3;
-var iframeHeight = window.innerHeight * 0.90;
-var observableHeight = iframeHeight * 0.72;
+var pageRatio = 0;
+var iframeHeight = window.innerHeight * 0.75;
+var observableHeight = iframeHeight * 0.8;
 
 startFromSlide = function(index) {
   activePage = index;
@@ -211,58 +196,61 @@ endPresentation = function() {
 }
 
 setSlideActive = function(index) {
-  removeSlideActive(activePage);
-  activePage = index;
-  var frame = document.getElementById("pres-frame-" + index);
+  var frame = document.getElementById("frame-" + index);
   frame.style.paddingLeft = ((window.innerWidth - window.innerHeight
           * pageRatio) / 2) + "px";
 
-  //var iframes = frame.getElementsByTagName("iframe");
-  //if(iframes.length > 0) {
-  //  var url = iframes[0].getAttribute("src");
-  //  iframes[0].setAttribute("src", url.replace("height=350", "height="
-  //      + observableHeight));
-  //  iframes[0].style.height = iframeHeight + "px";
-  //}
 
-  //var frameContainers = frame.getElementsByClassName("iframe-container");
-  //if(frameContainers.length > 0) {
-  //    frameContainers[0].style.width = (window.innerHeight * pageRatio) + "px";
-  //    frameContainers[0].style.height = (iframeHeight * 0.9) + "px";
-  //} 
+  var iframes = frame.getElementsByTagName("iframe");
+  if(iframes.length > 0) {
+    var url = iframes[0].getAttribute("src");
+    iframes[0].setAttribute("src", url.replace("height=350", "height="
+        + observableHeight));
+    iframes[0].style.height = iframeHeight + "px";
+  }
+
+  var frameContainers = frame.getElementsByClassName("iframe-container");
+  if(frameContainers.length > 0) {
+      frameContainers[0].style.width = (window.innerHeight * pageRatio) + "px";
+      frameContainers[0].style.height = (iframeHeight * 0.9) + "px";
+  } 
 
   frame.classList.add("active");
 }
 
 removeSlideActive = function(index) {
-  var frame = document.getElementById("pres-frame-" + index);
-  //frame.style.paddingLeft = "0px";
+  var frame = document.getElementById("frame-" + index);
+  frame.style.paddingLeft = "0px";
 
-  //var iframes = frame.getElementsByTagName("iframe");
-  //if(iframes.length > 0) {
-  //  var url = iframes[0].getAttribute("src");
-  //  iframes[0].setAttribute("src", url.replace("height=" + observableHeight, "height=350"));
-  //  iframes[0].style.height = "";
-  //}
+  var iframes = frame.getElementsByTagName("iframe");
+  if(iframes.length > 0) {
+    var url = iframes[0].getAttribute("src");
+    iframes[0].setAttribute("src", url.replace("height=" + observableHeight, "height=350"));
+    iframes[0].style.height = "";
+  }
 
-  //var frameContainers = frame.getElementsByClassName("iframe-container");
-  //if(frameContainers.length > 0) {
-  //    frameContainers[0].style.width = "100%";
-  //    frameContainers[0].style.height = "";
-  //}
+  var frameContainers = frame.getElementsByClassName("iframe-container");
+  if(frameContainers.length > 0) {
+      frameContainers[0].style.width = "100%";
+      frameContainers[0].style.height = "";
+  }
 
   frame.classList.remove("active");
 }
 
 prevSlide = function() {
   if(activePage > 1) {
-    setSlideActive(activePage - 1);
+    removeSlideActive(activePage);
+    activePage--;
+    setSlideActive(activePage);
   }
 }
 
 nextSlide = function() {
-  if(activePage < numPresentationPages) {
-    setSlideActive(activePage + 1);
+  if(activePage < numPages) {
+    removeSlideActive(activePage);
+    activePage++;
+    setSlideActive(activePage);
   }
 }
 
@@ -285,10 +273,11 @@ document.getElementById("launch")
 
 document.addEventListener("keydown", keyHandler);
 
-function renderObservable(url, cell, index, id, height) {
-  url = url + cell + "&height=" + height;
+function renderObservable(index, cell) {
+  var url = "https://observablehq.com/embed/@herbps10/defense_slides?cells="
+      + cell + "&height=350";
 
-  var frame = document.getElementById(id + "-" + index);
+  var frame = document.getElementById("frame-" + index);
 
   var iframeContainer = document.createElement("div");
   iframeContainer.classList.add("iframe-container");
@@ -305,29 +294,8 @@ function renderObservable(url, cell, index, id, height) {
 }
 
 function renderObservables() {
-    var url1 = "https://observablehq.com/embed/@herbps10/defense_slides?cells="
-    renderObservable(url1, "slide2", 28, "frame", 350);
-    renderObservable(url1, "slide1", 32, "frame",  350);
-    renderObservable(url1, "viewof ar,slide3", 36, "frame",  300);
-
-    var url2 = "https://observablehq.com/embed/4ac4ca5aa98a9aa3?cells=";
-    renderObservable(url2, "viewof+num_knots%2Cspline_degree_view%2Cplots", 30, "frame", 350);
-}
-
-function renderPresentationObservables() {
-    var url1 = "https://observablehq.com/embed/@herbps10/defense_slides?cells="
-    renderObservable(url1, "slide2", 57, "pres-frame", observableHeight); // FPEM
-    renderObservable(url1, "slide1", 62, "pres-frame", observableHeight);
-    renderObservable(url1, "viewof ar,slide3", 69, "pres-frame", observableHeight * 0.8);
-
-    var url2 = "https://observablehq.com/embed/4ac4ca5aa98a9aa3?cells=";
-    renderObservable(url2, "viewof+num_knots%2Cspline_degree_view%2Cplots", 59, "pres-frame", observableHeight);
-
-    var containers = document.querySelectorAll('.pres-frame .iframe-container');
-
-    for(let i = 0; i < containers.length; i++) {
-      containers[i].style.width = (window.innerHeight * pageRatio) + "px";    
-    }
+    renderObservable(24, "slide2");
+    renderObservable(28, "slide1");
 }
 
 // Asynchronous download of PDF
@@ -353,8 +321,8 @@ loadingTask.promise.then(function(pdf) {
 		caption.setAttribute("class", "caption");
 		caption.innerHTML = `<a id='slide-${pageNumber}'
  href='#slide-${pageNumber}'>Slide ${pageNumber}</a><br/><button
-      onClick='window.scrollTo(0, 0)' title='Back to top'>🔼</button>`;
-      
+      onClick='window.scrollTo(0, 0)' title='Back to top'>🔼</button><button
+      title='Start from here' onClick='startFromSlide(${pageNumber})'>▶️</button>`;
 
     frame.append(canvas);
 		
@@ -366,20 +334,20 @@ loadingTask.promise.then(function(pdf) {
 	fetch(textUrl)
 		.then(function(data) { return data.text() })
 		.then(function(res) {
-			var slides = res.split(/#/);
+			var slides = res.split(/# Slide/);
 			
 			for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
 				if(slides[pageNumber] != undefined) {
 					var slide = document.getElementById("canvas-" + pageNumber);
-
-					var alt = slides[pageNumber].match(/^(.+?)\n/g);
+					
+					var alt = slides[pageNumber].trim().match(/: (.+?)\n/);
 					if(alt != null) {
 					  alt = alt[1];
   					slide.setAttribute("aria-label", alt);
   					slide.innerHTML = alt;
 					}
 					
-					var html = marked.marked(slides[pageNumber].replaceAll('’', "'").replace(/^(.+?)\n/g, ""));
+					var html = marked.marked(slides[pageNumber].replaceAll('’', "'").replace(/[0-9]+?: (.+?)\n/gm, ""));
 					document.getElementById("text-" + pageNumber).innerHTML = html;
 					renderMathInElement(document.getElementById("text-" + pageNumber), { delimiters: [ { left: "$", right: "$", display: false }] });
 				}
@@ -417,53 +385,6 @@ loadingTask.promise.then(function(pdf) {
 	}
 
   renderObservables();
-}, function (reason) {
-	// PDF loading error
-	console.error(reason);
-});
-
-// Asynchronous download of PDF
-var loadingTaskPresentation = pdfjsLib.getDocument(pdfUrlPresentation);
-loadingTaskPresentation.promise.then(function(pdf) {
-	numPresentationPages = pdf.numPages;
-	
-	for(var pageNumber = 1; pageNumber <= numPresentationPages; pageNumber++) {
-    var frame = document.createElement("div");
-    frame.setAttribute("id", "pres-frame-" + pageNumber);
-		frame.setAttribute("class", "pres-frame");
-
-		var canvas = document.createElement("canvas");
-		canvas.setAttribute("id", "pres-canvas-" + pageNumber);
-		canvas.setAttribute("height", 544);
-		canvas.setAttribute("width", 725);
-		canvas.setAttribute("role", "img");
-		
-    frame.append(canvas);
-		
-		container.append(frame);
-	}
-	
-	for(var pageNumber = 1; pageNumber <= numPresentationPages; pageNumber++) {
-		pdf.getPage(pageNumber).then(function(page) {
-			// Prepare canvas using PDF page dimensions
-      var viewport = page.getViewport({ scale: 5 });
-			var canvas = document.getElementById('pres-canvas-' + (page._pageIndex + 1));
-			var context = canvas.getContext('2d');
-			canvas.height = viewport.height;
-			canvas.width = viewport.width;
-      pageRatio = canvas.width / canvas.height;
-
-			// Render PDF page into canvas context
-			var renderContext = {
-			  canvasContext: context,
-			  viewport: viewport
-			};
-			var renderTask = page.render(renderContext);
-
-		});
-	}
-	
-  renderPresentationObservables();
 }, function (reason) {
 	// PDF loading error
 	console.error(reason);
