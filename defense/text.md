@@ -199,7 +199,7 @@ To do that, we set up a hierarchical distribution on the spline coefficients so 
 
 # Smoothing model
 
-To finish specificying the process model we need to give a form for the smoothing component.
+To finish specifying the process model we need to give a form for the smoothing component.
 
 We choose an AR(1) model. The parameter $\rho$ controls the degree of autocorrelation and $\tau$ the variance of the process.
 
@@ -280,41 +280,72 @@ One last example where we see some differences in the two models. In Oceania, wh
 
 # Chapter 3 Background
 
-So far we've been working on methods for understanding where improvement is needed. But once we know that, how can we find out which interventions are effective for improving health outcomes?
+So far we've been working on methods for understanding where improvement is needed. But once we know that, how can we find out which interventions are effective for improving health outcomes? Do some interventions work better for some subgroups than others?
 
-In this chapter we're going to talk about a novel Bayesian estimator for Marginal Structural Models, which can be used to summarize how the effect of an intervention changes within population subgroups.
-
-# Motivating example
-
-Motivating example from [Karra et al. 2022](https://www.pnas.org/doi/10.1073/pnas.2200279119).
+To answer this question, we'll take advantage of _Marginal Structural Models_ (MSMs), which are a class of statistical parameters that can be used to summarize intervention effects.
+Our main contribution in this chapter is to introduce a novel Bayesian estimator for MSM parameters.
 
 # Motivating example
 
+Our motivating example comes from a randomized experiment conducted in Malawi ([Karra et al. 2022](https://www.pnas.org/doi/10.1073/pnas.2200279119)).
+
+Women were randomized into intervention and control groups. The intervention group received family planning information, counseling, and free transportation to clinics, among other things.
+
+The outcome was whether or not the women reported using contraceptives two years after the intervention.
+
 # Motivating example
 
-The marginal distribution of the number of children illustrates how there are some strata with few observations. We could proceed by stratifying the data and estimating a treatment effect within each subgroup separately, which might work well for the strata with many observations, but would likely perform poorly for the other strata.
+Several variables were recorded for each participant.
+
+First, we have a set of 11 covariates $X$, including number of children (which we call $X_c$).
+
+Second, $A$ is a binary indicator of randomization into the intervention group ($A = 1$ indicates intervention group, $A = 0$ control group).
+
+Finally, $Y$ is a binary indicator of whether the participant reported using contraceptives two years after the intervention.
+
+All together, we have $n$ i.i.d. draws of the generic variable $O$ from the law $P_0$ of the experiment.
+
+# Motivating example
+
+The scientific question that we will consider is whether the effect of the intervention on contraceptive use differs depending on the participant's number of children.
+
+This is a potential example of what we might call "Treatment Effect Modification".
+
+The marginal distribution of the number of children illustrates how there are some strata of number of children with few observations. We could proceed by stratifying the data and estimating a treatment effect within each subgroup separately, which might work well for the strata with many observations, but would likely perform poorly for the other strata.
+
+Next, let's formalize the problem by introducing notation and a target parameter of interest.
 
 # CATE
 
-We begin by formalizing the parameter that we will try to estimate.
+Start by defining the _Conditional Average Treatment Effect_, which is the difference in the outcome conditional on intervention status vs. non-intervention status within strata of covariates $x$.
 
-Start by defining the _Conditional Average Treatment Effect_, which is the difference in the outcom conditional on intervention status vs. non-intervention status within strata of covariates $x$.
+From a causal inference point of view, the CATE is identifiable under what we call "standard causal assumptions".
 
 # MSMs
 
-We then seek to summarize the association between the CATE and the potential treatment effect modifier ($X_c$) using a working model.
+Our strategy is to summarize the association between the CATE and the potential treatment effect modifier ($X_c$) using a working model.
 
-For instance, we can define an MSM by the following equation.
+For instance, we can define a new parameter $B(P)$ as the solution to the following optimization problem.
+
+We call this structure a "Marginal Structural Model".
 
 Let's break down each part of this formula.
 
 # MSMs
 
-# MSMs
+First, we have the parameter we are trying to approximate: $\Psi_P^{\mathrm{CATE}}$.
 
 # MSMs
 
+Second, we have a working model which tries to predict the value of the parameter. For this example I chose a linear working model which tries to predict the CATE as a linear function of the number of children $X_c$. Here the MSM parameter $\bm{\beta}$ are two numbers: the intercept and slope of the linear approximation.
+
 # MSMs
+
+We then have a loss function which measures how well the working model predicts the parameter. Here I chose a squared-error loss function.
+
+# MSMs
+
+The parameter $B(P)$ is then the value of $\bm{\beta}$ that minimizes the loss function. That is, it is the best linear approximation of the CATE in terms of the number of children.
 
 # Results
 
@@ -328,7 +359,24 @@ If the line is increasing, that means the intervention has a stronger effect as 
 
 MSMs are more general than just this example. Let's introduce a more general notation.
 
+We have $n$ i.i.d. copies of a variable $O$ from a law $P_0$.
+
+$P_0$ is in a non-parametric model $\mathcal{M}$. That is, we make no a-priori assumptions about $P_0$.
+
+The variable $O$ can be broken down into a variable $Z$ and $X$, and then we define a functional summary $\Psi_P$ with argument $X$.
+
+Our motivating example can be cast in this general notation, with the functional summary equal to the CATE.
+
+
 # General Setting
+
+The idea with MSMs is to approximate $\Psi_P$ with a working model.
+
+The working model is a set of functions $m_{\bm{\beta}}$ with parameter $\bm{\beta}$.
+
+We also need a loss function which measures, for a particular $\bm{\beta}$, how well the working model approximates $\Psi_P$.
+
+Then we are ready to define a new parameter $B(P)$ as the parameter that best approximates $\Psi_P$ under the working model.
 
 This general framework is our first contribution.
 
@@ -342,43 +390,168 @@ _Attention: $\mathcal{M}$ is an infinite dimensional space, but we're illustrati
 
 # Semi-parametric inference
 
+Our goal is to estimate the value of the MSM parameter under the true data generating distribution $P_0$.
+
+The first step is to figure out the best possible variance that an estimator can achieve in a semi-parametric model. 
+We call this the semi-parametric `efficiency bound.
+
+From semi-parametric efficiency theory, we know that any regular estimator of $\bm{\beta}$ can be written as the true value, plus the empirical mean of a function called the _influence function_, plus a term that converges to zero in probability.
+
+In general there may be multiple possibilities for the influence function. We are interested in the influence function with the smallest variance, which is called the _efficient influence function_, denoted $D^*$.
+
+The efficiency bound for estimating $\bm{\beta}_0$ is then given by the variance of the efficient influence function.
+
+Finding the form of $D^*$ is therefore important, because once we know $D^*$ we know the efficiency bound.
+
 # Efficient influence function of $B(P)$
+
+To make a long story short, we proved that the EIF of the MSM parameter $B$ has the following form.
+
+Importantly, the form of the EIF depends on the choice of loss function and working model through several derivatives.
+
+That is, the choice we make for the working model and loss function changes the efficiency bound.
+
+We can use this general result to derive the EIF for specific settings.
 
 # Efficient influence function of $B(P)$ for the example
 
+Let's look at the form of the EIF for our motivating example.
+
+Recall we are trying to approximate a conditional average treatment effect with a linear working model.
+
+The EIF is the sum of two components. The best possible variance for our estimator is the variance (think the square) of these two components.
+
+The first component has to do with the difficulty in estimating the conditional average treatment effect. The larger the square of this term, the higher the best possible variance of our estimator.
+When is this term large? If the probability of receiving the intervention is very small, then the first part will be large. This makes sense: if nobody receives the intervention, it will be hard to estimate the effect of the intervention. The second term will be large if there is a lot of noise in the outcome. This also makes sense: the more noise, the harder it is to tell what effect the intervention had.
+
+The second term has to do with the quality of the MSM approximation. If the true parameter value is far away from the MSM approximation, this term will be large, and the best possible variance of our estimator will also be large.
+
 # Targeted Minimum Loss-Based Estimation
+
+Now we know the best possible variance of a non-parametric estimator. Can we build an estimator that achieves this bound?
+
+It turns out we can, using _Targeted Minimum Loss-Based Estimation_.
+
+To explain how TMLE works, let's start by assuming we have an initial estimate of parts of the data-generating distribution $P_0$ that are relevant to $B$.
+
+Once we have an estimate of $P_0$, we can plug it into our parameter mapping to yield an estimate of the true MSM parameter $\bm{\beta}_0$.
+
+The problem is that this estimator will be biased. This is because even if our initial estimator does a good job estimating the relevant pieces of $P_0$, it will not necessarily balance the bias/variance tradeoff for our parameter $B$ (we say that the plug-in estimator is not _targeted_ to $B$). 
 
 # Plug-in estimation
 
+In diagram form, we have an initial estimate $P_n^\circ$ which we use to find an initial estimate of the true parameter value $B(P_0)$.
+
 # Targeted Minimum Loss-Based Estimation
 
+How do we deal with the bias?
+
+The idea with TMLE is to carefully _fluctuate_ our initial estimate of $P_0$ in the direction of the truth.
+
+We set up a _parametric submodel_ that fluctuates $P_n^\circ$. The parameter $\bm{\epsilon}$ of the submodel controls how far we fluctuate away from the initial estimate. 
+
+We choose the value of $\bm{\epsilon}$ by minimizing a carefully chosen loss function $\mathcal{L}$.
+
+Once we fluctuate $P_n^\circ$, we can plug-in the fluctuated distribution to form an updated estimate of the the true MSM parameter $\bm{\beta}$.
+
+The work in setting up a TMLE estimator is in carefully choosing the form of the submodel and loss function such that certain conditions are satisfied. One of our contributions in the full manuscript is a blueprint for how to do this.
+
 # TMLE: update initial estimate in direction of truth
-Test
+Coming back to the diagram, the idea is that we start with the initial estimate $P_n^\circ$. The parametric submodel allows us to fluctuate that initial estimate to varying degrees, represented by the dotted line. We choose how far to fluctuate by minimizing a loss function.
+
+Once we determine how far to fluctuate, we can then form a new estimate of the parameter of interest.
+
+Note that there is a one-to-one correspondance between how far we fluctuate, given by $\bm{\epsilon}$, and an estimate of the MSM parameter.
+
+If certain conditions are satisfied, then the resulting updated estimate will be efficient and asymptotically normal with variance given by the variance of the efficient influence function.
 
 # Bayesian TMLE
 
+That was a broad view of a frequentist TMLE procedure. Can we make it Bayesian?
+
+The key insight is that for some choices of the loss function used by TMLE to estimate the parameter $\bm{\epsilon}$, we can interpret the loss function as defining a likelihood of the data conditional on the parameter $\bm{\epsilon}$.
+
+(When this is the case, estimating $\bm{\epsilon}$ in the frequentist sense is equivalent to _maximum-likelihood estimation_.)
+
+Anytime we have a likelihood, we can perform Bayesian inference.
+
 # Bayesian TMLE
+
+In fact, Bayesian inference here is straightforward: we just apply Bayes' Law. The posterior distribution of $\bm{\epsilon}$ is proportional to a prior distribution and the likelihood.
+
+Once we have a posterior distribution for $\bm{\epsilon}$, we can derive a posterior distribution on the MSM parameter $\bm{\beta}$ through the parameter mapping $B$.
 
 # Bayesian TMLE illustration
 
+Coming back to the illustration again, the idea is that now instead of fluctuating the initial estimate to one particular point, we now have a probability distribution over all the possible fluctuations, which induces a corresponding probability distribution over the MSM parameter.
+
 # Bernstein von-Mises idea
+
+Theoretically, what we would like to see is that this new posterior distribution for the MSM parameter should converge to a normal distribution centered on the frequentist point estimate and with variance given by variance of the efficient influence function (the lowest possible asymptotic variance for an estimator of $\bm{\beta}_0$.
+Results of this type are called _Berstein von-Mises_ proofs.
+
+Our main theoretical contribution is what we call an _oracular_ Bernstein von-Mises proof. What we show is that, assuming we can form the fluctuation model with knowledge of the true data generating distribution $P_0$, then the posterior of $\bm{\beta}$ will converge to the optimal normal distribution.
 
 # Bernstein von-Mises plot
 
+Just to illustrate what I mean by oracular: we assume we can build a fluctuation model that fluctuates around the truth.
+
 # Bernstein von-Mises condition
+We do this because it tells us how we need to set up our fluctuation model.
+
+Specifically, we found two important conditions: first, that the derivative (gradient) of the log-likelihood evaluated at $\bm{\epsilon} = \bm{0}$ needs to equal to efficient influence function. A similar condition is necessary for the frequentist TMLE.
+
+Also, the second derivative (Hessian) of the log-likelihood evaluated at $\bm{\epsilon} = \bm{0}$ needs to equal the variance of the efficient influence function. This condition is not necessary for the frequentist TMLE, but is necessary for the posterior distribution to have the correct asymptotic variance.
+
+It's an interesting result because it means that setting up the fluctuation model is harder in the Bayesian context, because we have an additional condition that needs to be met.
 
 # Bernstein von-Mises theorem
 
+Under certain conditions such as these, we were able to prove a typical Bernstein von-Mises type result that the posterior distribution converges to a normal distribution with optimal variance in $\ell_1$ norm.
+
 # Universal algorithm
+
+To put our results into practice, we need to be able to compute the estimator.
+
+In practice, someone using our approach might want to try out different options for the working model and loss function. In our example I chose a linear working model, for example, but people might want to try something different as well.
+
+The fluctuation model and efficient influence function depend on several derivatives of the working model and loss function. We could hand-code these derivatives for as many working models and loss functions we can think of, but we're sure to miss something.
+
+We took an alternative approach, which is to use _automatic differentiation_ to compute the required derivatives automatically.
+
+Our main computational contribution is an implementation of our estimators in Julia with an algorithm that automatically adapts to any well-chosen working model and loss function.
 
 # Results 1
 
+Now we're finally ready to look at some results.
+
+Recall that in our motivating example we're trying to estimate the best linear approximation of the effect of an intervention on contraceptive use in terms of number of children.
+
+Here I'm showing the posterior distribution (in red) for the intercept and slope of that linear approximation.
+
+In blue I'm showing a normal distribution centered on the frequentist TMLE with variance given by the estimated variance of the efficient influence function.
+
+The takeaway is that the two distributions are very similar, which is not surprising given our Bernstein von-Mises result.
+
 # Results 2
+
+Now let's look at the main results plot. Here I'm showing the treatment effect on the $y$-axis as a function of the number of children on the $x$-axis. The line is the posterior median of the best linear approximation, with credible intervals shown in blue.
+
+We find that indeed, in terms of the approximation, the treatment effect grows larger as the number of children increases.
 
 # Contributions
 
+To sum up: we introduced a general notation for MSMs, and derived the efficiency bound by finding the efficient influence function.
+
+We then proposed a novel estimation approach by adapting Targeted Minimum Loss-Based Estimation to use Bayesian inference.
+
+Our computational approach is quite general and allows for almost arbitrary choice of MSM.
+
+Finally, we used our results to find that the effect of a broad-based family planning intervention on contraceptive use may be larger for participants with more children.
+
 # Future work
+
+In future work, we are interested in strengthening the theoretical results and developing methods for choosing between multiple choices of working model.
 
 # Summary
 
-Test

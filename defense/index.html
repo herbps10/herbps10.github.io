@@ -165,6 +165,18 @@
     PDF</a><br/>
   <button id="launch">Start Presentation</button>
 
+  <p>
+  Abbreviations:
+  <ul>
+    <li><em>TMMPs:</em> Temporal Models for Multiple Populations.</li>
+    <li><em>mCPR:</em>: Modern Contraceptive Prevalence Rate.</li>
+    <li><em>FPEM:</em> Family Planning Estimation Model (Cahill et al. 2018).</li>
+    <li><em>MSM:</em> Marginal Structural Model.</li>
+    <li><em>CATE:</em> Conditional Average Treatment Effect.</li>
+    <li><em>TMLE:</em> Targeted Minimum Loss-Based Estimation.</li>
+  <ul>
+  </p>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.min.js"></script>
@@ -446,7 +458,7 @@ loadingTaskPresentation.promise.then(function(pdf) {
 	for(var pageNumber = 1; pageNumber <= numPresentationPages; pageNumber++) {
 		pdf.getPage(pageNumber).then(function(page) {
 			// Prepare canvas using PDF page dimensions
-      var viewport = page.getViewport({ scale: 5 });
+      var viewport = page.getViewport({ scale: 8 });
 			var canvas = document.getElementById('pres-canvas-' + (page._pageIndex + 1));
 			var context = canvas.getContext('2d');
 			canvas.height = viewport.height;
