@@ -215,6 +215,8 @@ To fully specify the model, we need to make a connection to the observed data.
 
 We used a truncated normal data model where the variance is the sum of a fixed non-sampling error (incorporating the complex sampling design for each survey) and an additional estimated non-sampling error  for each data source. 
 
+# Computation
+
 # Choosing the splines
 
 Next, we needed to choose the tuning parameters for the spline model. 
