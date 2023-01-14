@@ -7,18 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Mon, 13 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Front-Door Criterion</title>
-      <link>/2022/06/13/front-door-criterion/</link>
-      <pubDate>Mon, 13 Jun 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/2022/06/13/front-door-criterion/</guid>
-      <description>  The goal of this post is to reproduce the simulation study of Bellemare et al. 2019 1.
- Bellemare, Marc F., Jeffrey R. Bloem, and Noah Wexler. The paper of how: Estimating treatment effects using the front-door criterion. Working paper, 2019.↩︎
-   </description>
-    </item>
-    
+    <lastBuildDate>Thu, 19 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Monotonic Gaussian Processes in Stan</title>
       <link>/2022/05/19/monotonic-gaussian-processes-in-stan/</link>
