@@ -7,7 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 17 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Front-Door Criterion</title>
+      <link>/2022/06/13/front-door-criterion/</link>
+      <pubDate>Mon, 13 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/2022/06/13/front-door-criterion/</guid>
+      <description>  The goal of this post is to reproduce the simulation study of Bellemare et al. 2019 1.
+ Bellemare, Marc F., Jeffrey R. Bloem, and Noah Wexler. The paper of how: Estimating treatment effects using the front-door criterion. Working paper, 2019.↩︎
+   </description>
+    </item>
+    
+    <item>
+      <title>Monotonic Gaussian Processes in Stan</title>
+      <link>/2022/05/19/monotonic-gaussian-processes-in-stan/</link>
+      <pubDate>Thu, 19 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/2022/05/19/monotonic-gaussian-processes-in-stan/</guid>
+      <description>Paul Klee: Movement of Vaulted Chambers (1915)
+ To recap, in the first two posts we looked at sampling from a Gaussian Process (GP) and its derivative and conditioning a GP on derivative observations. In the third post, we used Stan to fit a Gaussian Process model with derivatives using full Bayesian inference.
+In this post, we’re going to use the derivative of a GP introduce a monotonicity constraint, following the method of Riihimäki and Vehtari (2010).</description>
+    </item>
+    
     <item>
       <title>ADMM for Lasso in Julia</title>
       <link>/2022/02/17/admm-for-lasso-in-julia/</link>
@@ -130,15 +152,6 @@ I often use random walk/autoregressive models in my research as a component in t
     </item>
     
     <item>
-      <title>Predicting Jeopardy! Winners</title>
-      <link>/2017/10/07/predicting-jeopardy-winners/</link>
-      <pubDate>Sat, 07 Oct 2017 12:00:00 +0000</pubDate>
-      
-      <guid>/2017/10/07/predicting-jeopardy-winners/</guid>
-      <description>Using logistic regression to predict the winner of Jeopardy!</description>
-    </item>
-    
-    <item>
       <title>Bananagrams Probabilities</title>
       <link>/2017/07/30/bananagrams-probabilities/</link>
       <pubDate>Sun, 30 Jul 2017 21:13:14 -0500</pubDate>
@@ -181,7 +194,7 @@ I often use random walk/autoregressive models in my research as a component in t
       
       <guid>/about/</guid>
       <description>For my undergraduate degree, I studied Mathematics at the State University of New York at Geneseo. I then worked from 2014-2018 as a software developer at Silent Spring Institute in Newton, Massachusetts, where I worked on methods for making complex scientific information accessible to lay audiences.
-Since 2018 I have been pursuing a PhD in Biostatistics in the Department of Biostatistics &amp;amp; Epidemiology at the University of Massachusetts Amherst, with Leontine Alkema as my advisor.</description>
+From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatistics &amp;amp; Epidemiology at the University of Massachusetts Amherst, with Leontine Alkema as my advisor.</description>
     </item>
     
     <item>

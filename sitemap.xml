@@ -3,12 +3,18 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2022-02-17T00:00:00+00:00</lastmod>
+    <lastmod>2022-06-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/2022/02/17/admm-for-lasso-in-julia/</loc>
-    <lastmod>2022-02-17T00:00:00+00:00</lastmod>
+    <loc>/2022/06/13/front-door-criterion/</loc>
+    <lastmod>2022-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/post/</loc>
+    <lastmod>2022-06-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/2022/05/19/monotonic-gaussian-processes-in-stan/</loc>
+    <lastmod>2022-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/2022/02/17/admm-for-lasso-in-julia/</loc>
     <lastmod>2022-02-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/2020/12/11/derivative-gaussian-processes-in-stan/</loc>
@@ -61,9 +67,6 @@
   </url><url>
     <loc>/2017/10/09/fastest-way-to-see-17-boston-breweries-and-one-cider-house/</loc>
     <lastmod>2017-10-09T12:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/2017/10/07/predicting-jeopardy-winners/</loc>
-    <lastmod>2017-10-07T12:00:00+00:00</lastmod>
   </url><url>
     <loc>/2017/07/30/bananagrams-probabilities/</loc>
     <lastmod>2017-07-30T21:13:14-05:00</lastmod>
