@@ -7,28 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 19 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Monotonic Gaussian Processes in Stan</title>
-      <link>/2022/05/19/monotonic-gaussian-processes-in-stan/</link>
-      <pubDate>Thu, 19 May 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/2022/05/19/monotonic-gaussian-processes-in-stan/</guid>
-      <description>Paul Klee: Movement of Vaulted Chambers (1915)
- To recap, in the first two posts we looked at sampling from a Gaussian Process (GP) and its derivative and conditioning a GP on derivative observations. In the third post, we used Stan to fit a Gaussian Process model with derivatives using full Bayesian inference.
-In this post, we’re going to use the derivative of a GP introduce a monotonicity constraint, following the method of Riihimäki and Vehtari (2010).</description>
-    </item>
-    
-    <item>
-      <title>ADMM for Lasso in Julia</title>
-      <link>/2022/02/17/admm-for-lasso-in-julia/</link>
-      <pubDate>Thu, 17 Feb 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/2022/02/17/admm-for-lasso-in-julia/</guid>
-      <description>Alternating Direction Method of Multipliers (ADMM) is a algorithm for solving convex optimization problems of the form \[ \mathrm{minimize} \quad f(x) + g(x) \] where \(f\) and \(g\) are convex. The algorithm operates by alternating updates using the proximal operators of \(f\) and \(g\):
-\[\begin{align*} x^{k+1} &amp;amp;:= \mathrm{prox}_{\lambda f}(z^k - u^k), \\ z^{k+1} &amp;amp;:= \mathrm{prox}_{\lambda g}(x^{k + 1} + u^k), \\ u^{k+1} &amp;amp;:= u^k + x^{k+1} - z^{k+1}. \end{align*}\]</description>
-    </item>
-    
+    <lastBuildDate>Fri, 11 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Derivative Gaussian Processes in Stan</title>
       <link>/2020/12/11/derivative-gaussian-processes-in-stan/</link>
