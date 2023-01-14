@@ -170,15 +170,6 @@ I often use random walk/autoregressive models in my research as a component in t
     </item>
     
     <item>
-      <title>Jeopardy! Survival Analysis</title>
-      <link>/2016/06/19/jeopardy-survival-analysis/</link>
-      <pubDate>Sun, 19 Jun 2016 12:00:00 +0000</pubDate>
-      
-      <guid>/2016/06/19/jeopardy-survival-analysis/</guid>
-      <description>A Kaplan-Meier survival plot of Jeopardy winning streaks.</description>
-    </item>
-    
-    <item>
       <title>Raytracing in Bash</title>
       <link>/2014/04/04/raytracing-in-bash/</link>
       <pubDate>Fri, 04 Apr 2014 21:13:14 -0500</pubDate>
