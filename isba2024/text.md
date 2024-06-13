@@ -142,7 +142,7 @@ Bayesian TMLE was originally developed for the TMLE, and was subsequently extend
 Coming back to our visualization, we now have a prior distribution $p(\epsilon)$ on the fluctuation parameter $\epsilon$. By typical Bayesian inference, this prior is combined with the TMLE likelihood to yield a posterior for the ATE. 
 
 # Bayesian TMLE in Stan
-As a simple "proof by existance" that Bayesian TMLE can be put into practice, I wanted to show what it looks like when coded in Stan (code is also available on Github at github.com/herbps10/bayes_tmle). The core of the code is basically Bayesian logistic regression, with the main complication being the Jacobian adjustment necessary when we place a prior on directly on the ATE, rather than the fluctuation parameter $\epsilon$. }
+As a simple "proof by existance" that Bayesian TMLE can be put into practice, I wanted to show what it looks like when coded in Stan (code is also available on Github at [github.com/herbps10/bayes_tmle](http://github.com/herbps10/bayes_tmle)). The core of the code is basically Bayesian logistic regression, with the main complication being the Jacobian adjustment necessary when we place a prior on directly on the ATE, rather than the fluctuation parameter $\epsilon$.
 
 # Group treatment effects
 Now that we have a sense of what Bayesian TMLE is, let's break some new ground by applying it to a slightly harder problem than estimating the ATE. 
