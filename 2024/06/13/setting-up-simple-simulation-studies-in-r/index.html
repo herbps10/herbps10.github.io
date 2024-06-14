@@ -96,7 +96,7 @@ simulate &lt;- function(N, alpha, beta1, beta2, sigma, seed) {
   # and observed outcome
   tibble(X, A, Y0, Y1, Y)
 }</code></pre>
-<p>In a simulation study we have the benefit of being able to observe both potential outcomes – in reality, we would only get to see one (this is called the ``fundamental problem of causal inference”).</p>
+<p>In a simulation study we have the benefit of being able to observe both potential outcomes – in reality, we would only get to see one (this is called the “fundamental problem of causal inference”).</p>
 <p>In the DGP we’re working with, it’s easy to read off the true value of the ATE parameter <span class="math inline">\(\psi\)</span>: it is just <span class="math inline">\(\beta_2\)</span>. In more complicated DGPs, it can be more difficult (or impossible) to find a closed form solution for the true parameter value. A useful approach here is to estimate the value of the causal parameter by drawing a very large number of observations, and then plugging those observations into the causal parameter. Since we simulate all the potential outcomes, we can get a very good estimate of the true causal value.</p>
 <p>For the ATE, it’s pretty simple to write a function that, given a simulated dataset, takes the average of the two potential outcomes:</p>
 <pre class="r"><code>true_ate &lt;- function(data) {
@@ -106,7 +106,7 @@ simulate &lt;- function(N, alpha, beta1, beta2, sigma, seed) {
 <pre class="r"><code>true_ate(
   simulate(N = 1e5, alpha = 1, beta1 = 1, beta2 = 1, sigma = 0.1, seed = 1)
 )</code></pre>
-<pre><code>## [1] 0.9995342</code></pre>
+<pre><code>## [1] 0.999703</code></pre>
 <p>For those parameter values, the true ATE should be exactly 1; this Monte-Carlo approach gets us a pretty close estimate.</p>
 <p>Next, we can start defining some estimators of the ATE that we will be comparing in our simulation study. As a benchmark, we could consider a “naive” estimator that simply takes the difference of the empirical means of the treatment and control groups. Let’s put this into its own function:</p>
 <pre class="r"><code>ate_naive &lt;- function(data) {
@@ -176,18 +176,18 @@ simulated_datasets &lt;- expand_grid(
 <pre class="r"><code>simulation_summary</code></pre>
 <pre><code>## # A tibble: 24 × 7
 ## # Groups:   N, alpha, beta1, beta2, sigma [12]
-##        N alpha beta1 beta2 sigma estimator          bias
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
-##  1    50     0     1     1   0.1 g-computation -0.00105 
-##  2    50     0     1     1   0.1 naive         -0.0126  
-##  3    50     1     1     1   0.1 g-computation -0.00151 
-##  4    50     1     1     1   0.1 naive          0.820   
-##  5    50     2     1     1   0.1 g-computation  0.00273 
-##  6    50     2     1     1   0.1 naive          1.22    
-##  7   100     0     1     1   0.1 g-computation  0.00133 
-##  8   100     0     1     1   0.1 naive          0.00176 
-##  9   100     1     1     1   0.1 g-computation -0.000608
-## 10   100     1     1     1   0.1 naive          0.838   
+##        N alpha beta1 beta2 sigma estimator         bias
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+##  1    50     0     1     1   0.1 g-computation  0.00162
+##  2    50     0     1     1   0.1 naive          0.0374 
+##  3    50     1     1     1   0.1 g-computation  0.00171
+##  4    50     1     1     1   0.1 naive          0.882  
+##  5    50     2     1     1   0.1 g-computation -0.00233
+##  6    50     2     1     1   0.1 naive          1.23   
+##  7   100     0     1     1   0.1 g-computation  0.00296
+##  8   100     0     1     1   0.1 naive          0.0273 
+##  9   100     1     1     1   0.1 g-computation  0.00192
+## 10   100     1     1     1   0.1 naive          0.817  
 ## # ℹ 14 more rows</code></pre>
 <p>To view the results, it’s usually nice to convert to some other format that’s easier to read. Ideally, we can format it in such a way that it’s easy to put directly into a paper.</p>
 <pre class="r"><code>simulation_table &lt;- simulation_summary %&gt;%
@@ -200,18 +200,18 @@ simulation_table</code></pre>
 <pre><code>## # A tibble: 12 × 4
 ##    alpha     N `g-computation`    naive
 ##    &lt;dbl&gt; &lt;dbl&gt;           &lt;dbl&gt;    &lt;dbl&gt;
-##  1     0    50      -0.00105   -0.0126 
-##  2     0   100       0.00133    0.00176
-##  3     0   250      -0.000893  -0.0380 
-##  4     0   500      -0.000133  -0.00459
-##  5     1    50      -0.00151    0.820  
-##  6     1   100      -0.000608   0.838  
-##  7     1   250       0.000856   0.841  
-##  8     1   500       0.000545   0.822  
-##  9     2    50       0.00273    1.22   
-## 10     2   100       0.0000639  1.19   
-## 11     2   250      -0.000652   1.21   
-## 12     2   500       0.000417   1.20</code></pre>
+##  1     0    50        0.00162  0.0374  
+##  2     0   100        0.00296  0.0273  
+##  3     0   250        0.00124  0.000927
+##  4     0   500       -0.000239 0.00381 
+##  5     1    50        0.00171  0.882   
+##  6     1   100        0.00192  0.817   
+##  7     1   250       -0.00104  0.824   
+##  8     1   500       -0.000191 0.826   
+##  9     2    50       -0.00233  1.23    
+## 10     2   100       -0.00308  1.21    
+## 11     2   250       -0.00351  1.20    
+## 12     2   500       -0.000441 1.21</code></pre>
 <p>We can format this into an HTML table and clean up the precision of the estimates:</p>
 <pre class="r"><code>simulation_table %&gt;%
   mutate_at(vars(`g-computation`, naive), scales::number_format(accuracy = 0.001)) %&gt;%
@@ -229,74 +229,74 @@ simulation_table</code></pre>
 <tr class="odd">
 <td align="right">0</td>
 <td align="right">50</td>
-<td align="left">-0.001</td>
-<td align="left">-0.013</td>
+<td align="left">0.002</td>
+<td align="left">0.037</td>
 </tr>
 <tr class="even">
 <td align="right">0</td>
 <td align="right">100</td>
-<td align="left">0.001</td>
-<td align="left">0.002</td>
+<td align="left">0.003</td>
+<td align="left">0.027</td>
 </tr>
 <tr class="odd">
 <td align="right">0</td>
 <td align="right">250</td>
-<td align="left">-0.001</td>
-<td align="left">-0.038</td>
+<td align="left">0.001</td>
+<td align="left">0.001</td>
 </tr>
 <tr class="even">
 <td align="right">0</td>
 <td align="right">500</td>
 <td align="left">0.000</td>
-<td align="left">-0.005</td>
+<td align="left">0.004</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
+<td align="right">50</td>
+<td align="left">0.002</td>
+<td align="left">0.882</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">100</td>
+<td align="left">0.002</td>
+<td align="left">0.817</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">250</td>
+<td align="left">-0.001</td>
+<td align="left">0.824</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">500</td>
+<td align="left">0.000</td>
+<td align="left">0.826</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
 <td align="right">50</td>
 <td align="left">-0.002</td>
-<td align="left">0.820</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">100</td>
-<td align="left">-0.001</td>
-<td align="left">0.838</td>
-</tr>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">250</td>
-<td align="left">0.001</td>
-<td align="left">0.841</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">500</td>
-<td align="left">0.001</td>
-<td align="left">0.822</td>
-</tr>
-<tr class="odd">
-<td align="right">2</td>
-<td align="right">50</td>
-<td align="left">0.003</td>
-<td align="left">1.216</td>
+<td align="left">1.227</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="right">100</td>
-<td align="left">0.000</td>
-<td align="left">1.191</td>
+<td align="left">-0.003</td>
+<td align="left">1.206</td>
 </tr>
 <tr class="odd">
 <td align="right">2</td>
 <td align="right">250</td>
-<td align="left">-0.001</td>
-<td align="left">1.213</td>
+<td align="left">-0.004</td>
+<td align="left">1.205</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="right">500</td>
 <td align="left">0.000</td>
-<td align="left">1.199</td>
+<td align="left">1.206</td>
 </tr>
 </tbody>
 </table>
