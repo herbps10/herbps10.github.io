@@ -3,12 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2020-12-11T10:17:59-05:00</lastmod>
-  </url><url>
-    <loc>/2020/12/11/derivative-gaussian-processes-in-stan/</loc>
-    <lastmod>2020-12-11T10:17:59-05:00</lastmod>
+    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/post/</loc>
+    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/r/</loc>
+    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/2024/06/13/setting-up-simple-simulation-studies-in-r/</loc>
+    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/2020/12/11/derivative-gaussian-processes-in-stan/</loc>
     <lastmod>2020-12-11T10:17:59-05:00</lastmod>
   </url><url>
     <loc>/2020/12/01/conditioning-on-gaussian-process-derivative-observations/</loc>
@@ -32,13 +41,7 @@
     <loc>/2019/08/10/presidential-primary-polling-analysis-in-stan/</loc>
     <lastmod>2019-08-10T07:36:42-04:00</lastmod>
   </url><url>
-    <loc>/tags/r/</loc>
-    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-  </url><url>
     <loc>/tags/stan/</loc>
-    <lastmod>2019-08-10T07:36:42-04:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2019-08-10T07:36:42-04:00</lastmod>
   </url><url>
     <loc>/2019/08/09/autoregressive-processes-are-gaussian-processes/</loc>

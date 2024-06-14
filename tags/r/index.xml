@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Sat, 10 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Setting up simple simulation studies in R</title>
+      <link>/2024/06/13/setting-up-simple-simulation-studies-in-r/</link>
+      <pubDate>Thu, 13 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/2024/06/13/setting-up-simple-simulation-studies-in-r/</guid>
+      <description>Eugène Boudin, 1863: Beach Scene at Trouville. Courtesy National Gallery of Art, Washington.
+ Setting up and running simulation studies are a ubiquitous task in applied statistics. In this post, I’ll write up a small simulation study to show how I usually approach setting them up in R. This post will assume a certain level of familiarity with causal inference.
+The simulation study will compare a naive estimator of an Average Treatment Effect vs.</description>
+    </item>
+    
     <item>
       <title>Presidential Primary Polling Analysis in Stan</title>
       <link>/2019/08/10/presidential-primary-polling-analysis-in-stan/</link>

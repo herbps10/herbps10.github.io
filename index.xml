@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Fri, 11 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Setting up simple simulation studies in R</title>
+      <link>/2024/06/13/setting-up-simple-simulation-studies-in-r/</link>
+      <pubDate>Thu, 13 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/2024/06/13/setting-up-simple-simulation-studies-in-r/</guid>
+      <description>Eugène Boudin, 1863: Beach Scene at Trouville. Courtesy National Gallery of Art, Washington.
+ Setting up and running simulation studies are a ubiquitous task in applied statistics. In this post, I’ll write up a small simulation study to show how I usually approach setting them up in R. This post will assume a certain level of familiarity with causal inference.
+The simulation study will compare a naive estimator of an Average Treatment Effect vs.</description>
+    </item>
+    
     <item>
       <title>Derivative Gaussian Processes in Stan</title>
       <link>/2020/12/11/derivative-gaussian-processes-in-stan/</link>
@@ -207,7 +218,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Preprints  2023 A Bayesian analysis of current duration data with reporting issues: an application to estimating the distribution of time-between-sex from time-since-last-sex data as collected in cross-sectional surveys in low- and middle-income countries. Chi Hyun Lee, Herbert Susmann, and Leontine Alkema. arXiv preprint arXiv:2302.00951.   2023 Inference in Marginal Structural Models by Automatic Targeted Bayesian and Minimum Loss-Based Estimation. Herbert Susmann and Antoine Chambaz. arXiv preprint arXiv:2301.10630.   2023 Flexible Modeling of Demographic Transition Processes with a Bayesian Hierarchical Penalized B-splines Model.</description>
+      <description>Preprints  2024 Bayesian Projection of Refugee and Asylum Seeker Populations Herbert Susmann and Adrian Raftery. arXiv preprint arXiv:2405.06857.   2024 Local Longitudinal Modified Treatment Policies Herbert Susmann and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Probabilistic Prediction of Arrivals and Hospitalizations in Emergency Departments in Île-de-France Herbert Susmann, Antoine Chambaz, Julie Josse, Mathias Wargon, Philippe Aegerter and Emmanuel Bacry. HAL preprint hal-04539380.   2023 AdaptiveConformal: An R Package for Adaptive Conformal Inference Herbert Susmann, Antoine Chambaz, and Julie Josse.</description>
     </item>
     
     <item>
