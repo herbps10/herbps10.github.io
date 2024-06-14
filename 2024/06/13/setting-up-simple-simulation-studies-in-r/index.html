@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Setting up simple simulation studies in R | Herb Susmann</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/custom.css">
+
+  </head>
+
+  <body>
+    <svg id='graph' width='800' height='800'></svg>
+    <nav>
+    <a href='/' class='main-title'>Herb Susmann</a>
+    <ul class="menu">
+      
+      <li><a href="/about">About</a></li>
+      
+      <li><a href="/post">Posts</a></li>
+      
+      <li><a href="/notebooks">Notebooks</a></li>
+      
+      <li><a href="/research">Research</a></li>
+      
+      <li><a href="/software">Software</a></li>
+      
+    </ul>
+    </nav>
+    
+  <div class='container universal-wrapper'>
+<div class="article-meta">
+<h1><span class="title">Setting up simple simulation studies in R</span></h1>
+
+<h3 class="date">June 6, 2024</h3>
+</div>
+
+<main>
+
+
+
+<div class="figure">
+<img src="beach_scene_at_trouville.jpg" alt="" />
+<p class="caption">Eugène Boudin, 1863: <a href="https://www.nga.gov/collection/art-object-page.61364.html">Beach Scene at Trouville</a>. Courtesy National Gallery of Art, Washington.</p>
+</div>
+<p>Setting up and running simulation studies are a ubiquitous task in applied statistics. In this post, I’ll write up a small simulation study to show how I usually approach setting them up in R. This post will assume a certain level of familiarity with causal inference.</p>
+<p>The simulation study will compare a naive estimator of an Average Treatment Effect vs. a simple parametric g-estimator. The first step in setting up a simulation study is deciding on a data generating process for the observed data. I like to start by defining a bare-bones <code>simulation</code> function:</p>
+<pre><code>simulate &lt;- function(N, seed) {
+  set.seed(seed)
+}</code></pre>
+<p>This function will evolve with the simulation study, but at core it takes two arguments: <code>N</code>, the number of observations, and <code>seed</code>, the random number seed to use so that the function is reproducible.</p>
+<p>For our simulation, suppose the observed data are <span class="math inline">\(n\)</span> i.i.d. draws of a variable <span class="math inline">\(O = (X, A, Y)\)</span> where <span class="math inline">\(X\)</span> is a covariate, <span class="math inline">\(A\)</span> is a binary treatment indicator, and <span class="math inline">\(Y\)</span> is a continuous outcome. Further define the potential outcomes <span class="math inline">\(Y(A)\)</span> for <span class="math inline">\(A \in \{ 0, 1 \}\)</span> for the outcome under treatment <span class="math inline">\(A = 0\)</span> and <span class="math inline">\(A = 1\)</span>. Then we can write the observed outcome as <span class="math inline">\(Y = AY(1) + (1 - A)Y(0)\)</span>.</p>
+<p>Our target statistical parameter is the <em>average treatment effect</em> (ATE), defined as
+<span class="math display">\[
+\psi = \mathbb{E}[Y(1) - Y(0)].
+\]</span></p>
+<p>Under standard assumptions, the ATE is identified as
+<span class="math display">\[
+\psi = \mathbb{E}[\mathbb{E}[Y | A = 1, X] - \mathbb{E}[Y | A = 0, X]].
+\]</span></p>
+<p>Let’s get into setting up the actual simulation study. To be more concrete, we will assume the following data generating process (DGP):
+<span class="math display">\[
+\begin{align*}
+  X &amp;\sim \mathrm{Normal}(0, 1), \\
+  A | X &amp;\sim \mathrm{Bernoulli}\left(\mathrm{logit}^{-1}(\alpha X)\right), \\
+  Y | A, X &amp;\sim \mathrm{Normal}\left(\beta_1 X + \beta_2 A, \sigma^2\right),
+\end{align*}
+\]</span>
+where <span class="math inline">\(\alpha, \beta_1, \beta_2\)</span>, and <span class="math inline">\(\sigma &gt; 0\)</span> are parameters that we can use to control the properties of the simulated data. Specifically, <span class="math inline">\(\alpha\)</span> controls the dependence of <span class="math inline">\(A\)</span> on <span class="math inline">\(X\)</span>; we can use it to control the degree of covariate overlap in the treatment vs. control groups. The parameter <span class="math inline">\(\beta_1\)</span> controls the strength of association between the covariate and the outcome, and <span class="math inline">\(\beta_2\)</span> controls the magnitude of the treatment effect. Finally, <span class="math inline">\(\sigma\)</span> controls the conditional variance of the outcome.</p>
+<p>For causal simulation studies, I usually like to explicitly generate the potential outcomes, if it’s feasible to do so. Based on the prior DGP, the conditional distributions of the potential outcomes are given by:
+<span class="math display">\[
+\begin{align*}
+  Y(0) | X &amp;\sim \mathrm{Normal}(\beta_1 X, \sigma^2), \\
+  Y(1) | X &amp;\sim \mathrm{Normal}(\beta_1 X + \beta_2, \sigma^2). \\
+\end{align*}
+\]</span></p>
+<p>Next, we want to fill out the <code>simulate</code> function to encode this data generating process. We’ll add the parameters as arguments so that we can control how the data are generated. I typically rely heavily on <code>tidyverse</code> packages, so we’ll load that as well.</p>
+<pre class="r"><code>library(tidyverse)
+
+simulate &lt;- function(N, alpha, beta1, beta2, sigma, seed) {
+  X &lt;- rnorm(N, mean = 0, sd = 1)
+  A &lt;- rbinom(N, size = 1, prob = plogis(alpha * X))
+  
+  # Potential outcomes
+  Y0 &lt;- rnorm(N, mean = beta1 * X , sd = sigma)
+  Y1 &lt;- rnorm(N, mean = beta1 * X + beta2, sd = sigma)
+  
+  # Observed outcome
+  Y &lt;- A * Y1 + (1 - A) * Y0
+  
+  # Return data frame with covariate, treatment, both potential outcomes,
+  # and observed outcome
+  tibble(X, A, Y0, Y1, Y)
+}</code></pre>
+<p>In a simulation study we have the benefit of being able to observe both potential outcomes – in reality, we would only get to see one (this is called the ``fundamental problem of causal inference”).</p>
+<p>In the DGP we’re working with, it’s easy to read off the true value of the ATE parameter <span class="math inline">\(\psi\)</span>: it is just <span class="math inline">\(\beta_2\)</span>. In more complicated DGPs, it can be more difficult (or impossible) to find a closed form solution for the true parameter value. A useful approach here is to estimate the value of the causal parameter by drawing a very large number of observations, and then plugging those observations into the causal parameter. Since we simulate all the potential outcomes, we can get a very good estimate of the true causal value.</p>
+<p>For the ATE, it’s pretty simple to write a function that, given a simulated dataset, takes the average of the two potential outcomes:</p>
+<pre class="r"><code>true_ate &lt;- function(data) {
+  mean(data$Y1 - data$Y0)
+}</code></pre>
+<p>For example, we can calculate the true ATE under a specific set of simulation parameters using a large draw from the simulation DGP:</p>
+<pre class="r"><code>true_ate(
+  simulate(N = 1e5, alpha = 1, beta1 = 1, beta2 = 1, sigma = 0.1, seed = 1)
+)</code></pre>
+<pre><code>## [1] 0.9995342</code></pre>
+<p>For those parameter values, the true ATE should be exactly 1; this Monte-Carlo approach gets us a pretty close estimate.</p>
+<p>Next, we can start defining some estimators of the ATE that we will be comparing in our simulation study. As a benchmark, we could consider a “naive” estimator that simply takes the difference of the empirical means of the treatment and control groups. Let’s put this into its own function:</p>
+<pre class="r"><code>ate_naive &lt;- function(data) {
+  estimate &lt;- mean(data$Y[data$A == 1]) - mean(data$Y[data$A == 0])
+  
+  # Return estimate
+  tibble(
+    estimator = &quot;naive&quot;,
+    estimate = estimate
+  )
+}</code></pre>
+<p>Second, we can define a parametric g-computation estimator using linear models:</p>
+<pre class="r"><code>ate_gcomp &lt;- function(data) {
+  # Estimate outcome regression model
+  model &lt;- lm(Y ~ A + X, data = data)
+  
+  # Predict E[Y | A = 0, X]
+  mu0 = predict(model, mutate(data, A = 0))
+  
+  # Predict E[Y | A = 1, X]
+  mu1 = predict(model, mutate(data, A = 1))
+  
+  # Form estimate E[E[Y | A = 1, X] - E[Y | A = 0, X]]
+  estimate &lt;- mean(mu1 - mu0)
+  
+  # Return estimate
+  tibble(
+    estimator = &quot;g-computation&quot;,
+    estimate = estimate
+  )
+}</code></pre>
+<p>Next, I like to have a single function that runs all of the estimators on a simulated dataset:</p>
+<pre class="r"><code>fit &lt;- function(data) {
+  bind_rows(
+    ate_naive(data),
+    ate_gcomp(data)
+  )
+}</code></pre>
+<p>Now we’re finally ready to set up and run the actual study. We’ll set up a data frame that contains the simulated datasets. In this example, we simulate <span class="math inline">\(100\)</span> datasets for every combination of sample sizes <span class="math inline">\(N = \{ 50, 100, 250, 500 \}\)</span> and parameters <span class="math inline">\(\alpha \in \{ 0, 1, 2 \}\)</span>, <span class="math inline">\(\beta_1 = 1\)</span>, <span class="math inline">\(\beta_2 = 1\)</span>, and <span class="math inline">\(\sigma = 0.1\)</span>. As <span class="math inline">\(\alpha\)</span> increases, the degree of covariate overlap between the treatment and control group will decrease, so this simulation will help us understand how the estimators behave under increasingly severe violations of positivity.</p>
+<p>As mentioned earlier, in this simple example the true ATE has a closed form. We’ll use that knowledge and add an additional column giving the true ATEs corresponding to each simulated dataset. Alternatively, we could use the <code>true_ate</code> function we defined earlier and estimate the true ATE by drawing a large dataset for each unique set of parameters.</p>
+<pre class="r"><code>num_simulations &lt;- 100
+
+simulated_datasets &lt;- expand_grid(
+  N     = c(50, 100, 250, 500),
+  index = 1:num_simulations,
+  alpha = c(0, 1, 2),
+  beta1 = 1,
+  beta2 = 1,
+  sigma = 0.1
+) %&gt;%
+  mutate(
+    seed = 1:n(),
+    true_ate = beta2,
+    data = pmap(list(N, alpha, beta1, beta2, sigma, seed), simulate)
+  )</code></pre>
+<p>Now we apply the estimators to each of the simulated datasets, and immediately <code>unnest</code> to access each estimator’s results:</p>
+<pre class="r"><code>simulation_results &lt;- simulated_datasets %&gt;%
+  mutate(fits = map(data, fit)) %&gt;%
+  select(-data) %&gt;%
+  unnest(fits)</code></pre>
+<p>Now we can summarize the results to understand how, for example, the mean bias of the two estimators differs:</p>
+<pre class="r"><code>simulation_summary &lt;- simulation_results %&gt;%
+  group_by(N, alpha, beta1, beta2, sigma, estimator) %&gt;%
+  summarize(bias = mean(estimate - true_ate))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;N&#39;, &#39;alpha&#39;, &#39;beta1&#39;, &#39;beta2&#39;, &#39;sigma&#39;.
+## You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>simulation_summary</code></pre>
+<pre><code>## # A tibble: 24 × 7
+## # Groups:   N, alpha, beta1, beta2, sigma [12]
+##        N alpha beta1 beta2 sigma estimator          bias
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+##  1    50     0     1     1   0.1 g-computation -0.00105 
+##  2    50     0     1     1   0.1 naive         -0.0126  
+##  3    50     1     1     1   0.1 g-computation -0.00151 
+##  4    50     1     1     1   0.1 naive          0.820   
+##  5    50     2     1     1   0.1 g-computation  0.00273 
+##  6    50     2     1     1   0.1 naive          1.22    
+##  7   100     0     1     1   0.1 g-computation  0.00133 
+##  8   100     0     1     1   0.1 naive          0.00176 
+##  9   100     1     1     1   0.1 g-computation -0.000608
+## 10   100     1     1     1   0.1 naive          0.838   
+## # ℹ 14 more rows</code></pre>
+<p>To view the results, it’s usually nice to convert to some other format that’s easier to read. Ideally, we can format it in such a way that it’s easy to put directly into a paper.</p>
+<pre class="r"><code>simulation_table &lt;- simulation_summary %&gt;%
+  ungroup() %&gt;%
+  select(alpha, N, estimator, bias) %&gt;%
+  pivot_wider(names_from = estimator, values_from = bias) %&gt;%
+  arrange(alpha, N)
+
+simulation_table</code></pre>
+<pre><code>## # A tibble: 12 × 4
+##    alpha     N `g-computation`    naive
+##    &lt;dbl&gt; &lt;dbl&gt;           &lt;dbl&gt;    &lt;dbl&gt;
+##  1     0    50      -0.00105   -0.0126 
+##  2     0   100       0.00133    0.00176
+##  3     0   250      -0.000893  -0.0380 
+##  4     0   500      -0.000133  -0.00459
+##  5     1    50      -0.00151    0.820  
+##  6     1   100      -0.000608   0.838  
+##  7     1   250       0.000856   0.841  
+##  8     1   500       0.000545   0.822  
+##  9     2    50       0.00273    1.22   
+## 10     2   100       0.0000639  1.19   
+## 11     2   250      -0.000652   1.21   
+## 12     2   500       0.000417   1.20</code></pre>
+<p>We can format this into an HTML table and clean up the precision of the estimates:</p>
+<pre class="r"><code>simulation_table %&gt;%
+  mutate_at(vars(`g-computation`, naive), scales::number_format(accuracy = 0.001)) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">alpha</th>
+<th align="right">N</th>
+<th align="left">g-computation</th>
+<th align="left">naive</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">50</td>
+<td align="left">-0.001</td>
+<td align="left">-0.013</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">100</td>
+<td align="left">0.001</td>
+<td align="left">0.002</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">250</td>
+<td align="left">-0.001</td>
+<td align="left">-0.038</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">500</td>
+<td align="left">0.000</td>
+<td align="left">-0.005</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">50</td>
+<td align="left">-0.002</td>
+<td align="left">0.820</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">100</td>
+<td align="left">-0.001</td>
+<td align="left">0.838</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">250</td>
+<td align="left">0.001</td>
+<td align="left">0.841</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">500</td>
+<td align="left">0.001</td>
+<td align="left">0.822</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">50</td>
+<td align="left">0.003</td>
+<td align="left">1.216</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">100</td>
+<td align="left">0.000</td>
+<td align="left">1.191</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">250</td>
+<td align="left">-0.001</td>
+<td align="left">1.213</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">500</td>
+<td align="left">0.000</td>
+<td align="left">1.199</td>
+</tr>
+</tbody>
+</table>
+<p>From these results, we can see that the bias of the naive estimator is zero if there is no confounding between <span class="math inline">\(X\)</span> and <span class="math inline">\(A\)</span> (that is, when <span class="math inline">\(\alpha = 0\)</span>). For larger values of <span class="math inline">\(\alpha\)</span>, the bias of the naive method increases. On the other hand, the parametric g-computation method has low bias in all settings. This is not surprising, as the parametric model in the g-computation is correctly specified.</p>
+<p>Now that we have a skeleton, we could continue building out the simulation study by adding more estimators, more metrics (say the mean absolute error, empirical coverage if our methods give confidence intervals, etc.), and testing more combinations of simulation parameters.</p>
+<p>The code for this example lays out how I typically start simulation studies. The main idea is to have a function that simulates the data, and a function that runs all the estimators. Then a big data frame holds all the simulated datasets for the various combination of simulation parameters. The estimators are then run on each of the simulated datasets using the <code>pmap</code> function.</p>
+<p>This setup can be extended to handle more complicated scenarios. If the estimators are computation intensive, we can easily switch to running them via <code>future_pmap</code> so that they are executed in parallel. We can also modify the <code>fit</code> function and how it is called to cache estimated values for a simulated dataset, so that if <code>R</code> crashes or is interrupted the simulation study can be restarted and pick up where it left off.</p>
+<p>For very computationally intensive estimators, it’s often necessary to move to a high-performance computing cluster. This setup can be generalized to that case, where the <code>R</code> script is executed with various settings passed by environment variables by the cluster scheduler.</p>
+
+</main>
+
+  </div>
+  <footer>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/stan.min.js"></script>
+
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+
+<script src="/js/graph.js"></script>
+  
+  <br/><br/>
+  <hr/>
+  
+  </footer>
+  </body>
+</html>
+
