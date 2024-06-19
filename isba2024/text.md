@@ -27,6 +27,9 @@ It's also convenient to give names to a few parts of $P$: the marginal distribut
 
 Note that the Average Treatment Effect functional has a causal interpretation under standard causal assumptions including no unmeasured confounding and positivity. In this talk I'll focus primarily on the statistical estimation of the ATE functional.
 
+# Target parameter
+Here we visualize the ATE parameter mapping $\psi : \mathcal{M} \to [0, 1]$. On the left, we (recklessly) illustrate the non-parametric model $\mathcal{M}$ as a cloud in which distributions $P \in \mathcal{M}$ live. The functional $\psi$ maps elements $P$ to a value $\psi(P) \in [0, 1]$.
+
 # A Crude Taxonomy 1
 There are many different ways we could go about estimating $\psi(P_0)$ (the ATE under the true data-generating distribution $P_0$). I like to think about the different methods in terms of a crude taxonomy with two axes, separating methods by their inferential framework (Bayesian vs. frequentist) and what restrictions they put on the data-generating process (non-parametric vs parametric). 
 
@@ -46,9 +49,6 @@ From the frequentist point of view, I think there is much that can be learned fr
 
 # A Crude Taxonomy 4
 Bayesian TMLE can be seen as straddling the line between frequentist and Bayesian approaches. It was originally developed by statisticians who typically work in the frequentist paradigm. My goal in this talk is to suggest how some perhaps more "culturally Bayesian" techniques, like hierarchical modeling, may be able to improve its performance.
-
-# Target parameter
-Here we visualize the ATE parameter mapping $\psi : \mathcal{M} \to [0, 1]$. On the left, we (recklessly) illustrate the non-parametric model $\mathcal{M}$ as a cloud in which distributions $P \in \mathcal{M}$ live. The functional $\psi$ maps elements $P$ to a value $\psi(P) \in [0, 1]$.
 
 # Frequentist estimation of the ATE
 Let's look at how a frequentist might go about estimating the ATE.
