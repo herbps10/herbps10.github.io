@@ -196,7 +196,6 @@
 // If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
 var pdfUrl = './Susmann_ISBA2024.pdf';
-var pdfUrlPresentation = './Susmann_ISBA2024.pdf';
 var textUrl = "./text.md";
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
@@ -398,8 +397,7 @@ loadingTask.promise.then(function(pdf) {
 });
 
 // Asynchronous download of PDF
-var loadingTaskPresentation = pdfjsLib.getDocument(pdfUrlPresentation);
-loadingTaskPresentation.promise.then(function(pdf) {
+loadingTask.promise.then(function(pdf) {
 	numPresentationPages = pdf.numPages;
 	
 	for(var pageNumber = 1; pageNumber <= numPresentationPages; pageNumber++) {
