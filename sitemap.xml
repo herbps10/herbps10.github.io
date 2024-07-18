@@ -5,19 +5,31 @@
     <loc>/</loc>
     <lastmod>2024-07-08T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/2024/07/08/isba-2024-bayesian-targeted-learning/</loc>
+    <loc>/categories/</loc>
+    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/isba-2024-bayesian-targeted-learning/</loc>
+    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/</loc>
+    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/news/</loc>
+    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/news/</loc>
+    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
     <lastmod>2024-07-08T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/post/</loc>
-    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
+    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/r/</loc>
     <lastmod>2024-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/2024/06/13/setting-up-simple-simulation-studies-in-r/</loc>
-    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2024-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/2020/12/11/derivative-gaussian-processes-in-stan/</loc>
@@ -81,8 +93,6 @@
     <lastmod>2014-04-04T21:13:14-05:00</lastmod>
   </url><url>
     <loc>/about/</loc>
-  </url><url>
-    <loc>/categories/</loc>
   </url><url>
     <loc>/notebooks/b-splines/</loc>
   </url><url>
