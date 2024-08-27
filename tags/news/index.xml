@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>news on Herb Susmann</title>
+    <link>/tags/news/</link>
+    <description>Recent content in news on Herb Susmann</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; Herb Susmann {year}</copyright>
+    <lastBuildDate>Mon, 08 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ISBA 2024: Bayesian Targeted Learning</title>
+      <link>/news/isba-2024-bayesian-targeted-learning/</link>
+      <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/isba-2024-bayesian-targeted-learning/</guid>
+      <description>Chiesa di San Simeon Piccolo, Venice, Italy.
+ I had a wonderful time attending ISBA 2024 in last week, held at the Ca&#39; Foscari University of Venice. I had the opportunity to present at the invited session &amp;ldquo;Novel and Flexible Bayesian Approaches for Causal Inference in Complex Settings&amp;rdquo;, which was organized by Mike Daniels and Maria Josefsson and chaired by Arman Oganisian. The slides and speaker notes for my talk can be found here: Targeted Bayesian Learning for Causal Inference: The Best of Both Worlds?</description>
+    </item>
+    
+  </channel>
+</rss>

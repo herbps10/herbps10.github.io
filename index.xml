@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Mon, 08 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 26 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New publication in COMPUTO on Adaptive Conformal Inference</title>
+      <link>/news/computo-aci/</link>
+      <pubDate>Mon, 26 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/computo-aci/</guid>
+      <description>I recently had an article published in COMPUTO, a journal of the French Royal Statistical Society, titled AdaptiveConformal: An R Package for Adaptive Conformal Inference. The article was cowritten with my collaborators Antoine Chambaz and Julie Josse.
+COMPUTO has an interesting publication process that focuses on reproducibility. We wrote the manuscript as an R Quarto document, and we were required to submit a link to the Github repo so reviewers could verify reproducibility.</description>
+    </item>
+    
     <item>
       <title>ISBA 2024: Invited Talk on Bayesian Targeted Learning</title>
       <link>/news/isba-2024-bayesian-targeted-learning/</link>
@@ -228,7 +238,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Preprints  2024 Bayesian Projection of Refugee and Asylum Seeker Populations Herbert Susmann and Adrian Raftery. arXiv preprint arXiv:2405.06857.   2024 Local Longitudinal Modified Treatment Policies Herbert Susmann and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Probabilistic Prediction of Arrivals and Hospitalizations in Emergency Departments in Île-de-France Herbert Susmann, Antoine Chambaz, Julie Josse, Mathias Wargon, Philippe Aegerter and Emmanuel Bacry. HAL preprint hal-04539380.   2023 AdaptiveConformal: An R Package for Adaptive Conformal Inference Herbert Susmann, Antoine Chambaz, and Julie Josse.</description>
+      <description>Preprints  2024 Bayesian Projection of Refugee and Asylum Seeker Populations Herbert Susmann and Adrian Raftery. arXiv preprint arXiv:2405.06857.   2024 Local Longitudinal Modified Treatment Policies Herbert Susmann and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Probabilistic Prediction of Arrivals and Hospitalizations in Emergency Departments in Île-de-France Herbert Susmann, Antoine Chambaz, Julie Josse, Mathias Wargon, Philippe Aegerter and Emmanuel Bacry. HAL preprint hal-04539380.   2023 Quantile Super Learning for independent and online settings with application to solar power forecasting Herbert Susmann and Antoine Chambaz.</description>
     </item>
     
     <item>
