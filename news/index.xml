@@ -7,7 +7,34 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Mon, 26 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Preprint: Flexibly Modeling Shocks in Demographic and Health Indicators</title>
+      <link>/news/flexibly-modeling-shocks/</link>
+      <pubDate>Mon, 28 Oct 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/flexibly-modeling-shocks/</guid>
+      <description>I and Leontine Alkema have a new preprint available, Flexibly Modeling Shocks to Demographic and Health Indicators with Bayesian Shrinkage Priors. We discuss how to build models for estimating and projecting demographic and health indicators that exhibit large short-term fluctuations, which we call shocks, using Bayesian shrinkage priors.</description>
+    </item>
+    
+    <item>
+      <title>New Preprint: Targeted Provider Profiling</title>
+      <link>/news/targeted-provider-profiling/</link>
+      <pubDate>Mon, 28 Oct 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/targeted-provider-profiling/</guid>
+      <description>We now have a new preprint available, Doubly Robust Nonparametric Efficient Estimation for Provider Evaluation, co-authored with Yiting Li, Mara A. McAdams-DeMarco, Iván Díaz, and Wenbo Wu. We develop doubly robust estimators for causal parameters relevant to evaluating the performance of healthcare providers.</description>
+    </item>
+    
+    <item>
+      <title>Updated Preprint: Longitudinal Average Treatment Effects on the Treated</title>
+      <link>/news/longitudinal-average-treatment-effects-on-the-treated/</link>
+      <pubDate>Mon, 28 Oct 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/longitudinal-average-treatment-effects-on-the-treated/</guid>
+      <description>We recently released an updated preprint of our work on longitudinal generalizations of the Average Treatment Effect on the Treated based on longitudinal modified treatment policies. The updated preprint is titled Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments and is co-authored by Nicholas T. Williams, Kara E. Rudolph, and Iván Díaz.</description>
+    </item>
+    
     <item>
       <title>New publication in COMPUTO on Adaptive Conformal Inference</title>
       <link>/news/computo-aci/</link>

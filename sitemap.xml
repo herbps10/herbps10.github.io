@@ -3,18 +3,27 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2024-08-26T00:00:00+00:00</lastmod>
+    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2024-08-26T00:00:00+00:00</lastmod>
+    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/news/computo-aci/</loc>
-    <lastmod>2024-08-26T00:00:00+00:00</lastmod>
+    <loc>/news/flexibly-modeling-shocks/</loc>
+    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/targeted-provider-profiling/</loc>
+    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/news/</loc>
-    <lastmod>2024-08-26T00:00:00+00:00</lastmod>
+    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/news/</loc>
+    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/longitudinal-average-treatment-effects-on-the-treated/</loc>
+    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/computo-aci/</loc>
     <lastmod>2024-08-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/conference/</loc>
