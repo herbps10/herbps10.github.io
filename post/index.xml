@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 13 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Resources for Learning Semi-parametric Theory</title>
+      <link>/2024/11/05/resources-for-learning-semi-parametric-theory/</link>
+      <pubDate>Tue, 05 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/2024/11/05/resources-for-learning-semi-parametric-theory/</guid>
+      <description>This post gathers resources that I&amp;rsquo;ve found helpful in learning semi-parametric statistical theory. I intend to update this post as I find new resources. BibTex is provided at the bottom.
+Articles All of Edward Kennedy&amp;rsquo;s expository writing on the subject is excellent; I recommend starting with the following two articles:
+ Kennedy, Edward H. (2023). Semiparametric doubly robust targeted double machine learning: a review. https://arxiv.org/abs/2203.06469 Fisher, Aaron, and Kennedy, Edward H.</description>
+    </item>
+    
     <item>
       <title>Setting up simple simulation studies in R</title>
       <link>/2024/06/13/setting-up-simple-simulation-studies-in-r/</link>

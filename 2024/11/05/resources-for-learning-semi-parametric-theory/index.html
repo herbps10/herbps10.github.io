@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resources for Learning Semi-parametric Theory | Herb Susmann</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+</style>
+
+<link rel="stylesheet" href="/css/custom.css">
+
+  </head>
+
+  <body>
+    <svg id='graph' width='800' height='800'></svg>
+    <nav>
+    <a href='/' class='main-title'>Herb Susmann</a>
+    <ul class="menu">
+      
+      <li><a href="/about">About</a></li>
+      
+      <li><a href="/post">Posts</a></li>
+      
+      <li><a href="/notebooks">Notebooks</a></li>
+      
+      <li><a href="/research">Research</a></li>
+      
+      <li><a href="/software">Software</a></li>
+      
+    </ul>
+    </nav>
+    
+  <div class='container universal-wrapper'>
+<div class="article-meta">
+<h1><span class="title">Resources for Learning Semi-parametric Theory</span></h1>
+<h2 class="author">Herb Susmann</h2>
+<h3 class="date">November 11, 2024</h3>
+</div>
+
+<main>
+<p>This post gathers resources that I&rsquo;ve found helpful in learning semi-parametric statistical theory. I intend to update this post as I find new resources. BibTex is provided at the bottom.</p>
+<h2 id="articles">Articles</h2>
+<p>All of <a href="https://www.ehkennedy.com/">Edward Kennedy</a>&rsquo;s expository writing on the subject is excellent; I recommend starting with the following two articles:</p>
+<ul>
+<li>Kennedy, Edward H. (2023). Semiparametric doubly robust targeted double machine learning: a review. <a href="https://arxiv.org/abs/2203.06469">https://arxiv.org/abs/2203.06469</a></li>
+<li>Fisher, Aaron, and Kennedy, Edward H. (2021). Visually Communicating and Teaching Intuition for Influence Functions. The American Statistician, 75(2), 162–172. <a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2020.1717620">https://doi.org/10.1080/00031305.2020.1717620</a></li>
+</ul>
+<p>For a big-picture review of Targeted Learning and Double Machine Learning:</p>
+<ul>
+<li>Díaz, Iván. (2019). Machine learning in the estimation of causal effects: targeted minimum loss-based estimation and double/debiased machine learning. Biostatistics, 21(2), 353–358. <a href="https://academic.oup.com/biostatistics/article/21/2/353/5631845">https://doi.org/10.1093/biostatistics/kxz042</a></li>
+</ul>
+<h2 id="books">Books</h2>
+<p>There are several books by van der Vaart and colleagues that serve as foundational references for semi-parametric theory. You will often see both of the following books cited in papers.</p>
+<ul>
+<li>van der Vaart, Aad W., &amp; Wellner, Jon A. (2023). Weak Convergence and Empirical Processes: With Applications to Statistics (2nd ed.). Springer Cham. <a href="https://link.springer.com/book/10.1007/978-3-031-29040-4">https://link.springer.com/book/10.1007/978-3-031-29040-4</a></li>
+<li>van der Vaart, Aad W. (1998). Asymptotic Statistics. Cambridge University Press. <a href="https://doi.org/10.1017/CBO9780511802256">https://doi.org/10.1017/CBO9780511802256</a></li>
+</ul>
+<p>Both of the Targeted Learning books by van der Laan and Rose are the canonical texts on the subject:</p>
+<ul>
+<li>van der Laan, Mark, and Rose, Sherri. (2011). Targeted Learning: Causal Inference for Observational and Experimental Data. Springer New York, NY. <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1">https://doi.org/https://doi.org/10.1007/978-1-4419-9782-1</a></li>
+<li>van der Laan, Mark, and Rose, Sherri. (2018). Targeted Learning in Data Science: Causal Inference for Complex Longitudinal Studies. Springer Cham. <a href="https://link.springer.com/book/10.1007/978-3-319-65304-4">https://doi.org/https://doi.org/10.1007/978-3-319-65304-4</a></li>
+</ul>
+<h2 id="bibtex">Bibtex</h2>
+<p><em>Note the correct capitalization: &ldquo;van der Laan&rdquo; and &ldquo;van der Vaart&rdquo;.</em></p>
+<pre><code>@misc{kennedy2023review,
+      title={Semiparametric doubly robust targeted double machine learning: a review}, 
+      author={Edward H. Kennedy},
+      year={2023},
+      eprint={2203.06469},
+      archivePrefix={arXiv},
+      primaryClass={stat.ME},
+      url={https://arxiv.org/abs/2203.06469}, 
+}
+
+@article{fisher2021influence,
+  author = {Aaron Fisher and Edward H. Kennedy},
+  title = {Visually Communicating and Teaching Intuition for Influence Functions},
+  journal = {The American Statistician},
+  volume = {75},
+  number = {2},
+  pages = {162--172},
+  year = {2021},
+  publisher = {ASA Website},
+  doi = {10.1080/00031305.2020.1717620},
+  URL = {https://doi.org/10.1080/00031305.2020.1717620},
+  eprint = {https://doi.org/10.1080/00031305.2020.1717620}
+}
+
+@article{diaz2019machinelearning,
+    author = {Díaz, Iván},
+    title = &quot;{Machine learning in the estimation of causal effects: targeted minimum loss-based estimation and double/debiased machine learning}&quot;,
+    journal = {Biostatistics},
+    volume = {21},
+    number = {2},
+    pages = {353-358},
+    year = {2019},
+    month = {11},
+    issn = {1465-4644},
+    doi = {10.1093/biostatistics/kxz042},
+    url = {https://doi.org/10.1093/biostatistics/kxz042},
+    eprint = {https://academic.oup.com/biostatistics/article-pdf/21/2/353/32914770/kxz042.pdf},
+}
+
+@book{vdlrose2011targetd,
+  author={Mark {van der Laan} and Sherri Rose},
+  title={Targeted Learning},
+  subtitle={Causal Inference for Observational and Experimental Data},
+  year={2011},
+  series={Springer Series in Statistics},
+  publisher={Springer New York, NY},
+  doi={https://doi.org/10.1007/978-1-4419-9782-1}
+}
+
+@book{vdlrose2018targetd,
+  author={Mark {van der Laan} and Sherri Rose},
+  title={Targeted Learning in Data Science},
+  subtitle={Causal Inference for Complex Longitudinal Studies},
+  year={2018},
+  series={Springer Series in Statistics},
+  publisher={Springer Cham},
+  doi={https://doi.org/10.1007/978-3-319-65304-4}
+}
+
+@book{vdv1998asymptotics, 
+  place={Cambridge},
+  series={Cambridge Series in Statistical and Probabilistic Mathematics},
+  title={Asymptotic Statistics},
+  publisher={Cambridge University Press},
+  author={Aad W. {van der Vaart}},
+  year={1998}, 
+  collection={Cambridge Series in Statistical and Probabilistic Mathematics}
+} 
+
+@book{vdv2023weakconvergence,
+  edition={2},
+  year={2023},
+  series={Springer Series in Statistics},
+  publisher={Springer Cham},
+  author={Aad W. {van der Vaart} and Jon A. Wellner},
+  title={Weak Convergence and Empirical Processes},
+  subtitle={With Applications to Statistics},
+  doi={https://doi.org/10.1007/978-3-031-29040-4}
+}
+
+</code></pre>
+</main>
+
+  </div>
+  <footer>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/stan.min.js"></script>
+
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+
+<script src="/js/graph.js"></script>
+  
+  <br/><br/>
+  <hr/>
+  
+  </footer>
+  </body>
+</html>
+

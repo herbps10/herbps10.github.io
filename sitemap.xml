@@ -3,7 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2024-10-28T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
+    <lastmod>2024-11-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/2024/11/05/resources-for-learning-semi-parametric-theory/</loc>
+    <lastmod>2024-11-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
     <lastmod>2024-10-28T00:00:00+00:00</lastmod>
@@ -34,9 +40,6 @@
   </url><url>
     <loc>/tags/</loc>
     <lastmod>2024-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/post/</loc>
-    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/r/</loc>
     <lastmod>2024-06-13T00:00:00+00:00</lastmod>
