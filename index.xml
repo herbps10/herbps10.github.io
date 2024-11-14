@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Tue, 05 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 14 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Preprint: Causal Distributional Random Forests</title>
+      <link>/news/2024-11-14-causal-drf/</link>
+      <pubDate>Thu, 14 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/2024-11-14-causal-drf/</guid>
+      <description>Jeffrey Näf and I have a new preprint available on ArXiv, Causal-DRF: Conditional Kernel Treatment Effect Estimation using Distributional Random Forest. We took some of Jeff&amp;rsquo;s previous work on building distributional random forest&amp;rsquo;s and adapted it to the case of estimating kernel treatment effects. Jeff contributed the heavy-duty theory and I worked on the coding and simulation studies &amp;ndash; a good partnership!</description>
+    </item>
+    
     <item>
       <title>Resources for Learning Semi-parametric Theory</title>
       <link>/2024/11/05/resources-for-learning-semi-parametric-theory/</link>
@@ -276,7 +285,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Preprints  2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments  Herbert Susmann, Nicholas T. Williams, Kara E. Rudolph, and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Doubly Robust Nonparametric Efficient Estimation for Provider Evaluation  Herbert Susmann, Yiting Li, Mara A. McAdams-DeMarco, Iván Díaz, and Wenbo Wu. arXiv preprint arXiv:2410.19073.   2024 Flexibly Modeling Shocks to Demographic and Health Indicators with Bayesian Shrinkage Priors Herbert Susmann and Leontine Alkema.</description>
+      <description>Preprints  2024 Causal-DRF: Conditional Kernel Treatment Effect Estimation using Distributional Random Forest  Jeffrey Näf and Herbert Susmann. arXiv preprint arXiv:2411.08778.   2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments  Herbert Susmann, Nicholas T. Williams, Kara E. Rudolph, and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Doubly Robust Nonparametric Efficient Estimation for Provider Evaluation  Herbert Susmann, Yiting Li, Mara A.</description>
     </item>
     
     <item>

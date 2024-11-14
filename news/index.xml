@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Mon, 28 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 14 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Preprint: Causal Distributional Random Forests</title>
+      <link>/news/2024-11-14-causal-drf/</link>
+      <pubDate>Thu, 14 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/2024-11-14-causal-drf/</guid>
+      <description>Jeffrey Näf and I have a new preprint available on ArXiv, Causal-DRF: Conditional Kernel Treatment Effect Estimation using Distributional Random Forest. We took some of Jeff&amp;rsquo;s previous work on building distributional random forest&amp;rsquo;s and adapted it to the case of estimating kernel treatment effects. Jeff contributed the heavy-duty theory and I worked on the coding and simulation studies &amp;ndash; a good partnership!</description>
+    </item>
+    
     <item>
       <title>New Preprint: Flexibly Modeling Shocks in Demographic and Health Indicators</title>
       <link>/news/flexibly-modeling-shocks/</link>
