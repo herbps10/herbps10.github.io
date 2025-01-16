@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Tue, 05 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Readings on the politics of data science</title>
+      <link>/2024/12/07/readings-on-the-politics-of-data-science/</link>
+      <pubDate>Sat, 07 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/2024/12/07/readings-on-the-politics-of-data-science/</guid>
+      <description>This post collects readings on the politics of data science, statistics, and machine learning. Bibtex available at the bottom.
+ Data Science as Political Action: Grounding Data Science in a Politics of Justice, Ben Green (2021). [To Live in Their Utopia: Why Algorithmic Systems Create Absurd Outcomes], Ali Alkhatib (2021).  Bibtex @article{green2021politicalaction, author={Green, Ben}, journal={Journal of Social Computing}, title={Data Science as Political Action: Grounding Data Science in a Politics of Justice}, year={2021}, volume={2}, number={3}, pages={249-265}, keywords={Training;Ethics;Social computing;Shape;Grounding;Data science;Public policy;data science;ethics;politics;social justice;social change;social good;pedagogy}, doi={10.</description>
+    </item>
+    
     <item>
       <title>Resources for Learning Semi-parametric Theory</title>
       <link>/2024/11/05/resources-for-learning-semi-parametric-theory/</link>

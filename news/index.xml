@@ -7,7 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 14 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Publication: Probabilistic Predictions of Emergency Department Arrivals</title>
+      <link>/news/emergency-predictions/</link>
+      <pubDate>Mon, 09 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/emergency-predictions/</guid>
+      <description>Our paper Probabilistic prediction of arrivals and hospitalizations in emergency departments in Île-de-France was published in the International Journal of Medical Informatics. We used a combination of ensemble learning and Adaptive Conformal Inference to predict emergency department arrivals and hospitalizations in and around Paris.
+This paper builds on some previous theoretical work establishing that Super Learner can be applied for estimating quantiles in online settings (preprint available at https://arxiv.org/abs/2310.19343).
+We also used our R package AdaptiveConformal for Adaptive Conformal Inference, described in our paper in COMPUTO.</description>
+    </item>
+    
+    <item>
+      <title>New Preprints: Family Planning Estimation Model and Shrinkage Data Models</title>
+      <link>/news/family-planning-preprints/</link>
+      <pubDate>Tue, 26 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/family-planning-preprints/</guid>
+      <description>Two new preprints out today related to our work on Bayesian hierarchical models for demographic and health indicators.
+The first preprint, joint with Leontine Alkema and Evan Ray, introduces a data model that incorporates Bayesian shrinkage priors as a way to flexibly handle data sources with reporting issues. We have also used shrinkage priors for modeling indicators with large shocks (for example, life expectancy during wars); see our preprint.
+The second preprint, led by Leontine, gives an overview of the current iteration of the Family Planning Estimation Model (FPET), which incorporates extensions that I worked on for my dissertation.</description>
+    </item>
+    
     <item>
       <title>New Preprint: Causal Distributional Random Forests</title>
       <link>/news/2024-11-14-causal-drf/</link>

@@ -7,7 +7,39 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 14 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Publication: Probabilistic Predictions of Emergency Department Arrivals</title>
+      <link>/news/emergency-predictions/</link>
+      <pubDate>Mon, 09 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/emergency-predictions/</guid>
+      <description>Our paper Probabilistic prediction of arrivals and hospitalizations in emergency departments in Île-de-France was published in the International Journal of Medical Informatics. We used a combination of ensemble learning and Adaptive Conformal Inference to predict emergency department arrivals and hospitalizations in and around Paris.
+This paper builds on some previous theoretical work establishing that Super Learner can be applied for estimating quantiles in online settings (preprint available at https://arxiv.org/abs/2310.19343).
+We also used our R package AdaptiveConformal for Adaptive Conformal Inference, described in our paper in COMPUTO.</description>
+    </item>
+    
+    <item>
+      <title>Readings on the politics of data science</title>
+      <link>/2024/12/07/readings-on-the-politics-of-data-science/</link>
+      <pubDate>Sat, 07 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/2024/12/07/readings-on-the-politics-of-data-science/</guid>
+      <description>This post collects readings on the politics of data science, statistics, and machine learning. Bibtex available at the bottom.
+ Data Science as Political Action: Grounding Data Science in a Politics of Justice, Ben Green (2021). [To Live in Their Utopia: Why Algorithmic Systems Create Absurd Outcomes], Ali Alkhatib (2021).  Bibtex @article{green2021politicalaction, author={Green, Ben}, journal={Journal of Social Computing}, title={Data Science as Political Action: Grounding Data Science in a Politics of Justice}, year={2021}, volume={2}, number={3}, pages={249-265}, keywords={Training;Ethics;Social computing;Shape;Grounding;Data science;Public policy;data science;ethics;politics;social justice;social change;social good;pedagogy}, doi={10.</description>
+    </item>
+    
+    <item>
+      <title>New Preprints: Family Planning Estimation Model and Shrinkage Data Models</title>
+      <link>/news/family-planning-preprints/</link>
+      <pubDate>Tue, 26 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/news/family-planning-preprints/</guid>
+      <description>Two new preprints out today related to our work on Bayesian hierarchical models for demographic and health indicators.
+The first preprint, joint with Leontine Alkema and Evan Ray, introduces a data model that incorporates Bayesian shrinkage priors as a way to flexibly handle data sources with reporting issues. We have also used shrinkage priors for modeling indicators with large shocks (for example, life expectancy during wars); see our preprint.
+The second preprint, led by Leontine, gives an overview of the current iteration of the Family Planning Estimation Model (FPET), which incorporates extensions that I worked on for my dissertation.</description>
+    </item>
+    
     <item>
       <title>New Preprint: Causal Distributional Random Forests</title>
       <link>/news/2024-11-14-causal-drf/</link>
@@ -285,7 +317,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Preprints  2024 Causal-DRF: Conditional Kernel Treatment Effect Estimation using Distributional Random Forest  Jeffrey Näf and Herbert Susmann. arXiv preprint arXiv:2411.08778.   2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments  Herbert Susmann, Nicholas T. Williams, Kara E. Rudolph, and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Doubly Robust Nonparametric Efficient Estimation for Provider Evaluation  Herbert Susmann, Yiting Li, Mara A.</description>
+      <description>Preprints  2024 Temporal Models for Demographic and Global Health Outcomes in Multiple Populations: Introducing the Normal-with-Optional-Shrinkage Data Model Class Leontine Alkema, Herbert Susmann, and Evan Ray. arXiv preprint arXiv:2411.18646.   2024 Statistical Demography Meets Ministry of Health: The Case of the Family Planning Estimation Tool Leontine Alkema, Herbert Susmann, Evan Ray, Shauna Mooney, Niamh Cahill, Kristin Bietsch, A.A. Jayachandran, Rogers Kagimu, Priya Emmart, Zenon Mujani, Khan Muhammad, Brighton Muzavazi, Rebecca Rosenberg, John Stover, Emily Sonneveldt.</description>
     </item>
     
     <item>
@@ -303,7 +335,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/software/</guid>
-      <description>Julia packages  TargetedMSM.jl: Targeted Bayesian inference for marginal structural models, using automatic differentiation to support arbitrary working models and loss functions. [github]. Author.  R packages  TargetedRisk: Targeted estimation of risk standardization parameters. [[github]](Targeted estimation of risk standardization parameters). Author. AdaptiveConformal: Adaptive Conformal Inference (ACI) algorithms. [github]. Author. RNHANES: Tools for downloading and analyzing CDC NHANES data, with a focus on analytical laboratory data. [github] [CRAN]. Original author; now managed by Silent Spring Institute.</description>
+      <description>Julia packages  TargetedMSM.jl: Targeted Bayesian inference for marginal structural models, using automatic differentiation to support arbitrary working models and loss functions. [github]. Author.  R packages  TargetedRisk: Targeted estimation of risk standardization parameters. [github]. Author. AdaptiveConformal: Adaptive Conformal Inference (ACI) algorithms. [github]. Author. RNHANES: Tools for downloading and analyzing CDC NHANES data, with a focus on analytical laboratory data. [github] [CRAN]. Original author; now managed by Silent Spring Institute.</description>
     </item>
     
     <item>
