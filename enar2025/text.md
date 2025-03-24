@@ -122,6 +122,9 @@ Chernozhukov et la. proposed a very general, black-box framework for estimating 
 
 We apply this strategy to directly estimate the cumulative weights by minimizing a custom loss function.
 
+# Form of the loss function
+Here's what the loss function for estimating the Riesz representer looks like.
+
 # TMLE
 We used this approach to build an estimator based on TMLE. Code is available on Github.
 
