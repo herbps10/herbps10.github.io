@@ -7,10 +7,15 @@ I'm Herb Susmann, I'm currently a postdoc at NYU Grossman School of Medicine wor
 
 I'm presenting joint work with [Nick Williams](https://www.nicholastwilliams.com/), [Kara Rudolph](https://kararudolph.github.io/) and [Iván Díaz](https://idiaz.xyz/).
 
+_Acknowledgements:_ Iván Díaz and Kara Rudolph were supported through a Patient-Centered Outcomes Research In-
+stitute (PCORI) Project Program FundingAward (ME-2021C2-23636-IC). The computational re-
+quirements for this work were supported in part by the NYU Langone High Performance Comput-
+ing (HPC) Core’s resources and personnel.
+
 # Takeaways
 There are two main things I'd like to communicate in this talk.
 
-First, I want to introduce a way of generalizing the average treatment effect on the treated to longitudinal data structures, continuous and multi-value treatments, and complex interventions.
+First, I want to introduce a way of generalizing the average treatment effect on the treated to longitudinal data structures, continuous and multi-value treatments, and complex interventions defined as _modified treatment policies_.
 
 Second, a common problem that comes up when estimating longitudinal treatment effects is that it's difficult to stably estimate  longitudinal inverse probability of treatment weights, especially when there are many time points. We address this problem using a strategy based on learning Riesz representers through empirical loss minimization.
 
@@ -29,7 +34,7 @@ We want to define our causal question as the health effect on the subset of the 
 
 A causal question of interest could be: what would the average respiratory function have been _among the subset of the population exposed to PM2.5 over the EPA limit_, if their exposure had been decreased by 10\%?
 
-The crucial aspect of this question is that it looks at a subpopulation defined in terms of their exposure.
+The crucial aspect of this question is that it looks at a _subpopulation defined in terms of their exposure._
 
 # ATT
 Simplifying to a single time-point scenario, when we are interested in the impact of a binary intervention on the treated subset of the population, we have the traditional Average Treatment Effect on the Treated (ATT) parameter.
@@ -67,7 +72,7 @@ We can continue this process for longer longitudinal structures: if we intervene
 # Modified Treatment Policies
 Now we're ready to define the class of interventions that we will use to generalize the ATT.
 
-We define our intervention in terms of a fixed function $d$ of the natural value of treatment at time $t$ and counterfactual history up to time $t.
+We define our intervention in terms of a fixed function $d$ of the natural value of treatment at time $t$ and counterfactual history up to time $t. This is called a _modified treatment policy_.
 
 # Shift Treatment
 Here's a simple example of a modified treatment policy.
@@ -98,7 +103,7 @@ To identify the GATT, we need a strong sequential randomization assumption typic
 The final result identifies the GATT as the mean of the final nested regression conditional on the subset of the population with longitudinal treatment trajectory falling into the conditioning set.
 
 # Semi-parametric properties
-We study the semi-parametric properties through the following so-called \textit{von-Mises} expansion of the parameter into the mean of the \textit{efficient influence function} and a second-order remainder term.
+We study the semi-parametric properties through the following so-called _von-Mises_ expansion of the parameter into the mean of the _efficient influence function_ and a second-order remainder term.
 
 # EIF
 In our manuscript, we derive the Efficient Influence Function (EIF) of the GATT parameter. The EIF defines the efficiency bound for estimating the GATT in a non-parametric model, and leads to efficient, asymptotically normal estimators.
