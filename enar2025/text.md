@@ -22,7 +22,7 @@ Second, a common problem that comes up when estimating longitudinal treatment ef
 # Example
  We can motivate our work through a simple example.
 
-Suppose we have measurements of exposure to particulate matter (PM2.5) in humans over time. The fact that we have measurements over time makes the problem longitudinal.
+Suppose we have measurements of exposure to particulate matter (PM2.5) in humans over time. 
 
 The outcome of interest is some health outcome, for example some measure of respiratory function.
 
