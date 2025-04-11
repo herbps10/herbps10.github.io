@@ -1,6 +1,6 @@
 # Title slide
 
-I'm Herb Susmann, I'm currently a postdoc at NYU Grossman School of Medicine. I'm presenting joint work with Leontine Alkema from the University of Massachusetts Amherst.
+I'm Herb Susmann, I'm currently a postdoc at NYU Grossman School of Medicine. I'm presenting joint work with [Leontine Alkema](https://leontinealkema.github.io/alkema_lab/) from the University of Massachusetts Amherst.
 
 # ArXiv
 
@@ -24,6 +24,8 @@ To set up the problem, we start by defining a smooth statistical model for proje
 Let $\eta_{c,t}$ be the true male life expectancy at birth in country $c$ and time $t$.
 
 We model the change in $\eta_{c,t}$ as the sum of the expected rate of change, given by a function $f$, and a deviation $\epsilon$. 
+
+_See [my presentation from PAA 2021](http://herbsusmann.com/paa2021/) for more details about this kind of model._
 
 For the examples we show here we chose to model the expected rate of change using a B-spline transition model. The idea is that we can flexibly model the expected rate of change as a function of level flexibly, while still assuming there is a smooth relationship.
 
