@@ -113,17 +113,18 @@ loadingTask.promise.then(function(pdf) {
 		.then(function(data) { return data.text() })
 		.then(function(res) {
 			var slides = res.split(/# Slide/);
-			
 			for(var pageNumber = 1; pageNumber <= numPages; pageNumber++) {
 				if(slides[pageNumber] != undefined) {
-					var alt = slides[pageNumber].trim().match(/: (.+?)\n/)[1];
-					var slide = document.getElementById("canvas-" + pageNumber);
-					slide.setAttribute("aria-label", alt);
-					slide.innerHTML = alt;
-					
-					var html = marked(slides[pageNumber].trim().replaceAll('’', "'").replace(/[0-9]+?: (.+?)\n/, ""));
-					document.getElementById("text-" + pageNumber).innerHTML = html;
-					renderMathInElement(document.getElementById("text-" + pageNumber), { delimiters: [ { left: "$", right: "$", display: false }] });
+					if(slides[pageNumber].trim().match(/: (.+?)\r\n/) != null) {
+            var alt = slides[pageNumber].trim().match(/: (.+?)\r\n/)[1];
+            var slide = document.getElementById("canvas-" + pageNumber);
+            slide.setAttribute("aria-label", alt);
+            slide.innerHTML = alt;
+            
+            var html = marked.marked(slides[pageNumber].trim().replaceAll('’', "'").replace(/[0-9]+?: (.+?)\r\n/, ""));
+            document.getElementById("text-" + pageNumber).innerHTML = html;
+            renderMathInElement(document.getElementById("text-" + pageNumber), { delimiters: [ { left: "$", right: "$", display: false }] });
+          }
 				}
 			}
 			
