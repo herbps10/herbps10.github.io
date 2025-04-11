@@ -3,18 +3,27 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2024-12-09T00:00:00+00:00</lastmod>
+    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2024-12-09T00:00:00+00:00</lastmod>
+    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/news/emergency-predictions/</loc>
-    <lastmod>2024-12-09T00:00:00+00:00</lastmod>
+    <loc>/tags/conference/</loc>
+    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/enar-2025/</loc>
+    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/news/</loc>
-    <lastmod>2024-12-09T00:00:00+00:00</lastmod>
+    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/news/</loc>
+    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/emergency-predictions/</loc>
     <lastmod>2024-12-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/news/family-planning-preprints/</loc>
@@ -41,13 +50,7 @@
     <loc>/news/computo-aci/</loc>
     <lastmod>2024-08-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/conference/</loc>
-    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>/news/isba-2024-bayesian-targeted-learning/</loc>
-    <lastmod>2024-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2024-07-08T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/r/</loc>

@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Mon, 09 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 25 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Invited Talk: Generalized ATTs at ENAR 2025</title>
+      <link>/news/enar-2025/</link>
+      <pubDate>Tue, 25 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/enar-2025/</guid>
+      <description>I had the pleasure of visiting ENAR for the first time to give a talk on our work on generalizations of the Average Treatment Effect on the Treated to longitudinal settings. Slides and speaker notes for my talk can be found here: Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments</description>
+    </item>
+    
     <item>
       <title>New Publication: Probabilistic Predictions of Emergency Department Arrivals</title>
       <link>/news/emergency-predictions/</link>
