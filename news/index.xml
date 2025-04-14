@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Tue, 25 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Publication: B-splines Transition Models in JRSS-C</title>
+      <link>/news/splines-jrss-c/</link>
+      <pubDate>Mon, 14 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/splines-jrss-c/</guid>
+      <description>Leontine Alkema and I had our article on flexible modeling of demographic transitions using B-splines published in JRSS-C. This approach is now used in the Family Planning Estimation Tool for estimation and projection of family planning indicators; more details are available in a preprint led by Leontine.</description>
+    </item>
+    
     <item>
       <title>Invited Talk: Generalized ATTs at ENAR 2025</title>
       <link>/news/enar-2025/</link>
@@ -93,6 +102,15 @@ COMPUTO has an interesting publication process that focuses on reproducibility. 
       <guid>/news/isba-2024-bayesian-targeted-learning/</guid>
       <description>Chiesa di San Simeon Piccolo, Venice, Italy.
  I had a wonderful time attending ISBA 2024 in last week, held at the Ca&#39; Foscari University of Venice. I had the opportunity to present at the invited session &amp;ldquo;Novel and Flexible Bayesian Approaches for Causal Inference in Complex Settings&amp;rdquo;, which was organized by Mike Daniels and Maria Josefsson and chaired by Arman Oganisian. The slides and speaker notes for my talk can be found here: Targeted Bayesian Learning for Causal Inference: The Best of Both Worlds?</description>
+    </item>
+    
+    <item>
+      <title>Presentations at PAA 2025</title>
+      <link>/news/paa-2025/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/news/paa-2025/</guid>
+      <description>There was a lot of statistical demography activity at PAA this year, centered around three consecutive sessions on Saturday morning. I gave a talk on my work with Leontine Alkema on using Bayesian shrinkage priors to handle shocks in demographic and health indicators; the slides are available online. Adrian Raftery also presented our work on projecting refugee and asylum seeker populations, which is available on ArXiv as a preprint.</description>
     </item>
     
   </channel>

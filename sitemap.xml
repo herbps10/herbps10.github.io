@@ -3,21 +3,24 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
+    <lastmod>2025-04-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
+    <lastmod>2025-04-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/splines-jrss-c/</loc>
+    <lastmod>2025-04-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/</loc>
+    <lastmod>2025-04-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/categories/news/</loc>
+    <lastmod>2025-04-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/conference/</loc>
     <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/news/enar-2025/</loc>
-    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/news/</loc>
-    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/categories/news/</loc>
     <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/</loc>
@@ -132,6 +135,8 @@
     <loc>/notebooks/</loc>
   </url><url>
     <loc>/notebooks/one-step-estimators/</loc>
+  </url><url>
+    <loc>/news/paa-2025/</loc>
   </url><url>
     <loc>/publication_types/</loc>
   </url><url>
