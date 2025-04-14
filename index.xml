@@ -18,6 +18,15 @@
     </item>
     
     <item>
+      <title>Presentations at PAA 2025</title>
+      <link>/news/paa-2025/</link>
+      <pubDate>Sun, 13 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/paa-2025/</guid>
+      <description>There was a lot of statistical demography activity at PAA this year, centered around three consecutive sessions on Saturday morning. I gave a talk on my work with Leontine Alkema on using Bayesian shrinkage priors to handle shocks in demographic and health indicators; the slides are available online. Adrian Raftery also presented our work on projecting refugee and asylum seeker populations, which is available on ArXiv as a preprint.</description>
+    </item>
+    
+    <item>
       <title>Invited Talk: Generalized ATTs at ENAR 2025</title>
       <link>/news/enar-2025/</link>
       <pubDate>Tue, 25 Mar 2025 00:00:00 +0000</pubDate>
@@ -317,15 +326,6 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       
       <guid>/notebooks/one-step-estimators/</guid>
       <description>import {Runtime, Inspector} from &#34;https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js&#34;; import define from &#34;https://api.observablehq.com/@herbps10/one-step-estimators-and-pathwise-derivatives.js?v=3&#34;; new Runtime().module(define, Inspector.into(&#34;#observablehq-4907f595&#34;));  .observablehq--inspect { display: none; }  Source code: Observable notebook.</description>
-    </item>
-    
-    <item>
-      <title>Presentations at PAA 2025</title>
-      <link>/news/paa-2025/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/news/paa-2025/</guid>
-      <description>There was a lot of statistical demography activity at PAA this year, centered around three consecutive sessions on Saturday morning. I gave a talk on my work with Leontine Alkema on using Bayesian shrinkage priors to handle shocks in demographic and health indicators; the slides are available online. Adrian Raftery also presented our work on projecting refugee and asylum seeker populations, which is available on ArXiv as a preprint.</description>
     </item>
     
     <item>

@@ -17,6 +17,9 @@
     <loc>/categories/news/</loc>
     <lastmod>2025-04-14T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>/news/paa-2025/</loc>
+    <lastmod>2025-04-13T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>/tags/conference/</loc>
     <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
@@ -135,8 +138,6 @@
     <loc>/notebooks/</loc>
   </url><url>
     <loc>/notebooks/one-step-estimators/</loc>
-  </url><url>
-    <loc>/news/paa-2025/</loc>
   </url><url>
     <loc>/publication_types/</loc>
   </url><url>

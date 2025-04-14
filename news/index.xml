@@ -18,6 +18,15 @@
     </item>
     
     <item>
+      <title>Presentations at PAA 2025</title>
+      <link>/news/paa-2025/</link>
+      <pubDate>Sun, 13 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/paa-2025/</guid>
+      <description>There was a lot of statistical demography activity at PAA this year, centered around three consecutive sessions on Saturday morning. I gave a talk on my work with Leontine Alkema on using Bayesian shrinkage priors to handle shocks in demographic and health indicators; the slides are available online. Adrian Raftery also presented our work on projecting refugee and asylum seeker populations, which is available on ArXiv as a preprint.</description>
+    </item>
+    
+    <item>
       <title>Invited Talk: Generalized ATTs at ENAR 2025</title>
       <link>/news/enar-2025/</link>
       <pubDate>Tue, 25 Mar 2025 00:00:00 +0000</pubDate>
@@ -102,15 +111,6 @@ COMPUTO has an interesting publication process that focuses on reproducibility. 
       <guid>/news/isba-2024-bayesian-targeted-learning/</guid>
       <description>Chiesa di San Simeon Piccolo, Venice, Italy.
  I had a wonderful time attending ISBA 2024 in last week, held at the Ca&#39; Foscari University of Venice. I had the opportunity to present at the invited session &amp;ldquo;Novel and Flexible Bayesian Approaches for Causal Inference in Complex Settings&amp;rdquo;, which was organized by Mike Daniels and Maria Josefsson and chaired by Arman Oganisian. The slides and speaker notes for my talk can be found here: Targeted Bayesian Learning for Causal Inference: The Best of Both Worlds?</description>
-    </item>
-    
-    <item>
-      <title>Presentations at PAA 2025</title>
-      <link>/news/paa-2025/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/news/paa-2025/</guid>
-      <description>There was a lot of statistical demography activity at PAA this year, centered around three consecutive sessions on Saturday morning. I gave a talk on my work with Leontine Alkema on using Bayesian shrinkage priors to handle shocks in demographic and health indicators; the slides are available online. Adrian Raftery also presented our work on projecting refugee and asylum seeker populations, which is available on ArXiv as a preprint.</description>
     </item>
     
   </channel>
