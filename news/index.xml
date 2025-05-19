@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Mon, 14 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 13 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Publication: Quantile Super Learner in CSDA</title>
+      <link>/news/quantile-super-learner/</link>
+      <pubDate>Tue, 13 May 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/quantile-super-learner/</guid>
+      <description>Antoine Chambaz and I had our work on Quantile Super Learner published in Computational Statistics &amp;amp; Data Analysis. We establish theoretical guarantees for Super Learner ensembles (also known as model stacking) built to estimate conditional quantiles, and apply the method to some real-world applications relevant to solar forecasting.</description>
+    </item>
+    
     <item>
       <title>New Publication: B-splines Transition Models in JRSS-C</title>
       <link>/news/splines-jrss-c/</link>
