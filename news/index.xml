@@ -18,6 +18,15 @@
     </item>
     
     <item>
+      <title>New Preprint: Penalized Shrinkage Estimation for Causal Parameters</title>
+      <link>/news/penalized-causal-parameters/</link>
+      <pubDate>Mon, 12 May 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/penalized-causal-parameters/</guid>
+      <description>We have a new preprint out looking at how to apply shrinkage estimation to estimating large sets of causal parameters: Asymptotically Efficient Data-adaptive Penalized Shrinkage Estimation with Application to Causal Inference. The main idea is to define a new causal parameter of interest that is the solution of an optimization problem that balances fidelity to the parameter of interest and a penalty term. This structure allows us to apply standard techniques to analyze the penalized parameter, while choosing the strength of the penalization in such a way that the variance of an estimator is lower in finite samples.</description>
+    </item>
+    
+    <item>
       <title>New Publication: B-splines Transition Models in JRSS-C</title>
       <link>/news/splines-jrss-c/</link>
       <pubDate>Mon, 14 Apr 2025 00:00:00 +0000</pubDate>

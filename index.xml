@@ -18,6 +18,15 @@
     </item>
     
     <item>
+      <title>New Preprint: Penalized Shrinkage Estimation for Causal Parameters</title>
+      <link>/news/penalized-causal-parameters/</link>
+      <pubDate>Mon, 12 May 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/penalized-causal-parameters/</guid>
+      <description>We have a new preprint out looking at how to apply shrinkage estimation to estimating large sets of causal parameters: Asymptotically Efficient Data-adaptive Penalized Shrinkage Estimation with Application to Causal Inference. The main idea is to define a new causal parameter of interest that is the solution of an optimization problem that balances fidelity to the parameter of interest and a penalty term. This structure allows us to apply standard techniques to analyze the penalized parameter, while choosing the strength of the penalization in such a way that the variance of an estimator is lower in finite samples.</description>
+    </item>
+    
+    <item>
       <title>New Publication: B-splines Transition Models in JRSS-C</title>
       <link>/news/splines-jrss-c/</link>
       <pubDate>Mon, 14 Apr 2025 00:00:00 +0000</pubDate>
@@ -343,7 +352,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Preprints  2024 Temporal Models for Demographic and Global Health Outcomes in Multiple Populations: Introducing the Normal-with-Optional-Shrinkage Data Model Class. Leontine Alkema, Herbert Susmann, and Evan Ray. arXiv preprint arXiv:2411.18646.    2024 Statistical Demography Meets Ministry of Health: The Case of the Family Planning Estimation Tool. Leontine Alkema, Herbert Susmann, Evan Ray, Shauna Mooney, Niamh Cahill, Kristin Bietsch, A.A. Jayachandran, Rogers Kagimu, Priya Emmart, Zenon Mujani, Khan Muhammad, Brighton Muzavazi, Rebecca Rosenberg, John Stover, Emily Sonneveldt.</description>
+      <description>Preprints  2025 Asymptotically Efficient Data-adaptive Penalized Shrinkage Estimation with Application to Causal Inference Herbert Susmann, Yiting Li, Mara A. McAdams-DeMarco, Wenbo Wu, and Iván Díaz. arXiv preprint arXiv:2505.08065.   2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments. Herbert Susmann, Nicholas T. Williams, Kara E. Rudolph, and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Temporal Models for Demographic and Global Health Outcomes in Multiple Populations: Introducing the Normal-with-Optional-Shrinkage Data Model Class.</description>
     </item>
     
     <item>
