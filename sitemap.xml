@@ -3,18 +3,27 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2025-05-13T00:00:00+00:00</lastmod>
+    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2025-05-13T00:00:00+00:00</lastmod>
+    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/news/quantile-super-learner/</loc>
-    <lastmod>2025-05-13T00:00:00+00:00</lastmod>
+    <loc>/tags/conference/</loc>
+    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/jsm-2025/</loc>
+    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/news/</loc>
-    <lastmod>2025-05-13T00:00:00+00:00</lastmod>
+    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/news/</loc>
+    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/news/quantile-super-learner/</loc>
     <lastmod>2025-05-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/news/penalized-causal-parameters/</loc>
@@ -26,13 +35,7 @@
     <loc>/news/paa-2025/</loc>
     <lastmod>2025-04-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/conference/</loc>
-    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>/news/enar-2025/</loc>
-    <lastmod>2025-03-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2025-03-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/news/emergency-predictions/</loc>
