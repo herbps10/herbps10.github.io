@@ -3,7 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2025-08-07T00:00:00+00:00</lastmod>
+    <lastmod>2025-08-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/2025/08/29/semi-parametric-history/</loc>
+    <lastmod>2025-08-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
+    <lastmod>2025-08-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
     <lastmod>2025-08-07T00:00:00+00:00</lastmod>
@@ -46,9 +52,6 @@
   </url><url>
     <loc>/news/2024-11-14-causal-drf/</loc>
     <lastmod>2024-11-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/post/</loc>
-    <lastmod>2024-11-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/2024/11/05/resources-for-learning-semi-parametric-theory/</loc>
     <lastmod>2024-11-05T00:00:00+00:00</lastmod>

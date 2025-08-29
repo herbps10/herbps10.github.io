@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Tue, 05 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Historical notes on semi-parametric theory and estimation</title>
+      <link>/2025/08/29/semi-parametric-history/</link>
+      <pubDate>Fri, 29 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/2025/08/29/semi-parametric-history/</guid>
+      <description>This post gathers some notes on the history of various topics with a focus on the history of semi-parametric efficiency theory and related estimators. Some of these are more fleshed out than others. I intend to add to this as I learn more. Bibtex is provided at the bottom.
+Statistical Functionals and von Mises calculus The concept of a statistical functional has origins in von Mises (1947). There are also two earlier works by von Mises, published in French in 1936 and 1939.</description>
+    </item>
+    
     <item>
       <title>Resources for Learning Semi-parametric Theory</title>
       <link>/2024/11/05/resources-for-learning-semi-parametric-theory/</link>

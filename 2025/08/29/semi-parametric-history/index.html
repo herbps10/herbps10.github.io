@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historical notes on semi-parametric theory and estimation | Herb Susmann</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+</style>
+
+<link rel="stylesheet" href="/css/custom.css">
+
+  </head>
+
+  <body>
+    <svg id='graph' width='800' height='800'></svg>
+    <nav>
+    <a href='/' class='main-title'>Herb Susmann</a>
+    <ul class="menu">
+      
+      <li><a href="/about">About</a></li>
+      
+      <li><a href="/post">Posts</a></li>
+      
+      <li><a href="/notebooks">Notebooks</a></li>
+      
+      <li><a href="/research">Research</a></li>
+      
+      <li><a href="/software">Software</a></li>
+      
+    </ul>
+    </nav>
+    
+  <div class='container universal-wrapper'>
+<div class="article-meta">
+<h1><span class="title">Historical notes on semi-parametric theory and estimation</span></h1>
+
+<h3 class="date">August 29, 2025</h3>
+</div>
+
+<main>
+<p>This post gathers some notes on the history of various topics with a focus on
+the history of semi-parametric efficiency theory and related estimators. Some
+of these are more fleshed out than others. I intend to add to this as I learn more. Bibtex is provided at the bottom.</p>
+<h2 id="statistical-functionals-and-von-mises-calculus">Statistical Functionals and von Mises calculus</h2>
+<p>The concept of a statistical functional has origins in <a href="https://doi.org/10.1214/aoms/1177730385">von Mises (1947)</a>. There are also two earlier works by von Mises, published in French in <a href="https://www.numdam.org/item/AIHP_1936__6_3-4_185_0/">1936</a> and <a href="http://eudml.org/doc/86726">1939</a>. Interestingly, the author in both is given as &ldquo;de Mises&rdquo;, a translation into French of &ldquo;von Mises&rdquo;.
+<a href="https://link.springer.com/book/10.1007/978-1-4612-5604-5">Fernholz (1983)</a> has a nice discussion. Following her notation, let <span class='math inline'>X_1, \dots, X_n</span> an i.i.d. sample from a law with distribution function <span class='math inline'>F</span>. A <em>statistical functional</em> $T$ is a statistic of the empirical distribution <span class='math inline'>F_n: F_n \mapsto T(F_n)</span>. von Mises proposed expanding $T_n$ in the form
+<span class='math display'>
+T_n(F_n) = T(F) + T'_{F}\left( F_n - F \right) + \mathsf{Rem}_n(F_n - F)
+</span>
+where <span class='math inline'>T'_F</span> is a derivative of the functional and $\mathsf{Rem}_n$ is
+a remainder term. The derivative considered here was a type of Gateaux
+derivative. Subsequent work considered expansions based on alternative types of
+derivatives, which apply to larger sets of functionals. See in this line <a href="https://doi.org/10.1137/1107003">Filippova (1962)</a>, Reeds (1976), Huber (1977), <a href="https://onlinelibrary.wiley.com/doi/book/10.1002/9780470316481">Serfling (1980)</a>.</p>
+<p>Since then, the term &ldquo;von Mises expansion&rdquo; has been used to refer to this style
+of expansion for more general statistical functionals; see e.g. <a href="https://www.taylorfrancis.com/chapters/edit/10.1201/9781003216223-10/semiparametric-doubly-robust-targeted-double-machine-learning-review-edward-kennedy">Kennedy 2024</a>.</p>
+<h2 id="sample-splitting">Sample Splitting</h2>
+<p>To my knowledge, the first case of sample-splitting is in <a href="https://doi.org/10.1214/aos/1176350055">Schick (1986)</a>, who proposes splitting a sample into two parts, estimating a nuisance parameter in each part, and then using the left-out sample to evaluate the estimate. He writes &ldquo;_We divide the ample [sic] in two equal parts, obtain an estimate of the score function from each part, and evaluate the estimate of the score function obtained from the first part only with observations from the second part and vice versa.&rdquo;</p>
+<p>The idea splitting a sample into two parts and using one for estimation and the
+other for prediction predates Schick, but it seems he was the first to rotate
+the splits and average the results. He cites <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-10/issue-3/On-Adaptive-Estimation/10.1214/aos/1176345863.full">Bickel
+(1982)</a> as using the latter
+strategy. Pfanzagl (1982) also describes this approach being used by Hasminskii and Ibragimov (1979), but I haven&rsquo;t been able to track down a copy of their original paper.</p>
+<h2 id="one-step-estimation">One-step estimation</h2>
+<p>See <a href="https://link.springer.com/book/10.1007/978-1-4612-5769-1">Pfanzagl (1982)</a> as an early example of a one-step estimator.</p>
+<h2 id="bibtex">Bibtex</h2>
+<p>Presented in chronological order.</p>
+<pre><code>@article{vonmises1936functionals,
+     author = {Mis\'es, R. de},
+     title = {Les lois de probabilit\'e pour les fonctions statistiques},
+     journal = {Annales de l'institut Henri Poincar\'e},
+     pages = {185--212},
+     publisher = {Institut Henri Poincar\'e et les Presses Universitaires de France},
+     volume = {6},
+     number = {3-4},
+     year = {1936},
+     zbl = {0016.31204},
+     language = {fr},
+     url = {https://www.numdam.org/item/AIHP_1936__6_3-4_185_0/}
+}
+
+@article{vonmises1939functionals,
+    author = {Mises, R. de},
+    journal = {Bulletin de la Société Mathématique de France},
+    keywords = {probability theory},
+    language = {fre},
+    pages = {177-184},
+    publisher = {Société mathématique de France},
+    title = {Sur les fonctions statistiques},
+    url = {http://eudml.org/doc/86726},
+    volume = {67},
+    year = {1939},
+}
+
+@article{vonmises1947functionals,
+    author = {R. {von Mises}},
+    title = {{On the Asymptotic Distribution of Differentiable Statistical Functions}},
+    volume = {18},
+    journal = {The Annals of Mathematical Statistics},
+    number = {3},
+    publisher = {Institute of Mathematical Statistics},
+    pages = {309 -- 348},
+    year = {1947},
+    doi = {10.1214/aoms/1177730385},
+    URL = {https://doi.org/10.1214/aoms/1177730385}
+}
+
+
+@article{filippova1962mises,
+    author = {Filippova, A. A.},
+    title = {Mises’ Theorem on the Asymptotic Behavior of Functionals of Empirical Distribution Functions and Its Statistical Applications},
+    journal = {Theory of Probability \&amp; Its Applications},
+    volume = {7},
+    number = {1},
+    pages = {24-57},
+    year = {1962},
+    doi = {10.1137/1107003},
+    URL = {https://doi.org/10.1137/1107003},
+    eprint = {https://doi.org/10.1137/1107003}
+}
+
+@phdthesis{reeds1976vonmises,
+    author = {Reeds, J. A.},
+    title = {On the definition of von Mises functionals},
+    school = {Harvard University, Cambridge, MA},
+    year = {1976}
+}
+
+@conference{huber1977robust,
+    author = {Huber, P. J.},
+    booktitle = {Regional Conference Series in Applied Mathematics 27, SIAM},
+    title = {Robust Statistical Procedures},
+    year = {1977}
+}
+
+@inproceedings{hasminskii1979functionals,
+  author    = {Hasminskii, R. and Ibragimov, I. A.},
+  title     = {On the nonparametric estimation of functionals},
+  booktitle = {Proceedings of the Second Prague Symposium on Asymptotic Statistics},
+  editor    = {Mandl, P. and Hu{\v{s}}kova, M.},
+  pages     = {41--51},
+  year      = {1979},
+  publisher = {North-Holland},
+  address   = {Amsterdam}
+}
+
+@book{serfling1980approximation,
+    author = {Serfling, R. J.},
+    title = {Approximation Theorems of Mathematical Statistics},
+    publisher = {John Wiley \&amp; Sons},
+    year = {1980}
+}
+
+@article{bickel1982adaptive,
+    author = {P. J. Bickel},
+    doi = {10.1214/aos/1176345863},
+    journal = {The Annals of Statistics},
+    number = {3},
+    pages = {647 -- 671},
+    publisher = {Institute of Mathematical Statistics},
+    title = {On Adaptive Estimation},
+    url = {https://doi.org/10.1214/aos/1176345863},
+    volume = {10},
+    year = {1982}
+}
+
+@book{pfanzagl1982theory,
+    author=&quot;Pfanzagl, J.&quot;,
+    title=&quot;Contributions to a General Asymptotic Statistical Theory&quot;,
+    year=&quot;1982&quot;,
+    publisher=&quot;Springer New York&quot;,
+    address=&quot;New York, NY&quot;
+}
+
+@book{fernholz1983vonmises,
+    author=&quot;Fernholz, Luisa Turrin&quot;,
+    title=&quot;von Mises Calculus For Statistical Functionals&quot;,
+    publisher=&quot;Springer New York&quot;,
+    address=&quot;New York, NY&quot;,
+    year=&quot;1983&quot;
+}
+
+@article{schick1986efficientestimation,
+    author = {Anton Schick},
+    title = {{On Asymptotically Efficient Estimation in Semiparametric Models}},
+    volume = {14},
+    journal = {The Annals of Statistics},
+    number = {3},
+    publisher = {Institute of Mathematical Statistics},
+    pages = {1139 -- 1151},
+    year = {1986},
+    doi = {10.1214/aos/1176350055},
+    URL = {https://doi.org/10.1214/aos/1176350055}
+}
+
+@inbook{kennedy2024review,
+    author={Edward H. Kennedy},
+    title={Semiparametric doubly robust targeted double machine learning: a review}, 
+    publisher = {Chapman and Hall/CRC},
+    year = {2024},
+    chapter = {10},
+    bookTitle={Handbook of Statistical Methods for Precision Medicine}
+}
+
+
+</code></pre>
+</main>
+
+  </div>
+  <footer>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/stan.min.js"></script>
+
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+
+<script src="/js/graph.js"></script>
+
+  
+  <br/><br/>
+  <hr/>
+  
+  </footer>
+  </body>
+</html>
+
