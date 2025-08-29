@@ -50,18 +50,18 @@ the history of semi-parametric efficiency theory and related estimators. Some
 of these are more fleshed out than others. I intend to add to this as I learn more. Bibtex is provided at the bottom.</p>
 <h2 id="statistical-functionals-and-von-mises-calculus">Statistical Functionals and von Mises calculus</h2>
 <p>The concept of a statistical functional has origins in <a href="https://doi.org/10.1214/aoms/1177730385">von Mises (1947)</a>. There are also two earlier works by von Mises, published in French in <a href="https://www.numdam.org/item/AIHP_1936__6_3-4_185_0/">1936</a> and <a href="http://eudml.org/doc/86726">1939</a>. Interestingly, the author in both is given as &ldquo;de Mises&rdquo;, a translation into French of &ldquo;von Mises&rdquo;.
-<a href="https://link.springer.com/book/10.1007/978-1-4612-5604-5">Fernholz (1983)</a> has a nice discussion. Following her notation, let <span class='math inline'>X_1, \dots, X_n</span> an i.i.d. sample from a law with distribution function <span class='math inline'>F</span>. A <em>statistical functional</em> $T$ is a statistic of the empirical distribution <span class='math inline'>F_n: F_n \mapsto T(F_n)</span>. von Mises proposed expanding $T_n$ in the form
-<span class='math display'>
+<a href="https://link.springer.com/book/10.1007/978-1-4612-5604-5">Fernholz (1983)</a> has a nice discussion. Following her notation, let $( X_1, \dots, X_n )$ an i.i.d. sample from a law with distribution function $F$. A <em>statistical functional</em> $T$ is a statistic of the empirical distribution $F_n: F_n \mapsto T(F_n)$. von Mises proposed expanding $T_n$ in the form
+$$
 T_n(F_n) = T(F) + T'_{F}\left( F_n - F \right) + \mathsf{Rem}_n(F_n - F)
-</span>
-where <span class='math inline'>T'_F</span> is a derivative of the functional and $\mathsf{Rem}_n$ is
+$$
+where $T'_F$ is a derivative of the functional and $\mathsf{Rem}_n$ is
 a remainder term. The derivative considered here was a type of Gateaux
 derivative. Subsequent work considered expansions based on alternative types of
 derivatives, which apply to larger sets of functionals. See in this line <a href="https://doi.org/10.1137/1107003">Filippova (1962)</a>, Reeds (1976), Huber (1977), <a href="https://onlinelibrary.wiley.com/doi/book/10.1002/9780470316481">Serfling (1980)</a>.</p>
 <p>Since then, the term &ldquo;von Mises expansion&rdquo; has been used to refer to this style
 of expansion for more general statistical functionals; see e.g. <a href="https://www.taylorfrancis.com/chapters/edit/10.1201/9781003216223-10/semiparametric-doubly-robust-targeted-double-machine-learning-review-edward-kennedy">Kennedy 2024</a>.</p>
 <h2 id="sample-splitting">Sample Splitting</h2>
-<p>To my knowledge, the first case of sample-splitting is in <a href="https://doi.org/10.1214/aos/1176350055">Schick (1986)</a>, who proposes splitting a sample into two parts, estimating a nuisance parameter in each part, and then using the left-out sample to evaluate the estimate. He writes &ldquo;_We divide the ample [sic] in two equal parts, obtain an estimate of the score function from each part, and evaluate the estimate of the score function obtained from the first part only with observations from the second part and vice versa.&rdquo;</p>
+<p>To my knowledge, the first case of sample-splitting is in <a href="https://doi.org/10.1214/aos/1176350055">Schick (1986)</a>, who proposes splitting a sample into two parts, estimating a nuisance parameter in each part, and then using the left-out sample to evaluate the estimate. He writes <em>&ldquo;We divide the ample [sic] in two equal parts, obtain an estimate of the score function from each part, and evaluate the estimate of the score function obtained from the first part only with observations from the second part and vice versa.&quot;</em></p>
 <p>The idea splitting a sample into two parts and using one for estimation and the
 other for prediction predates Schick, but it seems he was the first to rotate
 the splits and average the results. He cites <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-10/issue-3/On-Adaptive-Estimation/10.1214/aos/1176345863.full">Bickel
@@ -219,8 +219,23 @@ strategy. Pfanzagl (1982) also describes this approach being used by Hasminskii 
 
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
 
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          
+          throwOnError : false
+        });
+    });
+</script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/r.min.js"></script>
