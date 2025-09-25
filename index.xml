@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Wed, 03 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Preprint: Non-overlap Average Treatment Effect Bounds</title>
+      <link>/news/non-overlap-bounds/</link>
+      <pubDate>Thu, 25 Sep 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/non-overlap-bounds/</guid>
+      <description>I have a new preprint out on joint work with Alec McClean and Iván Díaz on a novel method for handling overlap (positivity) violations via the use of partial identification bounds: Non-overlap Average Treatment Effect Bounds.</description>
+    </item>
+    
     <item>
       <title>New Publication: Treatment Effect Bounds under Left-censoring in Journal of Applied Statistics: Environmental Statistics and Data Science</title>
       <link>/news/left-censoring/</link>
@@ -381,7 +390,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Preprints  2025 Asymptotically Efficient Data-adaptive Penalized Shrinkage Estimation with Application to Causal Inference. Herbert Susmann, Yiting Li, Mara A. McAdams-DeMarco, Wenbo Wu, and Iván Díaz. arXiv preprint arXiv:2505.08065.   2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments. Herbert Susmann, Nicholas T. Williams, Kara E. Rudolph, and Iván Díaz. arXiv preprint arXiv:2405.06135.   2024 Temporal Models for Demographic and Global Health Outcomes in Multiple Populations: Introducing the Normal-with-Optional-Shrinkage Data Model Class.</description>
+      <description>Preprints  2025 Non-overlap Average Treatment Effect Bounds. Herbert Susmann, Alec McClean, and Iván Díaz. arXiv preprint arXiv:2509.20206.   2025 Asymptotically Efficient Data-adaptive Penalized Shrinkage Estimation with Application to Causal Inference. Herbert Susmann, Yiting Li, Mara A. McAdams-DeMarco, Wenbo Wu, and Iván Díaz. arXiv preprint arXiv:2505.08065.   2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments. Herbert Susmann, Nicholas T. Williams, Kara E.</description>
     </item>
     
     <item>
