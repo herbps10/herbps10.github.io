@@ -81,6 +81,9 @@ table.list {
 table.list tr {
   background: none; }
 
+table.list td {
+  min-width: 135px; }
+
 hr {
   border: 0.5px solid #ccc; }
 
