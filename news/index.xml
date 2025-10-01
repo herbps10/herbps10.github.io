@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 25 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Preprint: Time-smoothed counterfactual curves</title>
+      <link>/news/counterfactual-curves/</link>
+      <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/counterfactual-curves/</guid>
+      <description>I have some new work out on ArXiv today discussing a non-parametric method for estimating time-smoothed effect curves. This method makes it practical to estimate the sequential effect of interventions on time-varying outcomes. This is joint work with Nick Williams, Richard Liu, Jessica Young, and Iván Díaz: Computationally and statistically efficient estimation of time-smoothed counterfactual curves.</description>
+    </item>
+    
     <item>
       <title>New Preprint: Non-overlap Average Treatment Effect Bounds</title>
       <link>/news/non-overlap-bounds/</link>
