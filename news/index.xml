@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Wed, 01 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Publication: Targeted Provider Profiling in JRSS-A</title>
+      <link>/news/targeted-provider-profiling-jrss-a/</link>
+      <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/targeted-provider-profiling-jrss-a/</guid>
+      <description>Our paper Doubly robust nonparametric efficient estimation for healthcare provider evaluation is now published in JRSS-A. We propose doubly robust estimators based on Targeted Minimum Loss-Based Estimation (TMLE) for indirect standardization parameters relevant to healthcare provider profiling.
+This was joint work with Yiting Li, Mara A. McAdams-DeMarco, Iván Díaz, and Wenbo Wu.</description>
+    </item>
+    
     <item>
       <title>New Preprint: Time-smoothed counterfactual curves</title>
       <link>/news/counterfactual-curves/</link>
