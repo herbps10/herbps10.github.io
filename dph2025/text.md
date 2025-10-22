@@ -1,4 +1,4 @@
-Title slide
+# Title slide
 My name is Herb Susmann, I'm a postdoc in the [Division of Biostatistics](https://med.nyu.edu/departments-institutes/population-health/divisions-sections-centers/biostatistics/) in the [Department of Population Health](https://med.nyu.edu/departments-institutes/population-health/) at [NYU Grossman School of Medicine](https://med.nyu.edu/). Today I'll be talking to you about a new method we've developed to handle positivity violations, which are a common problem that comes up in estimating treatment effects based on observational data.
 
 # Collaborators
