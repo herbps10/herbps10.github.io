@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 09 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 22 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Invited talk: Department of Population Health Emerging Leaders in Research Lecture Series at NYU Grossman</title>
+      <link>/news/dph-2025/</link>
+      <pubDate>Wed, 22 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/dph-2025/</guid>
+      <description>I had the pleasure of giving an invited talk today in my home department, the Department of Population Health, at NYU Grossman School of Medicine as part of their Emerging Leaders in Research lecture series. I presented recent joint work with Alec McClean and Iván Díaz on non-overlap treatment effect bounds. An annotated version of the slides from today&amp;rsquo;s talk are also available.</description>
+    </item>
+    
     <item>
       <title>New Publication: Targeted Provider Profiling in JRSS-A</title>
       <link>/news/targeted-provider-profiling-jrss-a/</link>
