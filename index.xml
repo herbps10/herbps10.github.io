@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 20 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Publication: Refugee/asylum seeker population projectinos in Demography</title>
+      <link>/news/refugees-demography/</link>
+      <pubDate>Fri, 05 Dec 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/refugees-demography/</guid>
+      <description>My paper with Adrian Raftery Bayesian Projection of Extant Refugee and Asylum Seeker Populations is now published in Demography. We propose a Bayesian framework for producing probabilistic projections of refugee and asylum seeker populations by country of origin.</description>
+    </item>
+    
     <item>
       <title>Presentation: Migration Projections at the Wittgenstein Center Conference, Vienna</title>
       <link>/news/wittgenstein-2025/</link>
