@@ -7,7 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 30 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 20 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Presentation: Migration Projections at the Wittgenstein Center Conference, Vienna</title>
+      <link>/news/wittgenstein-2025/</link>
+      <pubDate>Thu, 20 Nov 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/wittgenstein-2025/</guid>
+      <description>I presented joint work with Adrian Raftery on &amp;ldquo;Projections of Refugee and Asylum Seeker Populations by Country of Origin and Destination&amp;rdquo; at the Wittgenstein Centre Conference 2025 on “Demographic Perspectives on Migration in the 21st Century”. Part of the work we presented has now been published in Demography. The event took place at the Austrian Academy of Sciences in Vienna.
+Ceiling fresco by Gregorio Guglielmi in the Austrian Academy of Sciences Building where the conference took place.</description>
+    </item>
+    
+    <item>
+      <title>Invited talk: Longitudinal Causal Inference at the Center for Advanced Studies, LMU Munich</title>
+      <link>/news/lmu-2025/</link>
+      <pubDate>Wed, 12 Nov 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/news/lmu-2025/</guid>
+      <description>I had the pleasure of visiting Ludwig-Maximilians-Universität München to collaborate with Michael Schomaker under the auspices of the Center for Advanced Studies. While I was there, I gave a joint talk with my post-doc advisor Iván Díazon Causal Inference Based on Machine Learning for Complex Longitudinal Exposures.</description>
+    </item>
+    
     <item>
       <title>Invited talk: Non-overlap bounds at UMass Amherst</title>
       <link>/news/umass-2025/</link>
