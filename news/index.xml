@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Fri, 05 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 03 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Presentation: Non-overlap bounds at the Online Causal Inference Seminar</title>
+      <link>/news/ocis-2026/</link>
+      <pubDate>Tue, 03 Feb 2026 00:00:00 +0000</pubDate>
+      
+      <guid>/news/ocis-2026/</guid>
+      <description>I presented our work on non-overlap treatment effect bounds at the Online Causal Inference Seminar, an international seminar on causal inference.</description>
+    </item>
+    
     <item>
       <title>New Publication: Refugee/asylum seeker population projections in Demography</title>
       <link>/news/refugees-demography/</link>
