@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Tue, 03 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Preprint: causal player evaluation</title>
+      <link>/news/counterfactual-combine/</link>
+      <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate>
+      
+      <guid>/news/counterfactual-combine/</guid>
+      <description>I have a new preprint on ArXiv with NYU Grossman PhD student Antonio D&amp;rsquo;Alessandro: The Counterfactual Combine: A Causal Framework for Player Evaluation. We show how evaluating the performance of healthcare providers is fundamentally the same problem as evaluating player performance in sports, and adapt causal inference methods developed for healthcare provider profiling to the sports setting. Antonio contributed a very nice baseball case study looking at using causal inference to evaluate MLB batter performance.</description>
+    </item>
+    
     <item>
       <title>Presentation: Non-overlap bounds at the Online Causal Inference Seminar</title>
       <link>/news/ocis-2026/</link>
@@ -465,7 +474,7 @@ From 2018-2022 I pursued a PhD in Biostatistics in the Department of Biostatisti
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/research/</guid>
-      <description>Preprints  2025 Computationally and statistically efficient estimation of time-smoothed counterfactual curves. Herbert Susmann, Nicholas T. Williams, Richard Liu, Jessica G. Young, and Iván Díaz. arXiv preprint arXiv:2509.26554.   2025 Non-overlap Average Treatment Effect Bounds. Herbert Susmann, Alec McClean, and Iván Díaz. arXiv preprint arXiv:2509.20206.   2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments. Herbert Susmann, Nicholas T. Williams, Kara E.</description>
+      <description>Preprints  2025 The Counterfactual Combine: A Causal Framework for Player Evaluation. Herbert Susmann and Antonio D&#39;Alessandro. arXiv preprint arXiv:2602.23233.   2025 Computationally and statistically efficient estimation of time-smoothed counterfactual curves. Herbert Susmann, Nicholas T. Williams, Richard Liu, Jessica G. Young, and Iván Díaz. arXiv preprint arXiv:2509.26554.   2025 Non-overlap Average Treatment Effect Bounds. Herbert Susmann, Alec McClean, and Iván Díaz. arXiv preprint arXiv:2509.20206.   2024 Longitudinal Generalizations of the Average Treatment Effect on the Treated for Multi-valued and Continuous Treatments.</description>
     </item>
     
     <item>
