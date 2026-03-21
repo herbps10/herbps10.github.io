@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Thu, 26 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 21 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Publication: Penalized Shrinkage Estimation for Causal Parameters in The Annals of Applied Statistics</title>
+      <link>/news/penalized-causal-parameters-aoas/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>/news/penalized-causal-parameters-aoas/</guid>
+      <description>Our paper on shrinkage estimation for estimating large sets of causal parameters is now available at The Annals of Applied Statistics: Asymptotically efficient data-adaptive penalized shrinkage estimation with application to causal inference. You can also download a PDF of the article. This is joint work with Yiting Li, Mara A. McAdams-DeMarco, Wenbo Wu, and Iván Díaz.</description>
+    </item>
+    
     <item>
       <title>New Preprint: Causal inference for sports player evaluation</title>
       <link>/news/counterfactual-combine/</link>
