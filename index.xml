@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; Herb Susmann {year}</copyright>
-    <lastBuildDate>Sat, 21 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 14 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Presentation: Non-overlap bounds at the American Causal Inference Conference 2026</title>
+      <link>/news/acic-2026/</link>
+      <pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate>
+      
+      <guid>/news/acic-2026/</guid>
+      <description>I had the pleasure of presenting our work on non-overlap treatment effect bounds at the American Causal Inference Conference held in Salt Lake City. I was part of a really nice invited session on positivity violations, with other talks given by Paul Zivich, Harsh Parikh, and with a discussion by Caleb Miles.</description>
+    </item>
+    
+    <item>
+      <title>New Publication: Causal Distributional Random Forests in AISTATS</title>
+      <link>/news/causal-drf/</link>
+      <pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate>
+      
+      <guid>/news/causal-drf/</guid>
+      <description>My joint work with Jeffrey Näf and Junhyung Park on Causal Distributional Random Forests was accepted at AISTATS 2026.</description>
+    </item>
+    
     <item>
       <title>New Publication: Penalized Shrinkage Estimation for Causal Parameters in The Annals of Applied Statistics</title>
       <link>/news/penalized-causal-parameters-aoas/</link>
